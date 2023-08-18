@@ -1,0 +1,83 @@
+[gd_resource type="Theme" load_steps=7 format=3 uid="uid://iix53v175t6k"]
+
+[ext_resource type="FontFile" uid="uid://lj5nmow7tv56" path="res://assets/fonts/Cantarell-Bold.ttf" id="1_n5qju"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o5s05"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.32549, 0.32549, 0.32549, 0.196078)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 5
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ra3kd"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.384314, 0.384314, 0.384314, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 5
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xiqlv"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.32549, 0.32549, 0.32549, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 5
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b1yos"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.32549, 0.32549, 0.32549, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qs1hx"]
+bg_color = Color(0.164706, 0.164706, 0.164706, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[resource]
+Button/constants/h_separation = 4
+Button/constants/icon_max_width = 24
+Button/font_sizes/font_size = 12
+Button/fonts/font = ExtResource("1_n5qju")
+Button/styles/disabled = SubResource("StyleBoxFlat_o5s05")
+Button/styles/hover = SubResource("StyleBoxFlat_ra3kd")
+Button/styles/normal = SubResource("StyleBoxFlat_xiqlv")
+Button/styles/pressed = SubResource("StyleBoxFlat_b1yos")
+Label/colors/font_color = Color(0.886275, 0.886275, 0.886275, 1)
+Label/font_sizes/font_size = 14
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_qs1hx")

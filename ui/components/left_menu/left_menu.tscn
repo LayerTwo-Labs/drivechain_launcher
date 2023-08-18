@@ -1,0 +1,64 @@
+[gd_scene load_steps=6 format=3 uid="uid://dwhtby81ylt3s"]
+
+[ext_resource type="Theme" uid="uid://deiietf7bytje" path="res://ui/components/left_menu/left_menu_button.tres" id="1_vs06l"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4qka4"]
+bg_color = Color(0.2, 0.2, 0.2, 1)
+draw_center = false
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_xwtbb"]
+load_path = "res://.godot/imported/dashboard-3-line.svg-b9337b0f267bee66dcb09902e6485fa7.editor.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_wpi15"]
+load_path = "res://.godot/imported/node-tree.svg-d1b5e55494228045207f909f4d7a1459.editor.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_sr383"]
+load_path = "res://.godot/imported/settings-4-line.svg-2d00436ca8eeea115928f18494cdcd4d.editor.ctex"
+
+[node name="LeftMenu" type="PanelContainer"]
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 200.0
+grow_vertical = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_4qka4")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Spacer" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="DashboardButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("1_vs06l")
+toggle_mode = true
+button_pressed = true
+text = "DASHBOARD"
+icon = SubResource("CompressedTexture2D_xwtbb")
+alignment = 0
+
+[node name="PlaygroundButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("1_vs06l")
+toggle_mode = true
+text = "PLAYGROUND"
+icon = SubResource("CompressedTexture2D_wpi15")
+alignment = 0
+
+[node name="SettingsButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("1_vs06l")
+toggle_mode = true
+text = "SETTINGS"
+icon = SubResource("CompressedTexture2D_sr383")
+alignment = 0

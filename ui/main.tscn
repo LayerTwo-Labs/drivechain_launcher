@@ -1,0 +1,66 @@
+[gd_scene load_steps=6 format=3 uid="uid://dscucqwnoepb1"]
+
+[ext_resource type="Script" path="res://ui/main.gd" id="1_ur5w6"]
+[ext_resource type="PackedScene" uid="uid://dwhtby81ylt3s" path="res://ui/components/left_menu/left_menu.tscn" id="2_0lj2k"]
+[ext_resource type="PackedScene" uid="uid://yhgodesyh1pt" path="res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.tscn" id="6_qu36f"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gxdun"]
+bg_color = Color(0.105882, 0.105882, 0.105882, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1ec3v"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+
+[node name="Main" type="CanvasLayer"]
+script = ExtResource("1_ur5w6")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_gxdun")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="LeftMenu" parent="HBoxContainer" instance=ExtResource("2_0lj2k")]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TabContainer" type="TabContainer" parent="HBoxContainer/MarginContainer"]
+layout_mode = 2
+tabs_visible = false
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/MarginContainer/TabContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_1ec3v")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="GridContainer" type="GridContainer" parent="HBoxContainer/MarginContainer/TabContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 2
+
+[node name="BaseChainDashboardPanel" parent="HBoxContainer/MarginContainer/TabContainer/ScrollContainer/VBoxContainer/GridContainer" instance=ExtResource("6_qu36f")]
+layout_mode = 2
+
+[node name="BaseChainDashboardPanel2" parent="HBoxContainer/MarginContainer/TabContainer/ScrollContainer/VBoxContainer/GridContainer" instance=ExtResource("6_qu36f")]
+layout_mode = 2

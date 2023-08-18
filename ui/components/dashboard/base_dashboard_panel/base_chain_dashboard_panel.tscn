@@ -1,0 +1,116 @@
+[gd_scene load_steps=10 format=3 uid="uid://yhgodesyh1pt"]
+
+[ext_resource type="Texture2D" uid="uid://cn1oru7132l84" path="res://assets/images/pattern_33.png" id="1_13ux5"]
+[ext_resource type="Script" path="res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.gd" id="1_6647v"]
+[ext_resource type="Texture2D" uid="uid://6jpcn5jo3lak" path="res://assets/images/chain.svg" id="2_fp0rc"]
+[ext_resource type="FontFile" uid="uid://lj5nmow7tv56" path="res://assets/fonts/Cantarell-Bold.ttf" id="3_ckr60"]
+[ext_resource type="Texture2D" uid="uid://ccs1lrfla0g35" path="res://assets/images/play-symbolic.svg" id="4_a5xlm"]
+[ext_resource type="Texture2D" uid="uid://chr4jhc3brcqk" path="res://assets/images/settings-4-line.svg" id="4_rudan"]
+[ext_resource type="Theme" uid="uid://ckf7x64em5bhq" path="res://ui/themes/important_button_dark.tres" id="5_7y8kv"]
+[ext_resource type="Texture2D" uid="uid://cqfvjt5i73ehf" path="res://assets/images/build-alt-symbolic 1.svg" id="5_x1m8y"]
+[ext_resource type="Texture2D" uid="uid://bp5bexsgjlk4" path="res://assets/images/download-cloud-line.svg" id="6_qglv3"]
+
+[node name="BaseChainDashboardPanel" type="PanelContainer"]
+clip_children = 2
+clip_contents = true
+custom_minimum_size = Vector2(0, 200)
+offset_right = 450.0
+offset_bottom = 200.0
+size_flags_horizontal = 3
+script = ExtResource("1_6647v")
+
+[node name="BackgroundPattern" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.0156863)
+texture_repeat = 2
+layout_mode = 2
+texture = ExtResource("1_13ux5")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Header" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 2
+theme_override_constants/separation = 8
+
+[node name="Image" type="TextureRect" parent="Margin/VBox/Header"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("2_fp0rc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="Margin/VBox/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_ckr60")
+theme_override_font_sizes/font_size = 22
+text = "Testchain"
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="Margin/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+focus_mode = 0
+icon = ExtResource("4_rudan")
+
+[node name="Content" type="VBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Description" type="Label" parent="Margin/VBox/Content"]
+layout_mode = 2
+text = "A blank sidechain based on Bitcoin Core 16.99"
+autowrap_mode = 2
+
+[node name="SecondaryDescription" type="Label" parent="Margin/VBox/Content"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.643137, 0.643137, 0.643137, 1)
+theme_override_font_sizes/font_size = 12
+text = "Secondary Description"
+autowrap_mode = 2
+
+[node name="Footer" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 10
+theme_override_constants/separation = 6
+
+[node name="StartButton" type="Button" parent="Margin/VBox/Footer"]
+layout_mode = 2
+tooltip_text = "Start chain"
+focus_mode = 0
+theme = ExtResource("5_7y8kv")
+disabled = true
+icon = ExtResource("4_a5xlm")
+
+[node name="MineButton" type="Button" parent="Margin/VBox/Footer"]
+layout_mode = 2
+focus_mode = 0
+disabled = true
+icon = ExtResource("5_x1m8y")
+
+[node name="DownloadButton" type="Button" parent="Margin/VBox/Footer"]
+layout_mode = 2
+size_flags_horizontal = 10
+tooltip_text = "Download testchain-linux.x86_54.tar"
+focus_mode = 0
+theme = ExtResource("5_7y8kv")
+icon = ExtResource("6_qglv3")
+
+[node name="LeftColor" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(4, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+color = Color(0.207843, 0.517647, 0.894118, 1)
