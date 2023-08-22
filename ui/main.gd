@@ -2,7 +2,6 @@ extends CanvasLayer
 
 @onready var tab_container = $HBox/Content/TabContainer
 @onready var left_menu = $HBox/LeftMenu
-@onready var dashboard_button = $Dash
 
 
 # Called when the node enters the scene tree for the first time.

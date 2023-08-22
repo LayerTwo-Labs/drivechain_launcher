@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=10 format=3 uid="uid://iix53v175t6k"]
+[gd_resource type="Theme" load_steps=11 format=3 uid="uid://iix53v175t6k"]
 
 [ext_resource type="FontFile" uid="uid://lj5nmow7tv56" path="res://assets/fonts/Cantarell-Bold.ttf" id="1_n5qju"]
 [ext_resource type="FontFile" uid="uid://qdke7kx1o2dj" path="res://assets/fonts/Cantarell-BoldItalic.ttf" id="2_g8qux"]
@@ -72,6 +72,18 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pfd70"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.207843, 0.517647, 0.894118, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 6
+
 [resource]
 Button/constants/h_separation = 4
 Button/constants/icon_max_width = 24
@@ -88,6 +100,7 @@ PopupMenu/font_sizes/font_separator_size = 14
 PopupMenu/font_sizes/font_size = 14
 PopupMenu/fonts/font = ExtResource("4_1uy8h")
 PopupMenu/fonts/font_separator = ExtResource("4_1uy8h")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_pfd70")
 RichTextLabel/colors/default_color = Color(0.886275, 0.886275, 0.886275, 1)
 RichTextLabel/font_sizes/bold_font_size = 14
 RichTextLabel/font_sizes/bold_italics_font_size = 14

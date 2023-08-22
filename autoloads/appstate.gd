@@ -5,7 +5,7 @@ enum platform { LINUX, MAC, WIN, UNSUPPORTED }
 const DEFAULT_CHAIN_PROVIDERS_PATH = "res://chain_providers.cfg"
 const CHAIN_PROVIDERS_PATH = "user://chain_providers.cfg"
 
-var chain_providers_config = ConfigFile.new()
+var chain_providers_config: ConfigFile
 var chain_providers: Array[ChainProvider] = []
 
 signal chain_providers_changed
@@ -23,7 +23,29 @@ func _ready():
 	chain_providers_changed.emit()
 	
 	
+func reset_everything():
+	var err = OS.move_to_trash(ProjectSettings.globalize_path(OS.get_user_data_dir()))
+	if err != OK:
+		print(err)
+		return
+		
+	err = OS.move_to_trash(ProjectSettings.globalize_path(Appstate.get_home() + "/.drivechain"))
+	if err != OK:
+		print(err)
+		return
+		
+	chain_providers.clear()
+	
+	load_config(true)
+	save_config()
+	setup_directories()
+	setup_confs()
+	
+	chain_providers_changed.emit()
+	
+	
 func load_config(force_default = false):
+	chain_providers_config = ConfigFile.new()
 	if not force_default:
 		var err = chain_providers_config.load(CHAIN_PROVIDERS_PATH)
 		if err != OK:

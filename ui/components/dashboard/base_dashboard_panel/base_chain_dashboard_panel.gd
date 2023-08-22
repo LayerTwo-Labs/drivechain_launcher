@@ -31,18 +31,37 @@ func setup(_chain_provider: ChainProvider):
 	desc.text = chain_provider.description
 	
 	if chain_provider.is_ready_for_execution():
-		download_button.visible = false
-		start_button.disabled = false
+		show_executable_state()
+	else:
+		show_download_state()
 		
 	if not chain_provider.available_for_platform():
-		download_button.disabled = true
-		start_button.disabled = true
-		mine_button.disabled = true
-		settings_button.disabled = true
-		secondary_desc.visible = true
-		secondary_desc.text = "[i]This sidechain is currently not available.[/i]"
-		modulate = modulate.darkened(0.2)
-
+		show_unsupported_state()
+		
+		
+func show_executable_state():
+	start_button.visible = true
+	mine_button.visible = true
+	download_button.visible = false
+	start_button.disabled = false
+	
+	
+func show_download_state():
+	start_button.visible = false
+	mine_button.visible = false
+	download_button.visible = true
+	download_button.disabled = false
+	
+	
+func show_unsupported_state():
+	download_button.visible = false
+	start_button.visible = false
+	mine_button.visible = false
+	secondary_desc.visible = true
+	secondary_desc.text = "[i]This sidechain is currently not available.[/i]"
+	modulate = modulate.darkened(0.2)
+	
+	
 func download():
 	if not chain_provider.available_for_platform():
 		return
@@ -74,11 +93,13 @@ func download():
 	
 	progress_bar.visible = true
 	
+	
 func _on_download_progress():
 	if download_req != null:
 		var bodySize: float = download_req.get_body_size()
 		var downloadedBytes: float = download_req.get_downloaded_bytes()
 		progress_bar.value = downloadedBytes*100/bodySize
+	
 	
 func _on_download_complete(result, response_code, _headers, body):
 	reset_download()
@@ -98,6 +119,7 @@ func unzip_file_and_setup_binary(zip_path: String):
 	var err := reader.open(zip_path)
 	if err != OK:
 		push_error("Unabled to read zip")
+		show_download_state()
 		return
 		
 	var files = reader.get_files()
@@ -114,7 +136,9 @@ func unzip_file_and_setup_binary(zip_path: String):
 			save.close()
 			OS.execute("chmod", ["+x", ProjectSettings.globalize_path(executable_path)])
 			
-			
+	show_executable_state()
+	
+	
 func reset_download():
 	remove_child(download_req)
 	download_req.queue_free()
