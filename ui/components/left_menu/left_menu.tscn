@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://dwhtby81ylt3s"]
+[gd_scene load_steps=7 format=3 uid="uid://dwhtby81ylt3s"]
 
 [ext_resource type="Theme" uid="uid://deiietf7bytje" path="res://ui/components/left_menu/left_menu_button.tres" id="1_vs06l"]
+[ext_resource type="Script" path="res://ui/components/left_menu/left_menu.gd" id="1_yja75"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4qka4"]
 bg_color = Color(0.2, 0.2, 0.2, 1)
@@ -22,17 +23,18 @@ offset_right = 200.0
 grow_vertical = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_4qka4")
+script = ExtResource("1_yja75")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBox" type="VBoxContainer" parent="."]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Spacer" type="Control" parent="VBoxContainer"]
+[node name="Spacer" type="Control" parent="VBox"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 
-[node name="DashboardButton" type="Button" parent="VBoxContainer"]
+[node name="DashboardButton" type="Button" parent="VBox"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 focus_mode = 0
@@ -43,7 +45,7 @@ text = "DASHBOARD"
 icon = SubResource("CompressedTexture2D_xwtbb")
 alignment = 0
 
-[node name="PlaygroundButton" type="Button" parent="VBoxContainer"]
+[node name="PlaygroundButton" type="Button" parent="VBox"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 focus_mode = 0
@@ -53,7 +55,7 @@ text = "PLAYGROUND"
 icon = SubResource("CompressedTexture2D_wpi15")
 alignment = 0
 
-[node name="SettingsButton" type="Button" parent="VBoxContainer"]
+[node name="SettingsButton" type="Button" parent="VBox"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 focus_mode = 0
@@ -62,3 +64,7 @@ toggle_mode = true
 text = "SETTINGS"
 icon = SubResource("CompressedTexture2D_sr383")
 alignment = 0
+
+[connection signal="toggled" from="VBox/DashboardButton" to="." method="_on_left_menu_button_toggled" binds= [0]]
+[connection signal="toggled" from="VBox/PlaygroundButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
+[connection signal="toggled" from="VBox/SettingsButton" to="." method="_on_left_menu_button_toggled" binds= [2]]

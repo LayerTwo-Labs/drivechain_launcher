@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c52uorr8pmayl"]
+
+[ext_resource type="Script" path="res://autoloads/appstate.gd" id="1_cg51h"]
+
+[node name="Appstate" type="Node2D"]
+script = ExtResource("1_cg51h")

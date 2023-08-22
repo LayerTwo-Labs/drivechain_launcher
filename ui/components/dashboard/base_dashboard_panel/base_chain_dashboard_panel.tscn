@@ -58,12 +58,19 @@ theme_override_font_sizes/font_size = 22
 text = "Testchain"
 vertical_alignment = 1
 
-[node name="Button" type="Button" parent="Margin/VBox/Header"]
+[node name="SettingsButton" type="MenuButton" parent="Margin/VBox/Header"]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
-focus_mode = 0
 icon = ExtResource("4_rudan")
+item_count = 3
+popup/item_0/text = "View Configuration"
+popup/item_0/id = 0
+popup/item_1/text = ""
+popup/item_1/id = 10
+popup/item_1/separator = true
+popup/item_2/text = "Reset"
+popup/item_2/id = 1
 
 [node name="Content" type="VBoxContainer" parent="Margin/VBox"]
 layout_mode = 2
@@ -74,12 +81,19 @@ layout_mode = 2
 text = "A blank sidechain based on Bitcoin Core 16.99"
 autowrap_mode = 2
 
-[node name="SecondaryDescription" type="Label" parent="Margin/VBox/Content"]
+[node name="SecondaryDescription" type="RichTextLabel" parent="Margin/VBox/Content"]
 visible = false
 layout_mode = 2
-theme_override_colors/font_color = Color(0.643137, 0.643137, 0.643137, 1)
-theme_override_font_sizes/font_size = 12
-text = "Secondary Description"
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(0.639216, 0.639216, 0.639216, 1)
+theme_override_font_sizes/normal_font_size = 13
+theme_override_font_sizes/bold_font_size = 13
+theme_override_font_sizes/italics_font_size = 13
+theme_override_font_sizes/bold_italics_font_size = 13
+theme_override_font_sizes/mono_font_size = 13
+bbcode_enabled = true
+fit_content = true
+scroll_following = true
 autowrap_mode = 2
 
 [node name="Footer" type="HBoxContainer" parent="Margin/VBox"]
@@ -89,6 +103,7 @@ theme_override_constants/separation = 6
 
 [node name="StartButton" type="Button" parent="Margin/VBox/Footer"]
 layout_mode = 2
+size_flags_vertical = 8
 tooltip_text = "Start chain"
 focus_mode = 0
 theme = ExtResource("5_7y8kv")
@@ -97,16 +112,29 @@ icon = ExtResource("4_a5xlm")
 
 [node name="MineButton" type="Button" parent="Margin/VBox/Footer"]
 layout_mode = 2
+size_flags_vertical = 8
 focus_mode = 0
 disabled = true
 icon = ExtResource("5_x1m8y")
 
-[node name="DownloadButton" type="Button" parent="Margin/VBox/Footer"]
+[node name="VBox" type="VBoxContainer" parent="Margin/VBox/Footer"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="ProgressBar" type="ProgressBar" parent="Margin/VBox/Footer/VBox"]
+visible = false
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+size_flags_vertical = 4
+show_percentage = false
+
+[node name="DownloadButton" type="Button" parent="Margin/VBox/Footer/VBox"]
 layout_mode = 2
 size_flags_horizontal = 10
 tooltip_text = "Download testchain-linux.x86_54.tar"
 focus_mode = 0
 theme = ExtResource("5_7y8kv")
+text = "Download"
 icon = ExtResource("6_qglv3")
 
 [node name="LeftColor" type="ColorRect" parent="."]
@@ -114,3 +142,5 @@ custom_minimum_size = Vector2(4, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 color = Color(0.207843, 0.517647, 0.894118, 1)
+
+[connection signal="pressed" from="Margin/VBox/Footer/VBox/DownloadButton" to="." method="download"]
