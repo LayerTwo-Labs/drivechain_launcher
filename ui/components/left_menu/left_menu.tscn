@@ -3,9 +3,8 @@
 [ext_resource type="Theme" uid="uid://deiietf7bytje" path="res://ui/components/left_menu/left_menu_button.tres" id="1_vs06l"]
 [ext_resource type="Script" path="res://ui/components/left_menu/left_menu.gd" id="1_yja75"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4qka4"]
-bg_color = Color(0.2, 0.2, 0.2, 1)
-draw_center = false
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c8gs8"]
+bg_color = Color(0.141176, 0.141176, 0.141176, 1)
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_xwtbb"]
 load_path = "res://.godot/imported/dashboard-3-line.svg-b9337b0f267bee66dcb09902e6485fa7.editor.ctex"
@@ -22,7 +21,7 @@ anchor_bottom = 1.0
 offset_right = 200.0
 grow_vertical = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_4qka4")
+theme_override_styles/panel = SubResource("StyleBoxFlat_c8gs8")
 script = ExtResource("1_yja75")
 
 [node name="VBox" type="VBoxContainer" parent="."]

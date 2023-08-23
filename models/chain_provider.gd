@@ -50,41 +50,57 @@ func is_ready_for_execution() -> bool:
 	return FileAccess.file_exists(ProjectSettings.globalize_path(base_dir + "/" + executable_name))
 	
 	
-func write_conf(force_default := true):
-	if not force_default:
-		if FileAccess.file_exists(ProjectSettings.globalize_path(base_dir + "/" + id + ".conf")):
-			return
+func write_conf(force_write := true):
+	if force_write:
+		if FileAccess.file_exists(get_conf_path()):
+			DirAccess.remove_absolute(get_conf_path())
+	elif FileAccess.file_exists(get_conf_path()):
+		return
 	
-	var conf = ConfigFile.new()
+	var conf = FileAccess.open(get_conf_path(), FileAccess.WRITE)
 	match id:
 		"drivechain":
-			conf.set_value("", "rpcuser", "user")
-			conf.set_value("", "rpcpassword", "password")
-			conf.set_value("", "rpcport", port)
-			conf.set_value("", "regtest", 1)
-			conf.set_value("", "server", 1)
-			conf.set_value("", "datadir", ProjectSettings.globalize_path(base_dir))
+			conf.store_line("rpcuser=user")
+			conf.store_line("rpcpassword=password")
+			conf.store_line("rpcport=" + str(port))
+			conf.store_line("regtest=1")
+			conf.store_line("server=1")
+			conf.store_line("datadir=" + ProjectSettings.globalize_path(base_dir))
 		"testchain","bitassets":
-			conf.set_value("", "rpcuser", "user")
-			conf.set_value("", "rpcpassword", "password")
-			conf.set_value("", "rpcport", port)
-			conf.set_value("", "regtest", 1)
-			conf.set_value("", "server", 1)
-			conf.set_value("", "datadir", ProjectSettings.globalize_path(base_dir))
-			conf.set_value("", "slot", slot)
+			conf.store_line("rpcuser=user")
+			conf.store_line("rpcpassword=password")
+			conf.store_line("rpcport=" + str(port))
+			conf.store_line("regtest=1")
+			conf.store_line("server=1")
+			conf.store_line("datadir=" + ProjectSettings.globalize_path(base_dir))
+			conf.store_line("slot=" + str(slot))
 		"latestcore":
-			conf.set_value("", "chain", "regtest")
-			conf.set_value("", "server", 1)
-			conf.set_value("", "splash", 0)
-			conf.set_value("", "datadir", ProjectSettings.globalize_path(base_dir))
-			conf.set_value("", "slot", slot)
-			conf.set_value("regtest", "rpcuser", "user")
-			conf.set_value("regtest", "rpcpassword", "password")
-			conf.set_value("regtest", "rpcport", port)
+			conf.store_line("chain=regtest")
+			conf.store_line("server=1")
+			conf.store_line("splash=0")
+			conf.store_line("datadir=" + ProjectSettings.globalize_path(base_dir))
+			conf.store_line("slot=" + str(slot))
+			conf.store_line("")
+			conf.store_line("[regtest]")
+			conf.store_line("rpcuser=user")
+			conf.store_line("rpcpassword=password")
+			conf.store_line("rpcport=" + str(port))
 			
-	conf.save(ProjectSettings.globalize_path(base_dir + "/" + id + ".conf"))
+	conf.close()
 	
 	
+func write_start_script():
+	match Appstate.get_platform():
+		Appstate.platform.LINUX:
+			if FileAccess.file_exists(get_start_path()):
+				DirAccess.remove_absolute(get_start_path())
+				
+			var file = FileAccess.open(get_start_path(), FileAccess.WRITE)
+			file.store_line("#!/bin/bash")
+			file.store_line(get_executable_path() + " --conf=" + get_conf_path())
+			file.close()
+			
+			
 func write_dir():
 	var dir = ProjectSettings.globalize_path(base_dir)
 	if not DirAccess.dir_exists_absolute(dir):
@@ -93,3 +109,17 @@ func write_dir():
 			print("Unable to create directory: " + dir)
 		else:
 			print("Sidechain directory found: " + dir)
+			
+			
+func get_start_path() -> String:
+	return ProjectSettings.globalize_path(base_dir + "/start.sh")
+	
+	
+func get_conf_path() -> String:
+	return ProjectSettings.globalize_path(base_dir + "/" + id + ".conf")
+	
+	
+func get_executable_path() -> String:
+	return ProjectSettings.globalize_path(base_dir + "/" + executable_name)
+	
+	

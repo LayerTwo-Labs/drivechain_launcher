@@ -3,11 +3,12 @@
 [ext_resource type="Script" path="res://ui/components/settings/settings.gd" id="1_00drh"]
 [ext_resource type="FontFile" uid="uid://lj5nmow7tv56" path="res://assets/fonts/Cantarell-Bold.ttf" id="1_ypfvs"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_disdh"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_icrj2"]
 content_margin_left = 8.0
 content_margin_top = 8.0
 content_margin_right = 8.0
 content_margin_bottom = 8.0
+bg_color = Color(0.141176, 0.141176, 0.141176, 1)
 
 [node name="Settings" type="ScrollContainer"]
 anchors_preset = 15
@@ -15,7 +16,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_disdh")
+theme_override_styles/panel = SubResource("StyleBoxFlat_icrj2")
 script = ExtResource("1_00drh")
 
 [node name="VBox" type="VBoxContainer" parent="."]

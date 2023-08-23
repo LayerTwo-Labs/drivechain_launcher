@@ -130,11 +130,13 @@ func unzip_file_and_setup_binary(zip_path: String):
 		var binary = reader.read_file(path)
 		
 		if binary.size() > 0:
-			var executable_path = chain_provider.base_dir + "/" + chain_provider.executable_name
-			var save = FileAccess.open(executable_path, FileAccess.WRITE)
+			var save = FileAccess.open(chain_provider.get_executable_path(), FileAccess.WRITE)
 			save.store_buffer(binary)
 			save.close()
-			OS.execute("chmod", ["+x", ProjectSettings.globalize_path(executable_path)])
+			OS.execute("chmod", ["+x", chain_provider.get_executable_path()])
+			
+			chain_provider.write_start_script()
+			OS.execute("chmod", ["+x", ProjectSettings.globalize_path(chain_provider.get_start_path())])
 			
 	show_executable_state()
 	
@@ -150,3 +152,7 @@ func reset_download():
 	download_button.visible = false
 	progress_bar.visible = false
 	start_button.disabled = false
+
+
+func _on_start_button_pressed():
+	Appstate.start_chain(chain_provider)

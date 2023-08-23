@@ -3,11 +3,12 @@
 [ext_resource type="PackedScene" uid="uid://yhgodesyh1pt" path="res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.tscn" id="1_vxcbl"]
 [ext_resource type="Script" path="res://ui/components/dashboard/dashboard.gd" id="1_xkw7t"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1ec3v"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1mjr6"]
 content_margin_left = 8.0
 content_margin_top = 8.0
 content_margin_right = 8.0
 content_margin_bottom = 8.0
+bg_color = Color(0.141176, 0.141176, 0.141176, 1)
 
 [node name="Dashboard" type="ScrollContainer"]
 anchors_preset = 15
@@ -15,7 +16,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_1ec3v")
+theme_override_styles/panel = SubResource("StyleBoxFlat_1mjr6")
 script = ExtResource("1_xkw7t")
 
 [node name="VBox" type="VBoxContainer" parent="."]

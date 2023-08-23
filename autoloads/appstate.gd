@@ -92,6 +92,13 @@ func save_config():
 	chain_providers_config.save(CHAIN_PROVIDERS_PATH)
 	
 	
+func start_chain(chain_provider: ChainProvider):
+	match Appstate.get_platform():
+		Appstate.platform.LINUX,Appstate.platform.MAC:
+			var pid = OS.create_process(chain_provider.get_start_path(), [], false)
+			print("Process with started with pid: " + str(pid))
+			
+			
 static func get_platform() -> platform:
 	match OS.get_name():
 		"Windows", "UWP":

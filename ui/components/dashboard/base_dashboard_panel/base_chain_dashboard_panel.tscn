@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://yhgodesyh1pt"]
+[gd_scene load_steps=11 format=3 uid="uid://yhgodesyh1pt"]
 
 [ext_resource type="Texture2D" uid="uid://cn1oru7132l84" path="res://assets/images/pattern_33.png" id="1_13ux5"]
 [ext_resource type="Script" path="res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.gd" id="1_6647v"]
@@ -10,6 +10,19 @@
 [ext_resource type="Texture2D" uid="uid://cqfvjt5i73ehf" path="res://assets/images/build-alt-symbolic 1.svg" id="5_x1m8y"]
 [ext_resource type="Texture2D" uid="uid://bp5bexsgjlk4" path="res://assets/images/download-cloud-line.svg" id="6_qglv3"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0u1v5"]
+bg_color = Color(0.188235, 0.188235, 0.188235, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.309804, 0.309804, 0.309804, 1)
+border_blend = true
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
 [node name="BaseChainDashboardPanel" type="PanelContainer"]
 clip_children = 2
 clip_contents = true
@@ -17,6 +30,7 @@ custom_minimum_size = Vector2(0, 200)
 offset_right = 450.0
 offset_bottom = 200.0
 size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_0u1v5")
 script = ExtResource("1_6647v")
 
 [node name="BackgroundPattern" type="TextureRect" parent="."]
@@ -104,7 +118,6 @@ theme_override_constants/separation = 6
 [node name="StartButton" type="Button" parent="Margin/VBox/Footer"]
 layout_mode = 2
 size_flags_vertical = 8
-tooltip_text = "Start chain"
 focus_mode = 0
 theme = ExtResource("5_7y8kv")
 disabled = true
@@ -131,10 +144,8 @@ show_percentage = false
 [node name="DownloadButton" type="Button" parent="Margin/VBox/Footer/VBox"]
 layout_mode = 2
 size_flags_horizontal = 10
-tooltip_text = "Download testchain-linux.x86_54.tar"
 focus_mode = 0
 theme = ExtResource("5_7y8kv")
-text = "Download"
 icon = ExtResource("6_qglv3")
 
 [node name="LeftColor" type="ColorRect" parent="."]
@@ -143,4 +154,5 @@ layout_mode = 2
 size_flags_horizontal = 0
 color = Color(0.207843, 0.517647, 0.894118, 1)
 
+[connection signal="pressed" from="Margin/VBox/Footer/StartButton" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="Margin/VBox/Footer/VBox/DownloadButton" to="." method="download"]
