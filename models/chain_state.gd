@@ -5,7 +5,6 @@ var id: String
 var state: c_state
 var height: int = 0
 var automine: bool = false
-	
 var refreshbmm: bool = false
 
 var chain_provider: ChainProvider
@@ -13,9 +12,12 @@ var chain_provider: ChainProvider
 enum c_state { WAITING, RUNNING }
 
 @onready var get_block_height_request: HTTPRequest = $GetBlockHeightRequest
-@onready var main_chain_mine_request: HTTPRequest = $MainChainMineRequest
+@onready var automine_request: HTTPRequest = $AutomineMainChainRequest
 @onready var list_active_sidechains_request: HTTPRequest = $ListActiveSidechainsRequest
 @onready var stop_chain_request: HTTPRequest = $StopChainRequest
+@onready var create_sidechain_proposal_request: HTTPRequest = $CreateSidechainProposalRequest
+@onready var mainchain_mine_request: HTTPRequest = $MainChainMineRequest
+
 
 func setup(_chain_provider: ChainProvider):
 	self.id = _chain_provider.id
@@ -26,7 +28,7 @@ func setup(_chain_provider: ChainProvider):
 	
 func set_automine(value):
 	if value == true and automine != true:
-		request_mainchain_mine()
+		request_automine()
 	automine = value
 	
 	
@@ -86,22 +88,46 @@ func _on_get_block_height_request_completed(_result, response_code, _headers, bo
 	request_block_height()
 	
 	
-func request_mainchain_mine():
-	make_request("generate", [1], main_chain_mine_request)
+func request_automine():
+	make_request("generate", [1], automine_request)
 	
 	
-func _on_main_chain_mine_request_completed(_result, response_code, _headers, body):
+func _on_automine_mainchain_request_completed(_result, response_code, _headers, body):
 	if automine:
 		await get_tree().create_timer(1).timeout
-		request_mainchain_mine()
+		request_automine()
+		
+		
+func request_create_sidechain_proposal(_chain_provider: ChainProvider) -> bool:
+	if chain_provider.id != "drivechain":
+		return false
+		
+	make_request("createsidechainproposal", [_chain_provider.slot, _chain_provider.id], create_sidechain_proposal_request)
+	var completed = await create_sidechain_proposal_request.request_completed
+	if completed.size() >= 2 and completed[1] == 200:
+		make_request("generate", [201], mainchain_mine_request)
+		await mainchain_mine_request.request_completed
+		return true
+		
+	return false
 	
 	
-func needs_activation() -> bool:
+func request_mainchain_mine(blocks_to_generate: int):
+	if chain_provider.id != "drivechain":
+		return
+		
+	make_request("generate", [blocks_to_generate], automine_request)
+	
+	
+func needs_activation(_chain_provider: ChainProvider) -> bool:
+	if chain_provider.id != "drivechain":
+		return false
+		
 	make_request("listactivesidechains", [], list_active_sidechains_request)
 	var completed = await list_active_sidechains_request.request_completed
 	var result = get_result(completed[1], completed[3])
 	for v in result.result:
-		if v.title == id:
+		if v.title == _chain_provider.id:
 			return false
 			
 	return true
@@ -112,3 +138,5 @@ func stop_chain():
 	
 func cleanup():
 	self.queue_free()
+	
+	

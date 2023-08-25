@@ -94,8 +94,9 @@ func show_running_state():
 		refresh_bmm_button.visible = false
 	else:
 		auto_mine_button.visible = false
-		refresh_bmm_button.visible = true
-		refresh_bmm_button.set_pressed_no_signal(chain_state.refreshbmm)
+		refresh_bmm_button.visible = false
+		#refresh_bmm_button.visible = true
+		#refresh_bmm_button.set_pressed_no_signal(chain_state.refreshbmm)
 		
 		
 func show_executable_state():
@@ -221,11 +222,26 @@ func reset_download():
 
 
 func _on_start_button_pressed():
-	chain_provider.start_chain()
+	if chain_provider.id != "drivechain":
+		var drivechain_state = Appstate.get_drivechain_state()
+		if drivechain_state == null:
+			return
+			
+		if await drivechain_state.needs_activation(chain_provider):
+			await drivechain_state.request_create_sidechain_proposal(chain_provider)
+			chain_provider.start_chain()
+		else:
+			chain_provider.start_chain()
+	else:
+		chain_provider.start_chain()
 	
 	
 func _on_stop_button_pressed():
-	chain_state.stop_chain()
+	if chain_provider.id == "drivechain":
+		for k in Appstate.chain_states:
+			Appstate.chain_states[k].stop_chain()
+	else:
+		chain_state.stop_chain()
 	
 	
 func _on_automine_toggled(button_pressed):

@@ -151,3 +151,13 @@ func drivechain_running() -> bool:
 	if not chain_states.has('drivechain'):
 		return false
 	return chain_states['drivechain'].state == ChainState.c_state.RUNNING
+	
+func get_drivechain_state() -> ChainState:
+	if not chain_states.has('drivechain'):
+		return null
+	return chain_states['drivechain']
+	
+func get_drivechain_provider() -> ChainProvider:
+	if not chain_providers.has('drivechain'):
+		return null
+	return chain_providers['drivechain']

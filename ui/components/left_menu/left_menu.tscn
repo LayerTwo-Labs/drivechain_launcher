@@ -45,6 +45,7 @@ icon = SubResource("CompressedTexture2D_xwtbb")
 alignment = 0
 
 [node name="PlaygroundButton" type="Button" parent="VBox"]
+visible = false
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 focus_mode = 0
@@ -66,4 +67,4 @@ alignment = 0
 
 [connection signal="toggled" from="VBox/DashboardButton" to="." method="_on_left_menu_button_toggled" binds= [0]]
 [connection signal="toggled" from="VBox/PlaygroundButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
-[connection signal="toggled" from="VBox/SettingsButton" to="." method="_on_left_menu_button_toggled" binds= [2]]
+[connection signal="toggled" from="VBox/SettingsButton" to="." method="_on_left_menu_button_toggled" binds= [1]]

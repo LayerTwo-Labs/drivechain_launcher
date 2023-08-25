@@ -30,10 +30,6 @@ tabs_visible = false
 [node name="Dashboard" parent="HBox/Content/TabContainer" instance=ExtResource("3_3v44j")]
 layout_mode = 2
 
-[node name="Playground" type="GraphEdit" parent="HBox/Content/TabContainer"]
-visible = false
-layout_mode = 2
-
 [node name="Settings" parent="HBox/Content/TabContainer" instance=ExtResource("4_3j67w")]
 visible = false
 layout_mode = 2
