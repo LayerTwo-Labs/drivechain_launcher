@@ -20,6 +20,8 @@ func _ready():
 		push_error("Unsupported platfom")
 		get_tree().quit()
 		
+	DisplayServer.window_set_title("Drivechain Launcher")
+		
 	load_config(true)
 	save_config()
 	setup_directories()
@@ -47,7 +49,7 @@ func reset_everything():
 		print(err)
 		return
 		
-	err = OS.move_to_trash(ProjectSettings.globalize_path(Appstate.get_home() + "/.drivechain"))
+	err = OS.move_to_trash(ProjectSettings.globalize_path(get_drivechain_dir()))
 	if err != OK:
 		print(err)
 		return
@@ -146,7 +148,14 @@ static func get_home() -> String:
 			return OS.get_environment("USERPROFILE")
 	return OS.get_environment("HOME")
 
-
+static func get_drivechain_dir() -> String:
+	match get_platform():
+		Appstate.platform.LINUX:
+			return get_home() + "/.drivechain"
+		Appstate.platform.WIN,Appstate.platform.MAC:
+			return get_home() + "/Drivechain"
+	return ""
+	
 func drivechain_running() -> bool:
 	if not chain_states.has('drivechain'):
 		return false

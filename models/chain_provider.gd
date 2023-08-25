@@ -28,7 +28,7 @@ func _init(dict: Dictionary):
 	self.chain_type = dict.get('chain_type', 0)
 	
 	if self.id == "drivechain":
-		self.base_dir = Appstate.get_home() + "/" + dict.get('base_dir', '')
+		self.base_dir = Appstate.get_drivechain_dir()
 	else:
 		self.base_dir = "user://" + dict.get('base_dir', '')
 		
@@ -111,17 +111,20 @@ func read_conf():
 				
 				
 func write_start_script():
+	if FileAccess.file_exists(get_start_path()):
+		DirAccess.remove_absolute(get_start_path())
+		
+	var file = FileAccess.open(get_start_path(), FileAccess.WRITE)
 	match Appstate.get_platform():
-		Appstate.platform.LINUX:
-			if FileAccess.file_exists(get_start_path()):
-				DirAccess.remove_absolute(get_start_path())
-				
-			var file = FileAccess.open(get_start_path(), FileAccess.WRITE)
+		Appstate.platform.LINUX,Appstate.platform.MAC:
 			file.store_line("#!/bin/bash")
 			file.store_line(get_executable_path() + " --conf=" + get_conf_path())
-			file.close()
+		Appstate.platform.WIN:
+			file.store_line("start " + get_executable_path() + " --conf=" + get_conf_path())
 			
-			
+	file.close()
+	
+	
 func write_dir():
 	var dir = ProjectSettings.globalize_path(base_dir)
 	if not DirAccess.dir_exists_absolute(dir):
@@ -135,14 +138,18 @@ func write_dir():
 			
 func start_chain():
 	match Appstate.get_platform():
-		Appstate.platform.LINUX,Appstate.platform.MAC:
+		Appstate.platform.LINUX,Appstate.platform.MAC,Appstate.platform.WIN:
 			var pid = OS.create_process(get_start_path(), [], false)
 			print("Process with started with pid: " + str(pid))
 				
 				
 func get_start_path() -> String:
-	return ProjectSettings.globalize_path(base_dir + "/start.sh")
-	
+	match Appstate.get_platform():
+		Appstate.platform.LINUX,Appstate.platform.MAC:
+			return ProjectSettings.globalize_path(base_dir + "/start.sh")
+		Appstate.platform.WIN:
+			return ProjectSettings.globalize_path(base_dir + "/start.bat")
+	return ""
 	
 func get_conf_path() -> String:
 	return ProjectSettings.globalize_path(base_dir + "/" + id + ".conf")

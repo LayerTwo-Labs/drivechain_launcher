@@ -14,7 +14,7 @@ config/name="drivechain_launcher"
 run/main_scene="res://ui/main.tscn"
 config/use_custom_user_dir=true
 config/features=PackedStringArray("4.1", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://icon.png"
 
 [autoload]
 
@@ -25,10 +25,6 @@ Appstate="*res://autoloads/appstate.tscn"
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/aspect="expand"
-
-[dotnet]
-
-project/assembly_name="drivchain_launcher"
 
 [gui]
 

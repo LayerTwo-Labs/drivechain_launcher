@@ -73,6 +73,7 @@ text = "Testchain"
 vertical_alignment = 1
 
 [node name="SettingsButton" type="MenuButton" parent="Margin/VBox/Header"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
@@ -112,7 +113,7 @@ autowrap_mode = 2
 
 [node name="Footer" type="HBoxContainer" parent="Margin/VBox"]
 layout_mode = 2
-size_flags_vertical = 10
+size_flags_vertical = 8
 theme_override_constants/separation = 6
 
 [node name="StartButton" type="Button" parent="Margin/VBox/Footer"]
@@ -151,7 +152,7 @@ show_percentage = false
 
 [node name="DownloadButton" type="Button" parent="Margin/VBox/Footer/VBox"]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_vertical = 8
 focus_mode = 0
 theme = ExtResource("5_7y8kv")
 icon = ExtResource("6_qglv3")
