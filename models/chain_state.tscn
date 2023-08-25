@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://rh61eqjfg6qd"]
+
+[ext_resource type="Script" path="res://models/chain_state.gd" id="1_khdcu"]
+
+[node name="ChainState" type="Node2D"]
+script = ExtResource("1_khdcu")
+
+[node name="GetBlockHeightRequest" type="HTTPRequest" parent="."]
+
+[node name="MainChainMineRequest" type="HTTPRequest" parent="."]
+
+[node name="ListActiveSidechainsRequest" type="HTTPRequest" parent="."]
+
+[node name="StopChainRequest" type="HTTPRequest" parent="."]
+
+[connection signal="request_completed" from="GetBlockHeightRequest" to="." method="_on_get_block_height_request_completed"]
+[connection signal="request_completed" from="MainChainMineRequest" to="." method="_on_main_chain_mine_request_completed"]

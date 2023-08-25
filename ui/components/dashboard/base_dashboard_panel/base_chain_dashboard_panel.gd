@@ -2,6 +2,7 @@ extends PanelContainer
 class_name BaseChainDashboardPanel
 
 var chain_provider: ChainProvider
+var chain_state: ChainState
 
 var download_req: HTTPRequest
 var progress_timer: Timer
@@ -12,14 +13,25 @@ var progress_timer: Timer
 @onready var left_indicator = $LeftColor
 @onready var background = $BackgroundPattern
 @onready var start_button = $Margin/VBox/Footer/StartButton
-@onready var mine_button = $Margin/VBox/Footer/MineButton
+@onready var stop_button = $Margin/VBox/Footer/StopButton
+@onready var auto_mine_button = $Margin/VBox/Footer/Automine
+@onready var refresh_bmm_button = $Margin/VBox/Footer/RefreshBMM
 @onready var download_button = $Margin/VBox/Footer/VBox/DownloadButton
 @onready var progress_bar = $Margin/VBox/Footer/VBox/ProgressBar
 @onready var settings_button = $Margin/VBox/Header/SettingsButton
 
+var enabled_modulate: Color
+var disabled_modulate: Color
 
-func setup(_chain_provider: ChainProvider):
+func _ready():
+	Appstate.connect("chain_states_changed", self.update_view)
+	enabled_modulate = modulate
+	disabled_modulate = modulate.darkened(0.3)
+	
+	
+func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 	self.chain_provider = _chain_provider
+	self.chain_state = _chain_state
 	if chain_provider.chain_type == ChainProvider.c_type.MAIN:
 		left_indicator.visible = true
 		background.visible = true
@@ -30,36 +42,90 @@ func setup(_chain_provider: ChainProvider):
 	title.text = chain_provider.display_name
 	desc.text = chain_provider.description
 	
-	if chain_provider.is_ready_for_execution():
-		show_executable_state()
-	else:
-		show_download_state()
+	update_view()
+	
+	
+func update_view():
+	if chain_state == null:
+		show_unsupported_state()
+		return
 		
 	if not chain_provider.available_for_platform():
 		show_unsupported_state()
+		return
+	
+	if chain_provider.id == 'drivechain':
+		if not chain_provider.is_ready_for_execution():
+			show_download_state()
+		elif chain_provider.is_ready_for_execution() and chain_state.state != ChainState.c_state.RUNNING:
+			show_executable_state()
+		else:
+			show_running_state()
+	else:
+		if not chain_provider.is_ready_for_execution():
+			show_download_state()
+		elif chain_provider.is_ready_for_execution() and chain_state.state != ChainState.c_state.RUNNING:
+			if Appstate.drivechain_running():
+				show_executable_state()
+			else:
+				show_waiting_on_drivechain_state()
+		else:
+			show_running_state()
+	
+func show_waiting_on_drivechain_state():
+	download_button.visible = false
+	start_button.visible = false
+	stop_button.visible = false
+	auto_mine_button.visible = false
+	refresh_bmm_button.visible = false
+	secondary_desc.visible = true
+	modulate = enabled_modulate
+	
+	
+func show_running_state():
+	start_button.visible = false
+	stop_button.visible = true
+	download_button.visible = false
+	modulate = enabled_modulate
+	
+	if chain_provider.id == 'drivechain':
+		auto_mine_button.visible = true
+		auto_mine_button.set_pressed_no_signal(chain_state.automine)
+		refresh_bmm_button.visible = false
+	else:
+		auto_mine_button.visible = false
+		refresh_bmm_button.visible = true
+		refresh_bmm_button.set_pressed_no_signal(chain_state.refreshbmm)
 		
 		
 func show_executable_state():
 	start_button.visible = true
-	mine_button.visible = true
+	stop_button.visible = false
+	auto_mine_button.visible = false
+	refresh_bmm_button.visible = false
 	download_button.visible = false
-	start_button.disabled = false
+	modulate = enabled_modulate
 	
 	
 func show_download_state():
 	start_button.visible = false
-	mine_button.visible = false
+	stop_button.visible = false
+	auto_mine_button.visible = false
+	refresh_bmm_button.visible = false
 	download_button.visible = true
 	download_button.disabled = false
+	modulate = enabled_modulate
 	
 	
 func show_unsupported_state():
 	download_button.visible = false
 	start_button.visible = false
-	mine_button.visible = false
+	stop_button.visible = false
+	auto_mine_button.visible = false
+	refresh_bmm_button.visible = false
 	secondary_desc.visible = true
 	secondary_desc.text = "[i]This sidechain is currently not available.[/i]"
-	modulate = modulate.darkened(0.2)
+	modulate = disabled_modulate
 	
 	
 func download():
@@ -138,7 +204,7 @@ func unzip_file_and_setup_binary(zip_path: String):
 			chain_provider.write_start_script()
 			OS.execute("chmod", ["+x", ProjectSettings.globalize_path(chain_provider.get_start_path())])
 			
-	show_executable_state()
+	update_view()
 	
 	
 func reset_download():
@@ -155,4 +221,14 @@ func reset_download():
 
 
 func _on_start_button_pressed():
-	Appstate.start_chain(chain_provider)
+	chain_provider.start_chain()
+	
+	
+func _on_stop_button_pressed():
+	chain_state.stop_chain()
+	
+	
+func _on_automine_toggled(button_pressed):
+	chain_state.set_automine(button_pressed)
+	
+	

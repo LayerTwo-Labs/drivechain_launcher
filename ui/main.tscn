@@ -1,23 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://dscucqwnoepb1"]
+[gd_scene load_steps=5 format=3 uid="uid://dscucqwnoepb1"]
 
 [ext_resource type="Script" path="res://ui/main.gd" id="1_ur5w6"]
 [ext_resource type="PackedScene" uid="uid://dwhtby81ylt3s" path="res://ui/components/left_menu/left_menu.tscn" id="2_0lj2k"]
 [ext_resource type="PackedScene" uid="uid://bwg823t4rnqpy" path="res://ui/components/dashboard/dashboard.tscn" id="3_3v44j"]
 [ext_resource type="PackedScene" uid="uid://bommmvy1qyobc" path="res://ui/components/settings/settings.tscn" id="4_3j67w"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gxdun"]
-bg_color = Color(0.105882, 0.105882, 0.105882, 1)
-
 [node name="Main" type="CanvasLayer"]
 script = ExtResource("1_ur5w6")
-
-[node name="PanelContainer" type="PanelContainer" parent="."]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_gxdun")
 
 [node name="HBox" type="HBoxContainer" parent="."]
 anchors_preset = 15

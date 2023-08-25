@@ -12,6 +12,9 @@ var port: int
 var slot: int
 var chain_type: c_type
 
+var rpc_user: String
+var rpc_password: String
+
 enum c_type { MAIN, CORE, PLAIN, ETH, ZCASH, ZSIDE }
 
 func _init(dict: Dictionary):
@@ -89,6 +92,24 @@ func write_conf(force_write := true):
 	conf.close()
 	
 	
+func read_conf():
+	if not FileAccess.file_exists(get_conf_path()):
+		return
+		
+	var conf = FileAccess.open(get_conf_path(), FileAccess.READ)
+	var index = 0
+	while not conf.eof_reached():
+		var line = conf.get_line()
+		if line.begins_with("rpcuser"):
+			var user = line.split("=")
+			if user.size() == 2:
+				rpc_user = user[1]
+		elif line.begins_with("rpcpassword"):
+			var password = line.split("=")
+			if password.size() == 2:
+				rpc_password = password[1]
+				
+				
 func write_start_script():
 	match Appstate.get_platform():
 		Appstate.platform.LINUX:
@@ -111,6 +132,14 @@ func write_dir():
 			print("Sidechain directory found: " + dir)
 			
 			
+			
+func start_chain():
+	match Appstate.get_platform():
+		Appstate.platform.LINUX,Appstate.platform.MAC:
+			var pid = OS.create_process(get_start_path(), [], false)
+			print("Process with started with pid: " + str(pid))
+				
+				
 func get_start_path() -> String:
 	return ProjectSettings.globalize_path(base_dir + "/start.sh")
 	

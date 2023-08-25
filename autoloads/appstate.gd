@@ -5,10 +5,15 @@ enum platform { LINUX, MAC, WIN, UNSUPPORTED }
 const DEFAULT_CHAIN_PROVIDERS_PATH = "res://chain_providers.cfg"
 const CHAIN_PROVIDERS_PATH = "user://chain_providers.cfg"
 
+@onready var chain_state = preload("res://models/chain_state.tscn")
+
 var chain_providers_config: ConfigFile
-var chain_providers: Array[ChainProvider] = []
+
+var chain_providers: Dictionary = {}
+var chain_states: Dictionary = {}
 
 signal chain_providers_changed
+signal chain_states_changed
 
 func _ready():
 	if Appstate.get_platform() == platform.UNSUPPORTED:
@@ -19,11 +24,24 @@ func _ready():
 	save_config()
 	setup_directories()
 	setup_confs()
+	setup_chain_states()
 	
 	chain_providers_changed.emit()
 	
+	start_chain_states()
+	
 	
 func reset_everything():
+	
+	for i in chain_states:
+		chain_states[i].stop_chain()
+		await get_tree().create_timer(0.1).timeout
+		remove_child(chain_states[i])
+		chain_states[i].cleanup()
+		
+	chain_states.clear()
+	chain_providers.clear()
+	
 	var err = OS.move_to_trash(ProjectSettings.globalize_path(OS.get_user_data_dir()))
 	if err != OK:
 		print(err)
@@ -34,14 +52,16 @@ func reset_everything():
 		print(err)
 		return
 		
-	chain_providers.clear()
-	
+		
 	load_config(true)
 	save_config()
 	setup_directories()
 	setup_confs()
+	setup_chain_states()
 	
 	chain_providers_changed.emit()
+	
+	start_chain_states()
 	
 	
 func load_config(force_default = false):
@@ -73,32 +93,42 @@ func load_config(force_default = false):
 		var inner_dict: Dictionary = dict.get(k)
 		if inner_dict == null:
 			continue
-		chain_providers.push_back(ChainProvider.new(inner_dict))
+		var cp = ChainProvider.new(inner_dict)
+		chain_providers[cp.id] = cp
 		
 	print(str(chain_providers.size()) + " Chain Providers loaded from config")
 	
 	
 func setup_directories():
-	for cp in chain_providers:
-		cp.write_dir()
-			
-			
+	for k in chain_providers:
+		chain_providers[k].write_dir()
+		
+		
 func setup_confs():
-	for cp in chain_providers:
-		cp.write_conf()
+	for k in chain_providers:
+		chain_providers[k].write_conf()
+		chain_providers[k].read_conf()
+		
+		
+func setup_chain_states():
+	for k in chain_providers:
+		var cp = chain_providers[k]
+		if not chain_states.find_key(cp.id):
+			var cs = chain_state.instantiate()
+			cs.setup(cp)
+			chain_states[cp.id] = cs
+			add_child(cs)
+			
+			
+func start_chain_states():
+	for k in chain_states:
+		chain_states[k].start()
 		
 		
 func save_config():
 	chain_providers_config.save(CHAIN_PROVIDERS_PATH)
 	
 	
-func start_chain(chain_provider: ChainProvider):
-	match Appstate.get_platform():
-		Appstate.platform.LINUX,Appstate.platform.MAC:
-			var pid = OS.create_process(chain_provider.get_start_path(), [], false)
-			print("Process with started with pid: " + str(pid))
-			
-			
 static func get_platform() -> platform:
 	match OS.get_name():
 		"Windows", "UWP":
@@ -115,3 +145,9 @@ static func get_home() -> String:
 		Appstate.platform.WIN:
 			return OS.get_environment("USERPROFILE")
 	return OS.get_environment("HOME")
+
+
+func drivechain_running() -> bool:
+	if not chain_states.has('drivechain'):
+		return false
+	return chain_states['drivechain'].state == ChainState.c_state.RUNNING

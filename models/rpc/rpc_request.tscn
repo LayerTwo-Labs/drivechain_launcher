@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://bg21cx6484wx6"]
+
+[ext_resource type="Script" path="res://models/rpc/rpc_request.gd" id="1_fy5it"]
+
+[node name="RPCRequest" type="Node"]
+script = ExtResource("1_fy5it")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_request_completed"]

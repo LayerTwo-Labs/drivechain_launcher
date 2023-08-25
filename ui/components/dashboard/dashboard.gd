@@ -9,8 +9,8 @@ var panel = preload("res://ui/components/dashboard/base_dashboard_panel/base_cha
 func _ready():
 	Appstate.connect("chain_providers_changed", self._on_chain_providers_changed)
 	_on_chain_providers_changed()
-
-
+	
+	
 func _on_chain_providers_changed():
 	var current_panels = grid.get_children()
 	for p in current_panels:
@@ -18,7 +18,13 @@ func _on_chain_providers_changed():
 		p.queue_free()
 		
 	var chain_providers = Appstate.chain_providers
-	for cp in chain_providers:
-		var p = panel.instantiate()
-		grid.add_child(p)
-		p.setup(cp)
+	var chain_states = Appstate.chain_states
+	for k in chain_providers:
+		var cp = chain_providers[k]
+		if chain_states.has(k):
+			var cs = chain_states[k]
+			var p = panel.instantiate()
+			grid.add_child(p)
+			p.setup(cp, cs)
+			
+			
