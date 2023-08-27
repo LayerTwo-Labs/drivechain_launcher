@@ -13,10 +13,9 @@ If you'd like to build from source check below.
 
 ## Development Enviornment Prerequisites
 
-- Godot 4.1.1 (.NET) version. [Download Page](https://godotengine.org/download)
-- .NET Core 6+ [Download Page](https://dotnet.microsoft.com/en-us/download)
+- Godot 4.1.1 [Download Page](https://godotengine.org/download)
 
-Currently only scripted in GDScript, but will potentially use C# where that falls short.
+Currently only scripted in GDScript, but we could use the .NET version of Godot which brings C# support
 
 Once you've gotten your development environment setup
 
