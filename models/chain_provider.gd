@@ -43,6 +43,11 @@ func _init(dict: Dictionary):
 			self.download_url = dict.get('download_url_mac', '')
 			
 			
+			
+func set_download(dict: Dictionary):
+	pass
+	
+	
 func available_for_platform() -> bool:
 	return self.download_url != ""
 	

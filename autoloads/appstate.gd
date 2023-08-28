@@ -4,10 +4,12 @@ enum platform { LINUX, MAC, WIN, UNSUPPORTED }
 
 const DEFAULT_CHAIN_PROVIDERS_PATH = "res://chain_providers.cfg"
 const CHAIN_PROVIDERS_PATH = "user://chain_providers.cfg"
+const APP_CONFIG_PATH = "user://app.cfg"
 
 @onready var chain_state = preload("res://models/chain_state.tscn")
 
 var chain_providers_config: ConfigFile
+var app_config: ConfigFile
 
 var chain_providers: Dictionary = {}
 var chain_states: Dictionary = {}
@@ -20,9 +22,8 @@ func _ready():
 		push_error("Unsupported platfom")
 		get_tree().quit()
 		
-	DisplayServer.window_set_title("Drivechain Launcher")
-		
-	load_config(true)
+	load_app_config()
+	load_config()
 	save_config()
 	setup_directories()
 	setup_confs()
@@ -31,6 +32,25 @@ func _ready():
 	chain_providers_changed.emit()
 	
 	start_chain_states()
+	
+	
+func load_app_config():
+	
+	DisplayServer.window_set_title("Drivechain Launcher")
+	var dpi = DisplayServer.screen_get_dpi()
+	var scale_factor: float = clampf(floorf(dpi * 0.01), 1, 2)
+	var screen_size = DisplayServer.screen_get_size(0)
+	var new_screen_size = Vector2i(screen_size.x / 2, screen_size.y / 2)
+	
+	app_config = ConfigFile.new()
+	var err = app_config.load(APP_CONFIG_PATH)
+	if err != OK:
+		app_config.set_value("", "scale_factor", scale_factor)
+		app_config.save(APP_CONFIG_PATH)
+		
+	scale_factor = app_config.get_value("", "scale_factor", scale_factor)
+	DisplayServer.window_set_size(new_screen_size)
+	get_tree().root.set_content_scale_factor(scale_factor)
 	
 	
 func reset_everything():
@@ -54,8 +74,8 @@ func reset_everything():
 		print(err)
 		return
 		
-		
-	load_config(true)
+	load_app_config()
+	load_config()
 	save_config()
 	setup_directories()
 	setup_confs()
@@ -66,22 +86,17 @@ func reset_everything():
 	start_chain_states()
 	
 	
-func load_config(force_default = false):
+func load_config():
 	chain_providers_config = ConfigFile.new()
-	if not force_default:
-		var err = chain_providers_config.load(CHAIN_PROVIDERS_PATH)
-		if err != OK:
-			print(ProjectSettings.globalize_path(CHAIN_PROVIDERS_PATH) + " not found. Trying to load from embeded cfg")
-			err = chain_providers_config.load(DEFAULT_CHAIN_PROVIDERS_PATH)
-			if err != OK:
-				print(ProjectSettings.globalize_path(DEFAULT_CHAIN_PROVIDERS_PATH) + " not found. Something went terribly wrong")
-				get_tree().quit() # TODO: Set exit code
-	else:
-		var err = chain_providers_config.load(DEFAULT_CHAIN_PROVIDERS_PATH)
+	var err = chain_providers_config.load(CHAIN_PROVIDERS_PATH)
+	if err != OK:
+		print(ProjectSettings.globalize_path(CHAIN_PROVIDERS_PATH) + " not found. Trying to load from embeded cfg")
+		err = chain_providers_config.load(DEFAULT_CHAIN_PROVIDERS_PATH)
 		if err != OK:
 			print(ProjectSettings.globalize_path(DEFAULT_CHAIN_PROVIDERS_PATH) + " not found. Something went terribly wrong")
 			get_tree().quit() # TODO: Set exit code
-		
+				
+				
 	var sections = chain_providers_config.get_sections()
 	var dict = {}
 	for s in sections:
