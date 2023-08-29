@@ -41,6 +41,7 @@ func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 		
 	title.text = chain_provider.display_name
 	desc.text = chain_provider.description
+	#download_button.tooltip_text = _chain_provider.download_url
 	
 	update_view()
 	
@@ -125,7 +126,7 @@ func show_unsupported_state():
 	auto_mine_button.visible = false
 	refresh_bmm_button.visible = false
 	secondary_desc.visible = true
-	secondary_desc.text = "[i]This sidechain is currently not available.[/i]"
+	secondary_desc.text = "[i]This sidechain is currently not available for this platform[/i]"
 	modulate = disabled_modulate
 	
 	
@@ -190,9 +191,13 @@ func unzip_file_and_setup_binary(zip_path: String):
 		return
 		
 	var files = reader.get_files()
-	var binary_index = files.find(chain_provider.binary_zip_path)
-	
-	if binary_index >= 0:
+	var binary_index: int
+	for i in files.size():
+		if files[i].ends_with(chain_provider.binary_zip_path):
+			binary_index = i
+			break
+			
+	if binary_index != null && binary_index >= 0:
 		var path = files[binary_index]
 		var binary = reader.read_file(path)
 		

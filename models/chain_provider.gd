@@ -10,6 +10,7 @@ var binary_zip_path: String
 var executable_name: String
 var port: int
 var slot: int
+var version: String
 var chain_type: c_type
 
 var rpc_user: String
@@ -26,6 +27,7 @@ func _init(dict: Dictionary):
 	self.port = dict.get('port', -1)
 	self.slot = dict.get('slot', -1)
 	self.chain_type = dict.get('chain_type', 0)
+	self.version = dict.get('version', '')
 	
 	if self.id == "drivechain":
 		self.base_dir = Appstate.get_drivechain_dir()
@@ -36,18 +38,19 @@ func _init(dict: Dictionary):
 	
 	match Appstate.get_platform():
 		Appstate.platform.LINUX:
-			self.download_url = dict.get('download_url_linux', '')
+			var file_path = dict.get('download_file_linux', '')
+			if file_path != '':
+				self.download_url = dict.get('base_download_url') + "/" + file_path
 		Appstate.platform.WIN:
-			self.download_url = dict.get('download_url_win', '')
+			var file_path = dict.get('download_file_win', '')
+			if file_path != '':
+				self.download_url = dict.get('base_download_url') + "/" + file_path
 		Appstate.platform.MAC:
-			self.download_url = dict.get('download_url_mac', '')
+			var file_path = dict.get('download_file_mac', '')
+			if file_path != '':
+				self.download_url = dict.get('base_download_url') + "/" + file_path
 			
 			
-			
-func set_download(dict: Dictionary):
-	pass
-	
-	
 func available_for_platform() -> bool:
 	return self.download_url != ""
 	
@@ -119,13 +122,29 @@ func write_start_script():
 	if FileAccess.file_exists(get_start_path()):
 		DirAccess.remove_absolute(get_start_path())
 		
+	var cmd: String
+	match id:
+		"thunder":
+			var drivechain = Appstate.get_drivechain_provider()
+			if drivechain == null:
+				return
+				
+			var data_dir = " -d " + ProjectSettings.globalize_path(base_dir + "/data")
+			var net_addr = " -n " + "127.0.0.1:" + str(port)
+			var dc_addr = " -m " + "127.0.0.1:" + str(drivechain.port)
+			var dc_user = " -u " + drivechain.rpc_user
+			var dc_pass = " -p " + drivechain.rpc_password
+			cmd = get_executable_path() + data_dir + net_addr + dc_addr + dc_user + dc_pass
+		_:
+			cmd = get_executable_path() + " --conf=" + get_conf_path()
+		
 	var file = FileAccess.open(get_start_path(), FileAccess.WRITE)
 	match Appstate.get_platform():
 		Appstate.platform.LINUX,Appstate.platform.MAC:
 			file.store_line("#!/bin/bash")
-			file.store_line(get_executable_path() + " --conf=" + get_conf_path())
+			file.store_line(cmd)
 		Appstate.platform.WIN:
-			file.store_line("start " + get_executable_path() + " --conf=" + get_conf_path())
+			file.store_line("start " + cmd)
 			
 	file.close()
 	

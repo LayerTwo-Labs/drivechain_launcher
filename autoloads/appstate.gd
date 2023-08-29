@@ -5,11 +5,13 @@ enum platform { LINUX, MAC, WIN, UNSUPPORTED }
 const DEFAULT_CHAIN_PROVIDERS_PATH = "res://chain_providers.cfg"
 const CHAIN_PROVIDERS_PATH = "user://chain_providers.cfg"
 const APP_CONFIG_PATH = "user://app.cfg"
+const VERSION_CONFIG = "res://version.cfg"
 
 @onready var chain_state = preload("res://models/chain_state.tscn")
 
 var chain_providers_config: ConfigFile
 var app_config: ConfigFile
+var version_config: ConfigFile
 
 var chain_providers: Dictionary = {}
 var chain_states: Dictionary = {}
@@ -23,6 +25,7 @@ func _ready():
 		get_tree().quit()
 		
 	load_app_config()
+	load_version_config()
 	load_config()
 	save_config()
 	setup_directories()
@@ -74,7 +77,7 @@ func reset_everything():
 		print(err)
 		return
 		
-	load_app_config()
+	load_version_config()
 	load_config()
 	save_config()
 	setup_directories()
@@ -86,6 +89,15 @@ func reset_everything():
 	start_chain_states()
 	
 	
+	
+func load_version_config():
+	version_config = ConfigFile.new()
+	var err = version_config.load(VERSION_CONFIG)
+	if err != OK:
+		print(ProjectSettings.globalize_path(VERSION_CONFIG) + " not found. Something went terribly wrong")
+		get_tree().quit() # TODO: Set exit code
+		
+		
 func load_config():
 	chain_providers_config = ConfigFile.new()
 	var err = chain_providers_config.load(CHAIN_PROVIDERS_PATH)
@@ -104,7 +116,9 @@ func load_config():
 		var keys = chain_providers_config.get_section_keys(s)
 		for k in keys:
 			inner_dict[k] = chain_providers_config.get_value(s, k) #TODO: Default?
+			inner_dict['base_download_url'] = version_config.get_value("", "base_download_url")
 		dict[s] = inner_dict
+		
 		
 	for k in dict:
 		var inner_dict: Dictionary = dict.get(k)

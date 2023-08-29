@@ -1,5 +1,6 @@
 extends ScrollContainer
 
+@onready var drivechain = $VBox/Drivechain
 @onready var grid = $VBox/Grid
 
 var panel = preload("res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.tscn")
@@ -17,14 +18,33 @@ func _on_chain_providers_changed():
 		grid.remove_child(p)
 		p.queue_free()
 		
+	for p in drivechain.get_children():
+		drivechain.remove_child(p)
+		p.queue_free()
+		
+		
 	var chain_providers = Appstate.chain_providers
 	var chain_states = Appstate.chain_states
+	# add available providers first
 	for k in chain_providers:
 		var cp = chain_providers[k]
-		if chain_states.has(k):
-			var cs = chain_states[k]
-			var p = panel.instantiate()
-			grid.add_child(p)
-			p.setup(cp, cs)
-			
-			
+		if cp.available_for_platform():
+			if chain_states.has(k):
+				var cs = chain_states[k]
+				var p = panel.instantiate()
+				p.name = "panel_" + cp.id
+				if cp.id == "drivechain":
+					drivechain.add_child(p)
+				else:
+					grid.add_child(p)
+				p.setup(cp, cs)
+				
+	for k in chain_providers:
+		var cp = chain_providers[k]
+		if not cp.available_for_platform():
+			if chain_states.has(k):
+				var cs = chain_states[k]
+				var p = panel.instantiate()
+				p.name = "panel_" + cp.id
+				grid.add_child(p)
+				p.setup(cp, cs)
