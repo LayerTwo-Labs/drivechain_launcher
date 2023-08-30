@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bommmvy1qyobc"]
+[gd_scene load_steps=5 format=3 uid="uid://bommmvy1qyobc"]
 
 [ext_resource type="Script" path="res://ui/components/settings/settings.gd" id="1_00drh"]
 [ext_resource type="FontFile" uid="uid://lj5nmow7tv56" path="res://assets/fonts/Cantarell-Bold.ttf" id="1_ypfvs"]
+[ext_resource type="Texture2D" uid="uid://gt3mnhyhb64b" path="res://assets/images/folder-open-symbolic 1.svg" id="3_e8eqq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_icrj2"]
 content_margin_left = 8.0
@@ -50,6 +51,11 @@ focus_mode = 0
 placeholder_text = "/home/jdavis/.local/share/drivechain_launcher"
 editable = false
 
+[node name="Open" type="Button" parent="VBox/AppDataDir"]
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("3_e8eqq")
+
 [node name="SidechainsDataDir" type="HBoxContainer" parent="VBox"]
 layout_mode = 2
 size_flags_vertical = 4
@@ -65,6 +71,11 @@ size_flags_horizontal = 3
 focus_mode = 0
 placeholder_text = "/home/jdavis/.local/share/drivechain_launcher"
 editable = false
+
+[node name="Open" type="Button" parent="VBox/SidechainsDataDir"]
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("3_e8eqq")
 
 [node name="DrivechainDataDir" type="HBoxContainer" parent="VBox"]
 layout_mode = 2
@@ -82,6 +93,11 @@ focus_mode = 0
 placeholder_text = "/home/jdavis/.local/share/drivechain_launcher"
 editable = false
 
+[node name="Open" type="Button" parent="VBox/DrivechainDataDir"]
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("3_e8eqq")
+
 [node name="HSeparator2" type="HSeparator" parent="VBox"]
 layout_mode = 2
 
@@ -91,4 +107,7 @@ size_flags_horizontal = 0
 size_flags_vertical = 2
 text = "Reset Everything"
 
+[connection signal="pressed" from="VBox/AppDataDir/Open" to="." method="_on_app_data_open_pressed"]
+[connection signal="pressed" from="VBox/SidechainsDataDir/Open" to="." method="_on_sidechain_data_open_pressed"]
+[connection signal="pressed" from="VBox/DrivechainDataDir/Open" to="." method="_on_drivechain_data_open_pressed"]
 [connection signal="pressed" from="VBox/ResetButton" to="." method="_on_reset_button_pressed"]

@@ -205,10 +205,12 @@ func unzip_file_and_setup_binary(zip_path: String):
 			var save = FileAccess.open(chain_provider.get_executable_path(), FileAccess.WRITE)
 			save.store_buffer(binary)
 			save.close()
-			OS.execute("chmod", ["+x", chain_provider.get_executable_path()])
 			
 			chain_provider.write_start_script()
-			OS.execute("chmod", ["+x", ProjectSettings.globalize_path(chain_provider.get_start_path())])
+			
+			if Appstate.get_platform() != Appstate.platform.WIN:
+				OS.execute("chmod", ["+x", chain_provider.get_executable_path()])
+				OS.execute("chmod", ["+x", ProjectSettings.globalize_path(chain_provider.get_start_path())])
 			
 	update_view()
 	

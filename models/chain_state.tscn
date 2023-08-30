@@ -6,6 +6,7 @@
 script = ExtResource("1_khdcu")
 
 [node name="GetBlockHeightRequest" type="HTTPRequest" parent="."]
+timeout = 1.0
 
 [node name="AutomineMainChainRequest" type="HTTPRequest" parent="."]
 

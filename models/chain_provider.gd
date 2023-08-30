@@ -34,8 +34,7 @@ func _init(dict: Dictionary):
 	else:
 		self.base_dir = "user://" + dict.get('base_dir', '')
 		
-	self.executable_name = self.binary_zip_path.split("/")[-1]
-	
+		
 	match Appstate.get_platform():
 		Appstate.platform.LINUX:
 			var file_path = dict.get('download_file_linux', '')
@@ -45,12 +44,15 @@ func _init(dict: Dictionary):
 			var file_path = dict.get('download_file_win', '')
 			if file_path != '':
 				self.download_url = dict.get('base_download_url') + "/" + file_path
+			self.binary_zip_path += ".exe"
 		Appstate.platform.MAC:
 			var file_path = dict.get('download_file_mac', '')
 			if file_path != '':
 				self.download_url = dict.get('base_download_url') + "/" + file_path
 			
-			
+	self.executable_name = self.binary_zip_path.split("/")[-1]
+	
+	
 func available_for_platform() -> bool:
 	return self.download_url != ""
 	
@@ -117,7 +119,9 @@ func read_conf():
 			if password.size() == 2:
 				rpc_password = password[1]
 				
-				
+	conf.close()
+	
+	
 func write_start_script():
 	if FileAccess.file_exists(get_start_path()):
 		DirAccess.remove_absolute(get_start_path())

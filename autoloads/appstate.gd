@@ -41,7 +41,9 @@ func load_app_config():
 	
 	DisplayServer.window_set_title("Drivechain Launcher")
 	var dpi = DisplayServer.screen_get_dpi()
-	var scale_factor: float = clampf(floorf(dpi * 0.01), 1, 2)
+	print(dpi)
+	var scale_factor: float = clampf(snappedf(dpi * 0.01, 0.1), 1, 2)
+	print(scale_factor)
 	var screen_size = DisplayServer.screen_get_size(0)
 	var new_screen_size = Vector2i(screen_size.x / 2, screen_size.y / 2)
 	
@@ -51,7 +53,9 @@ func load_app_config():
 		app_config.set_value("", "scale_factor", scale_factor)
 		app_config.save(APP_CONFIG_PATH)
 		
-	scale_factor = app_config.get_value("", "scale_factor", scale_factor)
+		
+	#scale_factor = 1.5#app_config.get_value("", "scale_factor", scale_factor)
+	print(scale_factor)
 	DisplayServer.window_set_size(new_screen_size)
 	get_tree().root.set_content_scale_factor(scale_factor)
 	
@@ -182,7 +186,7 @@ static func get_drivechain_dir() -> String:
 		Appstate.platform.LINUX:
 			return get_home() + "/.drivechain"
 		Appstate.platform.WIN,Appstate.platform.MAC:
-			return get_home() + "/Drivechain"
+			return OS.get_environment("USERPROFILE") + "/AppData/Roaming/Drivechain"
 	return ""
 	
 func drivechain_running() -> bool:

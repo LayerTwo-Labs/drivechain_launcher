@@ -47,7 +47,7 @@ func make_request(method: String, params: Variant, http_request: HTTPRequest):
 	var jsonrpc := JSONRPC.new()
 	var req = jsonrpc.make_request(method, params, 1)
 	
-	http_request.request("http://localhost:" + str(chain_provider.port), headers, HTTPClient.METHOD_POST, JSON.stringify(req))
+	http_request.request("http://127.0.0.1:" + str(chain_provider.port), headers, HTTPClient.METHOD_POST, JSON.stringify(req))
 	
 	
 func get_result(response_code, body) -> Dictionary:
@@ -71,6 +71,7 @@ func request_block_height():
 	
 	
 func _on_get_block_height_request_completed(_result, response_code, _headers, body):
+	#print(response_code)
 	var res = get_result(response_code, body)
 	if res.has("result"):
 		if height != res.result:
