@@ -24,90 +24,140 @@ script = ExtResource("1_00drh")
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 16
 
-[node name="Title" type="Label" parent="VBox"]
+[node name="Titlebar" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Title" type="Label" parent="VBox/Titlebar"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_ypfvs")
 theme_override_font_sizes/font_size = 24
 text = "Settings"
+vertical_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="VBox"]
+[node name="Border" type="HSeparator" parent="VBox/Titlebar"]
 layout_mode = 2
 
-[node name="AppDataDir" type="HBoxContainer" parent="VBox"]
+[node name="DirectoriesSettings" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/DirectoriesSettings"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.415686, 0.415686, 0.415686, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_ypfvs")
+text = "Data Directories"
+vertical_alignment = 1
+
+[node name="AppDataDir" type="HBoxContainer" parent="VBox/DirectoriesSettings"]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="VBox/AppDataDir"]
+[node name="Label" type="Label" parent="VBox/DirectoriesSettings/AppDataDir"]
 layout_mode = 2
 size_flags_vertical = 8
-text = "Application Data Directory"
+text = "Application Data Directory:"
 
-[node name="Value" type="LineEdit" parent="VBox/AppDataDir"]
+[node name="Value" type="LineEdit" parent="VBox/DirectoriesSettings/AppDataDir"]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
 placeholder_text = "/home/jdavis/.local/share/drivechain_launcher"
 editable = false
 
-[node name="Open" type="Button" parent="VBox/AppDataDir"]
+[node name="Open" type="Button" parent="VBox/DirectoriesSettings/AppDataDir"]
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("3_e8eqq")
 
-[node name="SidechainsDataDir" type="HBoxContainer" parent="VBox"]
+[node name="SidechainsDataDir" type="HBoxContainer" parent="VBox/DirectoriesSettings"]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="VBox/SidechainsDataDir"]
+[node name="Label" type="Label" parent="VBox/DirectoriesSettings/SidechainsDataDir"]
 layout_mode = 2
 size_flags_vertical = 8
-text = "Sidechains Data Directory"
+text = "Sidechains Data Directory:"
 
-[node name="Value" type="LineEdit" parent="VBox/SidechainsDataDir"]
+[node name="Value" type="LineEdit" parent="VBox/DirectoriesSettings/SidechainsDataDir"]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
 placeholder_text = "/home/jdavis/.local/share/drivechain_launcher"
 editable = false
 
-[node name="Open" type="Button" parent="VBox/SidechainsDataDir"]
+[node name="Open" type="Button" parent="VBox/DirectoriesSettings/SidechainsDataDir"]
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("3_e8eqq")
 
-[node name="DrivechainDataDir" type="HBoxContainer" parent="VBox"]
+[node name="DrivechainDataDir" type="HBoxContainer" parent="VBox/DirectoriesSettings"]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="VBox/DrivechainDataDir"]
+[node name="Label" type="Label" parent="VBox/DirectoriesSettings/DrivechainDataDir"]
 layout_mode = 2
 size_flags_vertical = 8
-text = "Drivechain Data Directory"
+text = "Drivechain Data Directory:"
 
-[node name="Value" type="LineEdit" parent="VBox/DrivechainDataDir"]
+[node name="Value" type="LineEdit" parent="VBox/DirectoriesSettings/DrivechainDataDir"]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
 placeholder_text = "/home/jdavis/.local/share/drivechain_launcher"
 editable = false
 
-[node name="Open" type="Button" parent="VBox/DrivechainDataDir"]
+[node name="Open" type="Button" parent="VBox/DirectoriesSettings/DrivechainDataDir"]
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("3_e8eqq")
 
-[node name="HSeparator2" type="HSeparator" parent="VBox"]
+[node name="AppSettings" type="VBoxContainer" parent="VBox"]
 layout_mode = 2
+theme_override_constants/separation = 8
 
-[node name="ResetButton" type="Button" parent="VBox"]
+[node name="Label" type="Label" parent="VBox/AppSettings"]
 layout_mode = 2
-size_flags_horizontal = 0
+theme_override_colors/font_color = Color(0.415686, 0.415686, 0.415686, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_ypfvs")
+text = "App Settings"
+vertical_alignment = 1
+
+[node name="HBox" type="HBoxContainer" parent="VBox/AppSettings"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="VBox/AppSettings/HBox"]
+layout_mode = 2
+text = "Display Scale"
+
+[node name="ScaleSpin" type="SpinBox" parent="VBox/AppSettings/HBox"]
+layout_mode = 2
+min_value = 1.0
+max_value = 2.0
+step = 0.1
+value = 1.0
+
+[node name="Footer" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="Border" type="HSeparator" parent="VBox/Footer"]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="ResetButton" type="Button" parent="VBox/Footer"]
+layout_mode = 2
+size_flags_horizontal = 8
 size_flags_vertical = 2
 text = "Reset Everything"
 
-[connection signal="pressed" from="VBox/AppDataDir/Open" to="." method="_on_app_data_open_pressed"]
-[connection signal="pressed" from="VBox/SidechainsDataDir/Open" to="." method="_on_sidechain_data_open_pressed"]
-[connection signal="pressed" from="VBox/DrivechainDataDir/Open" to="." method="_on_drivechain_data_open_pressed"]
-[connection signal="pressed" from="VBox/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="VBox/DirectoriesSettings/AppDataDir/Open" to="." method="_on_app_data_open_pressed"]
+[connection signal="pressed" from="VBox/DirectoriesSettings/SidechainsDataDir/Open" to="." method="_on_sidechain_data_open_pressed"]
+[connection signal="pressed" from="VBox/DirectoriesSettings/DrivechainDataDir/Open" to="." method="_on_drivechain_data_open_pressed"]
+[connection signal="value_changed" from="VBox/AppSettings/HBox/ScaleSpin" to="." method="_on_scale_spin_value_changed"]
+[connection signal="pressed" from="VBox/Footer/ResetButton" to="." method="_on_reset_button_pressed"]

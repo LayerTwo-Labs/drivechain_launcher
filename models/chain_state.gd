@@ -34,6 +34,7 @@ func set_automine(value):
 	
 func start():
 	request_block_height()
+	set_automine(true)
 	
 	
 func make_request(method: String, params: Variant, http_request: HTTPRequest):
@@ -71,7 +72,6 @@ func request_block_height():
 	
 	
 func _on_get_block_height_request_completed(_result, response_code, _headers, body):
-	#print(response_code)
 	var res = get_result(response_code, body)
 	if res.has("result"):
 		if height != res.result:
@@ -93,7 +93,7 @@ func request_automine():
 	make_request("generate", [1], automine_request)
 	
 	
-func _on_automine_mainchain_request_completed(_result, response_code, _headers, body):
+func _on_automine_mainchain_request_completed(_result, _response_code, _headers, _body):
 	if automine:
 		await get_tree().create_timer(1).timeout
 		request_automine()

@@ -61,6 +61,7 @@ corner_radius_bottom_left = 4
 corner_detail = 5
 
 [resource]
+Button/colors/font_color = Color(1, 1, 1, 1)
 Button/constants/h_separation = 4
 Button/constants/icon_max_width = 24
 Button/font_sizes/font_size = 14

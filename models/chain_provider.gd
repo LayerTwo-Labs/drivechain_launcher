@@ -8,6 +8,8 @@ var download_url: String
 var base_dir: String
 var binary_zip_path: String
 var executable_name: String
+var binary_zip_size: int
+var binary_zip_hash: String
 var port: int
 var slot: int
 var version: String
@@ -34,21 +36,26 @@ func _init(dict: Dictionary):
 	else:
 		self.base_dir = "user://" + dict.get('base_dir', '')
 		
-		
 	match Appstate.get_platform():
 		Appstate.platform.LINUX:
 			var file_path = dict.get('download_file_linux', '')
 			if file_path != '':
 				self.download_url = dict.get('base_download_url') + "/" + file_path
+				self.binary_zip_hash = dict.get('download_hash_linux', '')
+				self.binary_zip_size = dict.get('download_size_linux', 0)
 		Appstate.platform.WIN:
 			var file_path = dict.get('download_file_win', '')
 			if file_path != '':
 				self.download_url = dict.get('base_download_url') + "/" + file_path
-			self.binary_zip_path += ".exe"
+				self.binary_zip_path += ".exe"
+				self.binary_zip_hash = dict.get('download_hash_linux', '')
+				self.binary_zip_size = dict.get('download_size_linux', 0)
 		Appstate.platform.MAC:
 			var file_path = dict.get('download_file_mac', '')
 			if file_path != '':
 				self.download_url = dict.get('base_download_url') + "/" + file_path
+				self.binary_zip_hash = dict.get('download_hash_linux', '')
+				self.binary_zip_size = dict.get('download_size_linux', 0)
 			
 	self.executable_name = self.binary_zip_path.split("/")[-1]
 	
@@ -107,7 +114,6 @@ func read_conf():
 		return
 		
 	var conf = FileAccess.open(get_conf_path(), FileAccess.READ)
-	var index = 0
 	while not conf.eof_reached():
 		var line = conf.get_line()
 		if line.begins_with("rpcuser"):
@@ -186,4 +192,7 @@ func get_conf_path() -> String:
 func get_executable_path() -> String:
 	return ProjectSettings.globalize_path(base_dir + "/" + executable_name)
 	
+	
+func get_local_zip_hash() -> String:
+	return FileAccess.get_sha256(ProjectSettings.globalize_path(base_dir + "/" + id + ".zip"))
 	

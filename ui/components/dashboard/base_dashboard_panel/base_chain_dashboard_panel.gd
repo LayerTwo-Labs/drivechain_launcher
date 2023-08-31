@@ -41,6 +41,7 @@ func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 		
 	title.text = chain_provider.display_name
 	desc.text = chain_provider.description
+	download_button.text = str(int(_chain_provider.binary_zip_size * 0.000001)) + " mb"
 	#download_button.tooltip_text = _chain_provider.download_url
 	
 	update_view()
@@ -253,5 +254,9 @@ func _on_stop_button_pressed():
 	
 func _on_automine_toggled(button_pressed):
 	chain_state.set_automine(button_pressed)
+	
+	
+func _on_info_button_pressed():
+	Appstate.show_chain_provider_info(self.chain_provider)
 	
 	
