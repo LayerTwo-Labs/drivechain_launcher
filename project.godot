@@ -14,6 +14,7 @@ config/name="drivechain_launcher"
 run/main_scene="res://ui/main.tscn"
 config/use_custom_user_dir=true
 config/features=PackedStringArray("4.1", "Forward Plus")
+boot_splash/show_image=false
 config/icon="res://icon.png"
 
 [autoload]
@@ -26,6 +27,10 @@ window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/aspect="expand"
 
+[filesystem]
+
+import/blender/enabled=false
+
 [gui]
 
 theme/custom="res://ui/themes/default_dark.tres"
@@ -35,5 +40,6 @@ theme/default_font_generate_mipmaps=true
 
 [rendering]
 
+renderer/rendering_method="mobile"
 environment/defaults/default_clear_color=Color(0, 0, 0, 0)
 viewport/transparent_background=true
