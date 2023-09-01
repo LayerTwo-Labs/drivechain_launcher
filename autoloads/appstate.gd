@@ -108,7 +108,19 @@ func load_version_config():
 		print(ProjectSettings.globalize_path(VERSION_CONFIG) + " not found. Something went terribly wrong")
 		get_tree().quit() # TODO: Set exit code
 		
-		
+	var version = version_config.get_value("", "version")
+	var current_version = app_config.get_value("", "version", "")
+	if current_version == "":
+		app_config.set_value("", "version", version)
+		app_config.save(APP_CONFIG_PATH)
+		return
+	else:
+		if version != current_version:
+			app_config.set_value("", "version", version)
+			app_config.save(APP_CONFIG_PATH)
+			reset_everything()
+			
+			
 func load_config():
 	chain_providers_config = ConfigFile.new()
 	var err = chain_providers_config.load(CHAIN_PROVIDERS_PATH)
