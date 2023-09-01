@@ -150,8 +150,12 @@ func write_start_script():
 		
 	var file = FileAccess.open(get_start_path(), FileAccess.WRITE)
 	match Appstate.get_platform():
-		Appstate.platform.LINUX,Appstate.platform.MAC:
+		Appstate.platform.LINUX:
 			file.store_line("#!/bin/bash")
+			file.store_line(cmd)
+		Appstate.platform.MAC:
+			file.store_line("#!/bin/bash")
+			cmd = cmd.replace("Application Support", "Application\\ Support")
 			file.store_line(cmd)
 		Appstate.platform.WIN:
 			file.store_line("start " + cmd)

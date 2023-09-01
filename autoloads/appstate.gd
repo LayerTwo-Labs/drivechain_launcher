@@ -193,8 +193,10 @@ func get_drivechain_dir() -> String:
 	match get_platform():
 		Appstate.platform.LINUX:
 			return get_home() + "/.drivechain"
-		Appstate.platform.WIN,Appstate.platform.MAC:
-			return OS.get_environment("USERPROFILE") + "/AppData/Roaming/Drivechain"
+		Appstate.platform.WIN:
+			return get_home() + "/AppData/Roaming/Drivechain"
+		Appstate.platform.MAC:
+			return get_home() + "/Library/Application Support/Drivechain"
 	return ""
 	
 	
