@@ -103,6 +103,7 @@ func show_running_state():
 		
 func show_executable_state():
 	start_button.visible = true
+	start_button.disabled = false
 	stop_button.visible = false
 	auto_mine_button.visible = false
 	refresh_bmm_button.visible = false
@@ -242,6 +243,8 @@ func _on_start_button_pressed():
 			chain_provider.start_chain()
 	else:
 		chain_provider.start_chain()
+		
+	start_button.disabled = true
 	
 	
 func _on_stop_button_pressed():
