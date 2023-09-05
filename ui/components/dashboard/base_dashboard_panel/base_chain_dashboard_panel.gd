@@ -102,6 +102,7 @@ func show_running_state():
 		
 		
 func show_executable_state():
+	settings_button.disabled = false
 	start_button.visible = true
 	start_button.disabled = false
 	stop_button.visible = false
@@ -112,6 +113,7 @@ func show_executable_state():
 	
 	
 func show_download_state():
+	settings_button.disabled = false
 	start_button.visible = false
 	stop_button.visible = false
 	auto_mine_button.visible = false
@@ -122,6 +124,7 @@ func show_download_state():
 	
 	
 func show_unsupported_state():
+	settings_button.disabled = true
 	download_button.visible = false
 	start_button.visible = false
 	stop_button.visible = false
