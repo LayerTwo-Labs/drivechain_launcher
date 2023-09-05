@@ -72,27 +72,6 @@ layout_mode = 2
 focus_mode = 0
 icon = ExtResource("3_e8eqq")
 
-[node name="SidechainsDataDir" type="HBoxContainer" parent="VBox/DirectoriesSettings"]
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="Label" type="Label" parent="VBox/DirectoriesSettings/SidechainsDataDir"]
-layout_mode = 2
-size_flags_vertical = 8
-text = "Sidechains Data Directory:"
-
-[node name="Value" type="LineEdit" parent="VBox/DirectoriesSettings/SidechainsDataDir"]
-layout_mode = 2
-size_flags_horizontal = 3
-focus_mode = 0
-placeholder_text = "/home/jdavis/.local/share/drivechain_launcher"
-editable = false
-
-[node name="Open" type="Button" parent="VBox/DirectoriesSettings/SidechainsDataDir"]
-layout_mode = 2
-focus_mode = 0
-icon = ExtResource("3_e8eqq")
-
 [node name="DrivechainDataDir" type="HBoxContainer" parent="VBox/DirectoriesSettings"]
 layout_mode = 2
 size_flags_vertical = 4
@@ -157,7 +136,6 @@ size_flags_vertical = 2
 text = "Reset Everything"
 
 [connection signal="pressed" from="VBox/DirectoriesSettings/AppDataDir/Open" to="." method="_on_app_data_open_pressed"]
-[connection signal="pressed" from="VBox/DirectoriesSettings/SidechainsDataDir/Open" to="." method="_on_sidechain_data_open_pressed"]
 [connection signal="pressed" from="VBox/DirectoriesSettings/DrivechainDataDir/Open" to="." method="_on_drivechain_data_open_pressed"]
 [connection signal="value_changed" from="VBox/AppSettings/HBox/ScaleSpin" to="." method="_on_scale_spin_value_changed"]
 [connection signal="pressed" from="VBox/Footer/ResetButton" to="." method="_on_reset_button_pressed"]

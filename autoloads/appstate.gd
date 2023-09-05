@@ -76,15 +76,15 @@ func reset_everything():
 		remove_child(chain_states[i])
 		chain_states[i].cleanup()
 		
+	for i in chain_providers:
+		var err = OS.move_to_trash(ProjectSettings.globalize_path(chain_providers[i].base_dir))
+		if err != OK:
+			print(err)
+		
 	chain_states.clear()
 	chain_providers.clear()
 	
 	var err = OS.move_to_trash(ProjectSettings.globalize_path(OS.get_user_data_dir()))
-	if err != OK:
-		print(err)
-		return
-		
-	err = OS.move_to_trash(ProjectSettings.globalize_path(Appstate.get_drivechain_dir()))
 	if err != OK:
 		print(err)
 		return

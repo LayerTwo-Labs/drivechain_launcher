@@ -31,11 +31,6 @@ func _init(dict: Dictionary):
 	self.chain_type = dict.get('chain_type', 0)
 	self.version = dict.get('version', '')
 	
-	if self.id == "drivechain":
-		self.base_dir = Appstate.get_drivechain_dir()
-	else:
-		self.base_dir = "user://" + dict.get('base_dir', '')
-		
 	match Appstate.get_platform():
 		Appstate.platform.LINUX:
 			var file_path = dict.get('download_file_linux', '')
@@ -43,6 +38,7 @@ func _init(dict: Dictionary):
 				self.download_url = dict.get('base_download_url') + "/" + file_path
 				self.binary_zip_hash = dict.get('download_hash_linux', '')
 				self.binary_zip_size = dict.get('download_size_linux', 0)
+			self.base_dir = Appstate.get_home() + "/" + dict.get('base_dir_linux', '')
 		Appstate.platform.WIN:
 			var file_path = dict.get('download_file_win', '')
 			if file_path != '':
@@ -50,12 +46,14 @@ func _init(dict: Dictionary):
 				self.binary_zip_path += ".exe"
 				self.binary_zip_hash = dict.get('download_hash_linux', '')
 				self.binary_zip_size = dict.get('download_size_linux', 0)
+			self.base_dir = Appstate.get_home() + "/AppData/Roaming/" + dict.get('base_dir_win', '')
 		Appstate.platform.MAC:
 			var file_path = dict.get('download_file_mac', '')
 			if file_path != '':
 				self.download_url = dict.get('base_download_url') + "/" + file_path
 				self.binary_zip_hash = dict.get('download_hash_linux', '')
 				self.binary_zip_size = dict.get('download_size_linux', 0)
+			self.base_dir = Appstate.get_home() + "/Library/Application Support/" + dict.get('base_dir_mac', '')
 			
 	self.executable_name = self.binary_zip_path.split("/")[-1]
 	
