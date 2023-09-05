@@ -106,7 +106,7 @@ func request_create_sidechain_proposal(_chain_provider: ChainProvider) -> bool:
 	make_request("createsidechainproposal", [_chain_provider.slot, _chain_provider.id], create_sidechain_proposal_request)
 	var completed = await create_sidechain_proposal_request.request_completed
 	if completed.size() >= 2 and completed[1] == 200:
-		make_request("generate", [201], mainchain_mine_request)
+		make_request("generate", [21], mainchain_mine_request)
 		await mainchain_mine_request.request_completed
 		return true
 		
