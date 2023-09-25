@@ -84,7 +84,7 @@ func write_conf(force_write := true):
 			conf.store_line("regtest=1")
 			conf.store_line("server=1")
 			conf.store_line("datadir=" + ProjectSettings.globalize_path(base_dir))
-		"testchain","bitassets":
+		"testchain","bitassets","zside":
 			conf.store_line("rpcuser=user")
 			conf.store_line("rpcpassword=password")
 			conf.store_line("rpcport=" + str(port))
@@ -132,17 +132,18 @@ func write_start_script():
 		
 	var cmd: String
 	match id:
-		"thunder":
+		"thunder","bitnames":
 			var drivechain = Appstate.get_drivechain_provider()
 			if drivechain == null:
 				return
 				
 			var data_dir = " -d " + ProjectSettings.globalize_path(base_dir + "/data")
-			var net_addr = " -n " + "127.0.0.1:" + str(port)
+			var net_addr = " -n " + "127.0.0.1:" + str(port * 2)
 			var dc_addr = " -m " + "127.0.0.1:" + str(drivechain.port)
+			var rpc_addr = " -r" + "127.0.0.1:" + str(port)
 			var dc_user = " -u " + drivechain.rpc_user
 			var dc_pass = " -p " + drivechain.rpc_password
-			cmd = get_executable_path() + data_dir + net_addr + dc_addr + dc_user + dc_pass
+			cmd = get_executable_path() + data_dir + net_addr + dc_addr + dc_user + dc_pass + rpc_addr
 		_:
 			cmd = get_executable_path() + " --conf=" + get_conf_path()
 		
@@ -175,8 +176,16 @@ func write_dir():
 func start_chain():
 	match Appstate.get_platform():
 		Appstate.platform.LINUX,Appstate.platform.MAC,Appstate.platform.WIN:
-			var pid = OS.create_process(get_start_path(), [], false)
-			print("Process with started with pid: " + str(pid))
+			if id == "zside":
+				var dir = DirAccess.open(ProjectSettings.globalize_path(Appstate.get_home() + "/.zcash-params"))
+				if dir == null:
+					Appstate.show_zparams_modal(self)
+				else:
+					var pid = OS.create_process(get_start_path(), [], false)
+					print("Process with started with pid: " + str(pid))
+			else:
+				var pid = OS.create_process(get_start_path(), [], false)
+				print("Process with started with pid: " + str(pid))
 				
 				
 func get_start_path() -> String:

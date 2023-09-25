@@ -9,6 +9,7 @@ const VERSION_CONFIG = "res://version.cfg"
 
 @onready var chain_state = preload("res://models/chain_state.tscn")
 @onready var chain_provider_info = preload("res://ui/components/dashboard/chain_providers_info/chain_provider_info.tscn")
+@onready var z_params_modal = preload("res://ui/components/dashboard/z_params_modal/z_params_modal.tscn")
 
 var chain_providers_config: ConfigFile
 var app_config: ConfigFile
@@ -237,3 +238,8 @@ func show_chain_provider_info(chain_provider: ChainProvider):
 	info.setup(chain_provider)
 	
 	
+func show_zparams_modal(chain_provider: ChainProvider):
+	var zparams = z_params_modal.instantiate()
+	zparams.name = "z_params_modal"
+	get_tree().root.get_node("Main").add_child(zparams)
+	zparams.setup(chain_provider)

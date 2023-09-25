@@ -202,6 +202,14 @@ func unzip_file_and_setup_binary(zip_path: String):
 			binary_index = i
 			break
 			
+	var zside_params_index = -1
+	var zside_params_name = "zside-fetch-params.sh"
+	if chain_provider.id == "zside":
+		for i in files.size():
+			if files[i].ends_with(zside_params_name):
+				zside_params_index = i
+				break
+			
 	if binary_index != null && binary_index >= 0:
 		var path = files[binary_index]
 		var binary = reader.read_file(path)
@@ -210,6 +218,17 @@ func unzip_file_and_setup_binary(zip_path: String):
 			var save = FileAccess.open(chain_provider.get_executable_path(), FileAccess.WRITE)
 			save.store_buffer(binary)
 			save.close()
+			
+			if zside_params_index > -1:
+				var zside_params = files[zside_params_index]
+				var zside_binary = reader.read_file(zside_params)
+				if zside_binary.size() > 0:
+					var save_zside_params = FileAccess.open(ProjectSettings.globalize_path(chain_provider.base_dir + "/" + zside_params_name), FileAccess.WRITE)
+					save_zside_params.store_buffer(zside_binary)
+					save_zside_params.close()
+					
+					if Appstate.get_platform() != Appstate.platform.WIN:
+						OS.execute("chmod", ["+x", ProjectSettings.globalize_path(chain_provider.base_dir + "/" + zside_params_name)])
 			
 			chain_provider.write_start_script()
 			

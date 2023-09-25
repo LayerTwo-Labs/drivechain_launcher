@@ -3,7 +3,7 @@ class_name ChainState
 
 var id: String
 var state: c_state
-var height: int = 0
+var height: int = -1
 var automine: bool = false
 var refreshbmm: bool = false
 
