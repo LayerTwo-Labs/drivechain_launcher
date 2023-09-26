@@ -13,19 +13,14 @@ config_version=5
 config/name="drivechain_launcher"
 run/main_scene="res://ui/main.tscn"
 config/use_custom_user_dir=true
-config/features=PackedStringArray("4.1", "Forward Plus")
-boot_splash/show_image=false
+config/features=PackedStringArray("4.1", "GL Compatibility")
 config/icon="res://icon.png"
+config/macos_native_icon="res://icon.icns"
+config/windows_native_icon="res://icon.ico"
 
 [autoload]
 
 Appstate="*res://autoloads/appstate.tscn"
-
-[display]
-
-window/size/viewport_width=1280
-window/size/viewport_height=720
-window/stretch/aspect="expand"
 
 [filesystem]
 
@@ -36,10 +31,8 @@ import/blender/enabled=false
 theme/custom="res://ui/themes/default_dark.tres"
 theme/custom_font="res://assets/fonts/Cantarell-Regular.ttf"
 theme/default_font_multichannel_signed_distance_field=true
-theme/default_font_generate_mipmaps=true
 
 [rendering]
 
-renderer/rendering_method="mobile"
-environment/defaults/default_clear_color=Color(0, 0, 0, 0)
-viewport/transparent_background=true
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

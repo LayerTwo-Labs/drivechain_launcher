@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://bommmvy1qyobc"]
 
 [ext_resource type="Script" path="res://ui/components/settings/settings.gd" id="1_00drh"]
-[ext_resource type="FontFile" uid="uid://lj5nmow7tv56" path="res://assets/fonts/Cantarell-Bold.ttf" id="1_ypfvs"]
-[ext_resource type="Texture2D" uid="uid://gt3mnhyhb64b" path="res://assets/images/folder-open-symbolic 1.svg" id="3_e8eqq"]
+[ext_resource type="FontFile" uid="uid://b1w37357tl3er" path="res://assets/fonts/Cantarell-Bold.ttf" id="1_ypfvs"]
+[ext_resource type="Texture2D" uid="uid://hcq0d87vm0xk" path="res://assets/images/folder-open-symbolic 1.svg" id="3_e8eqq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_icrj2"]
 content_margin_left = 8.0

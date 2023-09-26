@@ -1,14 +1,14 @@
 [gd_scene load_steps=11 format=3 uid="uid://yhgodesyh1pt"]
 
-[ext_resource type="Texture2D" uid="uid://cn1oru7132l84" path="res://assets/images/pattern_33.png" id="1_13ux5"]
+[ext_resource type="Texture2D" uid="uid://2xouba13q8q7" path="res://assets/images/pattern_33.png" id="1_13ux5"]
 [ext_resource type="Script" path="res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.gd" id="1_6647v"]
-[ext_resource type="Texture2D" uid="uid://6jpcn5jo3lak" path="res://assets/images/chain.svg" id="2_fp0rc"]
-[ext_resource type="FontFile" uid="uid://lj5nmow7tv56" path="res://assets/fonts/Cantarell-Bold.ttf" id="3_ckr60"]
-[ext_resource type="Texture2D" uid="uid://ccs1lrfla0g35" path="res://assets/images/play-symbolic.svg" id="4_a5xlm"]
+[ext_resource type="Texture2D" uid="uid://drsftlr0wcb3m" path="res://assets/images/chain.svg" id="2_fp0rc"]
+[ext_resource type="FontFile" uid="uid://b1w37357tl3er" path="res://assets/fonts/Cantarell-Bold.ttf" id="3_ckr60"]
+[ext_resource type="Texture2D" uid="uid://bd7416ly17qhn" path="res://assets/images/play-symbolic.svg" id="4_a5xlm"]
 [ext_resource type="Theme" uid="uid://ckf7x64em5bhq" path="res://ui/themes/important_button_dark.tres" id="5_7y8kv"]
-[ext_resource type="Texture2D" uid="uid://cuvaox8ybag4m" path="res://assets/images/info-symbolic 1.svg" id="5_pnoaf"]
-[ext_resource type="Texture2D" uid="uid://bp5bexsgjlk4" path="res://assets/images/download-cloud-line.svg" id="6_qglv3"]
-[ext_resource type="Texture2D" uid="uid://frx4quho2h86" path="res://assets/images/stop-symbolic.svg" id="8_sf64t"]
+[ext_resource type="Texture2D" uid="uid://vfwftvcbvob6" path="res://assets/images/info-symbolic 1.svg" id="5_pnoaf"]
+[ext_resource type="Texture2D" uid="uid://u6al2fx1l7ia" path="res://assets/images/download-cloud-line.svg" id="6_qglv3"]
+[ext_resource type="Texture2D" uid="uid://u2c8qj3wcgro" path="res://assets/images/stop-symbolic.svg" id="8_sf64t"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0u1v5"]
 bg_color = Color(0.188235, 0.188235, 0.188235, 1)

@@ -1,9 +1,9 @@
 [gd_resource type="Theme" load_steps=16 format=3 uid="uid://iix53v175t6k"]
 
-[ext_resource type="FontFile" uid="uid://lj5nmow7tv56" path="res://assets/fonts/Cantarell-Bold.ttf" id="1_n5qju"]
-[ext_resource type="FontFile" uid="uid://qdke7kx1o2dj" path="res://assets/fonts/Cantarell-BoldItalic.ttf" id="2_g8qux"]
-[ext_resource type="FontFile" uid="uid://bso20iwyrcf4" path="res://assets/fonts/Cantarell-Italic.ttf" id="3_sdywu"]
-[ext_resource type="FontFile" uid="uid://cd8o2og83ankc" path="res://assets/fonts/Cantarell-Regular.ttf" id="4_1uy8h"]
+[ext_resource type="FontFile" uid="uid://b1w37357tl3er" path="res://assets/fonts/Cantarell-Bold.ttf" id="1_n5qju"]
+[ext_resource type="FontFile" uid="uid://cb1hb3b6h6b40" path="res://assets/fonts/Cantarell-BoldItalic.ttf" id="2_g8qux"]
+[ext_resource type="FontFile" uid="uid://jcbeo7vsa1q3" path="res://assets/fonts/Cantarell-Italic.ttf" id="3_sdywu"]
+[ext_resource type="FontFile" uid="uid://ccfr6y00w3tjf" path="res://assets/fonts/Cantarell-Regular.ttf" id="4_1uy8h"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o5s05"]
 content_margin_left = 4.0

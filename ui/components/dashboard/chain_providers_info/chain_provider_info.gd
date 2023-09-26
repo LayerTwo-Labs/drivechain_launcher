@@ -9,7 +9,6 @@ extends ColorRect
 var chain_provider: ChainProvider
 
 func setup(_chain_provider: ChainProvider):
-	print(_chain_provider)
 	chain_provider = _chain_provider
 	title.text = chain_provider.display_name + " Info"
 	
