@@ -2,42 +2,41 @@
 
 🚧 Under construction
 
-This application is built using [Godot](https://github.com/godotengine/godot)
+This application is built using [Godot](https://github.com/godotengine/godot).
 
-Godot may seem like an odd choice at first glance, but with its cross-platform abilities and an amazing set of GUI &
-IO features, it makes it very capabile for this application. 
+Godot may seem like an odd choice at first glance, but with its cross-platform abilities and an amazing set of GUI & IO features, it makes it very capable for this application.
 
-We can currently run on Mac, Windows and Linux.
+We can currently run on Mac, Windows, and Linux.
 
-If you'd like to build from source check below.
+If you'd like to build from source, check below.
 
-## Development Enviornment Prerequisites
+## Development Environment Prerequisites
 
 - Godot 4.1.1 [Download Page](https://godotengine.org/download)
 
-Currently only scripted in GDScript, but we could use the .NET version of Godot which brings C# support
+Currently only scripted in GDScript, but we could use the .NET version of Godot which brings C# support.
 
-Once you've gotten your development environment setup
+Once you've gotten your development environment set up:
 
 - Clone repo
 - Open the project and run
 
 ### Important
 
-The app relies on external binaries to be downloaded from specific github release. This is a bit combersome,
+The app relies on external binaries to be downloaded from a specific GitHub release. This is a bit cumbersome,
 but was the best we could come up with for now.
 
-- chain_providers.cfg are where each of the sidechain configs start.
+- chain_providers.cfg are where each of the sidechain configs starts.
 	The hash and file size for each platform binary is manually generated and added to the config
 	for the release if it has changed.
-- version.cfg is where you would update the version and base github release url.
+- version.cfg is where you would update the version and base GitHub release URL.
 	Sometimes you may need to create a pre-release, upload all the binaries there and point to that
 	as you are developing.
-- Currently each platform version is built on its respective platform. So build the launcher for linux on linux,
-	Mac on mac, and Windows on Windows.
-- Mac is a bit different as you need to have a developer ID certificate so that Godot can request signature and
-	notarization. Whom ever does this will need to create a signing certificate request and have Paul then create a
-	new developer ID certificate with that request. Then you would install that into you mac keychain.
+- Currently, each platform version is built on its respective platform. So build the launcher for Linux on Linux,
+	Mac on Mac, and Windows on Windows.
+- Mac is a bit different as you need to have a developer ID certificate so that Godot can request a signature and
+	notarization. Whoever does this will need to create a signing certificate request and have Paul then create a
+	new developer ID certificate with that request. Then you would install that into your Mac keychain.
 	More info here: https://developer.apple.com/help/account/create-certificates/create-developer-id-certificates
 
 ### LICENSE
