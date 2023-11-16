@@ -97,6 +97,7 @@ func _on_automine_mainchain_request_completed(_result, _response_code, _headers,
 	if automine:
 		await get_tree().create_timer(1).timeout
 		request_automine()
+		request_block_height()
 		
 		
 func request_create_sidechain_proposal(_chain_provider: ChainProvider) -> bool:

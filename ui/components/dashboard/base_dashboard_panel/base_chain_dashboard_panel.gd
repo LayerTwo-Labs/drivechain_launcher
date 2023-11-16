@@ -9,6 +9,7 @@ var progress_timer: Timer
 
 @onready var title = $Margin/VBox/Header/Title
 @onready var desc = $Margin/VBox/Content/Description
+@onready var block_height = $Margin/VBox/Footer/BlockHeight
 @onready var secondary_desc = $Margin/VBox/Content/SecondaryDescription
 @onready var left_indicator = $LeftColor
 @onready var background = $BackgroundPattern
@@ -41,6 +42,7 @@ func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 		
 	title.text = chain_provider.display_name
 	desc.text = chain_provider.description
+	block_height.visible = chain_state.state == ChainState.c_state.RUNNING
 	download_button.text = str(int(_chain_provider.binary_zip_size * 0.000001)) + " mb"
 	#download_button.tooltip_text = _chain_provider.download_url
 	
@@ -48,6 +50,9 @@ func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 	
 	
 func update_view():
+	block_height.visible = chain_state.state == ChainState.c_state.RUNNING
+	block_height.text = 'Block height: %d' % chain_state.height
+
 	if chain_state == null:
 		show_unsupported_state()
 		return

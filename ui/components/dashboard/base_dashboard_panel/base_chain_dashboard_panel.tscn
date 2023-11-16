@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://yhgodesyh1pt"]
+[gd_scene load_steps=12 format=3 uid="uid://yhgodesyh1pt"]
 
 [ext_resource type="Texture2D" uid="uid://2xouba13q8q7" path="res://assets/images/pattern_33.png" id="1_13ux5"]
 [ext_resource type="Script" path="res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.gd" id="1_6647v"]
@@ -22,6 +22,8 @@ corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2fadl"]
 
 [node name="BaseChainDashboardPanel" type="PanelContainer"]
 clip_children = 2
@@ -141,6 +143,10 @@ layout_mode = 2
 size_flags_vertical = 8
 focus_mode = 0
 text = "Refresh BMM"
+
+[node name="BlockHeight" type="Label" parent="Margin/VBox/Footer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_2fadl")
 
 [node name="VBox" type="VBoxContainer" parent="Margin/VBox/Footer"]
 layout_mode = 2
