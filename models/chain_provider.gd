@@ -56,7 +56,7 @@ func _init(dict: Dictionary):
 				self.binary_zip_hash = dict.get('download_hash_mac', '')
 				self.binary_zip_size = dict.get('download_size_mac', 0)
 			self.base_dir = Appstate.get_home() + "/Library/Application Support/" + dict.get('base_dir_mac', '')
-			
+	print("Determined base directory for ", self.id, ": ", self.base_dir)		
 
 	# Look for both a version suffixed binary path, as well as one without
 	# a suffix.
