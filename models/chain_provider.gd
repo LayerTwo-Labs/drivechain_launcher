@@ -25,7 +25,9 @@ func _init(dict: Dictionary):
 	self.display_name = dict.get('display_name', '')
 	self.description = dict.get('description', '')
 	self.repo_url = dict.get('repo_url', '')
-	self.binary_zip_path = dict.get('binary_zip_path', '')
+
+	var binary_zip_path_fallback = dict.get('binary_zip_path', '')
+	self.binary_zip_path = dict.get('binary_zip_path' + Appstate.get_platform_config_suffix(), binary_zip_path_fallback)
 	self.port = dict.get('port', -1)
 	self.slot = dict.get('slot', -1)
 	self.chain_type = dict.get('chain_type', 0)
@@ -55,7 +57,12 @@ func _init(dict: Dictionary):
 				self.binary_zip_size = dict.get('download_size_mac', 0)
 			self.base_dir = Appstate.get_home() + "/Library/Application Support/" + dict.get('base_dir_mac', '')
 			
-	self.executable_name = self.binary_zip_path.split("/")[-1]
+	# If the chain doesn't specify the name of the executable, 
+	# fallback to the file name of the ZIP path.
+	self.executable_name = dict.get(
+		"executable_name" + Appstate.get_platform_config_suffix(), 
+		self.binary_zip_path.split("/")[-1], 
+	)
 	
 	
 func available_for_platform() -> bool:
@@ -127,6 +134,7 @@ func read_conf():
 	
 	
 func write_start_script():
+	print("Writing start script: ", get_start_path())
 	if FileAccess.file_exists(get_start_path()):
 		DirAccess.remove_absolute(get_start_path())
 		
@@ -174,18 +182,18 @@ func write_dir():
 			
 			
 func start_chain():
-	match Appstate.get_platform():
-		Appstate.platform.LINUX,Appstate.platform.MAC,Appstate.platform.WIN:
-			if id == "zside":
-				var dir = DirAccess.open(ProjectSettings.globalize_path(Appstate.get_home() + "/.zcash-params"))
-				if dir == null:
-					Appstate.show_zparams_modal(self)
-				else:
-					var pid = OS.create_process(get_start_path(), [], false)
-					print("Process with started with pid: " + str(pid))
-			else:
-				var pid = OS.create_process(get_start_path(), [], false)
-				print("Process with started with pid: " + str(pid))
+	if id == "zside":
+		var dir = DirAccess.open(ProjectSettings.globalize_path(Appstate.get_home() + "/.zcash-params"))
+		if dir == null:
+			Appstate.show_zparams_modal(self)
+
+	var binary = get_start_path()
+	print("Starting binary: ", binary)
+
+	var pid = OS.create_process(binary, [], false)
+	assert(pid != -1, "could not start process: " + binary)
+	print("Process started with pid: " + str(pid))
+
 				
 				
 func get_start_path() -> String:

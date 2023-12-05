@@ -131,16 +131,28 @@ func load_config():
 		if err != OK:
 			print(ProjectSettings.globalize_path(DEFAULT_CHAIN_PROVIDERS_PATH) + " not found. Something went terribly wrong")
 			get_tree().quit() # TODO: Set exit code
+
+	else:
+		print("Loaded config file from path ", CHAIN_PROVIDERS_PATH)
 				
 				
 	var sections = chain_providers_config.get_sections()
 	var dict = {}
 	for s in sections:
 		var inner_dict = {}
+
+		# Let the chain providers specify a download URL
+		var baseURL = chain_providers_config.get_value(s, "base_download_url")
+
+		# But fallback to the global download URL if that's not set
+		if baseURL == null:
+			baseURL = version_config.get_value("", "base_download_url")
+
+		inner_dict['base_download_url'] = baseURL
+
 		var keys = chain_providers_config.get_section_keys(s)
 		for k in keys:
 			inner_dict[k] = chain_providers_config.get_value(s, k) #TODO: Default?
-			inner_dict['base_download_url'] = version_config.get_value("", "base_download_url")
 		dict[s] = inner_dict
 		
 		
@@ -184,6 +196,17 @@ func save_config():
 	chain_providers_config.save(CHAIN_PROVIDERS_PATH)
 	
 	
+
+func get_platform_config_suffix() -> String:
+	match OS.get_name():
+		"Windows", "UWP":
+			return "_win"
+		"macOS":
+			return "_mac"
+		"Linux", "FreeBSD", "NetBSD", "OpenBSD", "BSD":
+			return "_linux"
+	return ""
+
 func get_platform() -> platform:
 	match OS.get_name():
 		"Windows", "UWP":

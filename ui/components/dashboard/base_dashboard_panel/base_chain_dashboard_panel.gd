@@ -151,6 +151,7 @@ func download():
 		progress_timer.stop()
 		remove_child(progress_timer)
 		
+	print("Downloading ", chain_provider.display_name, " from " ,  chain_provider.download_url)
 	download_req = HTTPRequest.new()
 	add_child(download_req)
 	
@@ -182,65 +183,44 @@ func _on_download_progress():
 func _on_download_complete(result, response_code, _headers, body):
 	reset_download()
 	if result != 0 or response_code != 200:
+		print("Could not download ", chain_provider.display_name, ": ", response_code)
 		return
 		
+	print("Downloading ", chain_provider.display_name,  ": OK" )
 	var path = chain_provider.base_dir + "/" + chain_provider.id + ".zip"
 	var save_game = FileAccess.open(path, FileAccess.WRITE)
 	save_game.store_buffer(body)
 	save_game.close()
 	
-	unzip_file_and_setup_binary(path)
+	unzip_file_and_setup_binary(chain_provider.base_dir, path)
 	
 	
-func unzip_file_and_setup_binary(zip_path: String):
-	var reader := ZIPReader.new()
-	var err := reader.open(zip_path)
-	if err != OK:
-		push_error("Unabled to read zip")
-		show_download_state()
-		return
-		
-	var files = reader.get_files()
-	var binary_index: int
-	for i in files.size():
-		if files[i].ends_with(chain_provider.binary_zip_path):
-			binary_index = i
-			break
-			
-	var zside_params_index = -1
-	var zside_params_name = "zside-fetch-params.sh"
-	if chain_provider.id == "zside":
-		for i in files.size():
-			if files[i].ends_with(zside_params_name):
-				zside_params_index = i
-				break
-			
-	if binary_index != null && binary_index >= 0:
-		var path = files[binary_index]
-		var binary = reader.read_file(path)
-		
-		if binary.size() > 0:
-			var save = FileAccess.open(chain_provider.get_executable_path(), FileAccess.WRITE)
-			save.store_buffer(binary)
-			save.close()
-			
-			if zside_params_index > -1:
-				var zside_params = files[zside_params_index]
-				var zside_binary = reader.read_file(zside_params)
-				if zside_binary.size() > 0:
-					var save_zside_params = FileAccess.open(ProjectSettings.globalize_path(chain_provider.base_dir + "/" + zside_params_name), FileAccess.WRITE)
-					save_zside_params.store_buffer(zside_binary)
-					save_zside_params.close()
-					
-					if Appstate.get_platform() != Appstate.platform.WIN:
-						OS.execute("chmod", ["+x", ProjectSettings.globalize_path(chain_provider.base_dir + "/" + zside_params_name)])
-			
-			chain_provider.write_start_script()
-			
-			if Appstate.get_platform() != Appstate.platform.WIN:
-				OS.execute("chmod", ["+x", chain_provider.get_executable_path()])
-				OS.execute("chmod", ["+x", ProjectSettings.globalize_path(chain_provider.get_start_path())])
-			
+# A prior implementation of this unzipped through using ZIPReader. 
+# However, this swallowed file types and permissions. Instead, we 
+# execute a program that handles this for us. 
+# TODO: handle Linux, Windows
+func unzip_file_and_setup_binary(base_dir: String, zip_path: String):
+	var prog = "unzip"
+	var args = [zip_path, "-d", base_dir]
+	if Appstate.get_platform() == Appstate.platform.WIN:
+		prog = "powershell.exe"
+		args = ["-Command", 'Expand-Archive -Force ' + zip_path + ' ' + base_dir]
+
+
+	print("Unzipping ", zip_path, ": ", prog, " ", args)
+	assert(
+		OS.execute(prog, args) == OK,
+		"Was not able to unzip"
+	)
+	
+	chain_provider.write_start_script()
+	if Appstate.get_platform() != Appstate.platform.WIN:
+		OS.execute("chmod", ["+x", ProjectSettings.globalize_path(chain_provider.get_start_path())])
+
+		# This will error on non-zcash chains, but that's OK. Just swallow it.
+		var zside_params_name = "zside-fetch-params.sh"
+		OS.execute("chmod", ["+x", ProjectSettings.globalize_path(chain_provider.base_dir + "/" + zside_params_name)])
+
 	update_view()
 	
 	
@@ -258,18 +238,17 @@ func reset_download():
 
 
 func _on_start_button_pressed():
+	print("Starting chain: ", chain_provider.id)
+
 	if chain_provider.id != "drivechain":
 		var drivechain_state = Appstate.get_drivechain_state()
-		if drivechain_state == null:
-			return
+		assert(drivechain_state != null)
 			
 		if await drivechain_state.needs_activation(chain_provider):
+			print("Activating sidechain: ", chain_provider.id)
 			await drivechain_state.request_create_sidechain_proposal(chain_provider)
-			chain_provider.start_chain()
-		else:
-			chain_provider.start_chain()
-	else:
-		chain_provider.start_chain()
+			
+	chain_provider.start_chain()
 		
 	start_button.disabled = true
 	
