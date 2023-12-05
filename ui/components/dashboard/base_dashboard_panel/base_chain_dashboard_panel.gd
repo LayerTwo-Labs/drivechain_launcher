@@ -212,10 +212,17 @@ func unzip_file_and_setup_binary(base_dir: String, zip_path: String):
 		OS.execute(prog, args) == OK,
 		"Was not able to unzip"
 	)
-	
+
 	chain_provider.write_start_script()
 	if Appstate.get_platform() != Appstate.platform.WIN:
-		OS.execute("chmod", ["+x", ProjectSettings.globalize_path(chain_provider.get_start_path())])
+		var start_path = ProjectSettings.globalize_path(chain_provider.get_start_path())
+		print("chmodding start path: ", start_path)
+
+		var bin_path = ProjectSettings.globalize_path(chain_provider.base_dir + "/" + chain_provider.binary_zip_path)
+		print("chmodding bin path: ", bin_path)
+
+		OS.execute("chmod", ["+x", start_path])
+		OS.execute("chmod", ["+x", bin_path])
 
 		# This will error on non-zcash chains, but that's OK. Just swallow it.
 		var zside_params_name = "zside-fetch-params.sh"
