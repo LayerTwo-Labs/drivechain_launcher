@@ -133,7 +133,7 @@ func load_config():
 			get_tree().quit() # TODO: Set exit code
 
 	else:
-		print("Loaded config file from path ", CHAIN_PROVIDERS_PATH)
+		print("Loaded config file from path ", ProjectSettings.globalize_path(CHAIN_PROVIDERS_PATH))
 				
 				
 	var sections = chain_providers_config.get_sections()

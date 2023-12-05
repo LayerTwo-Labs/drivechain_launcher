@@ -47,7 +47,7 @@ func _init(dict: Dictionary):
 				self.download_url = dict.get('base_download_url') + "/" + file_path
 				self.binary_zip_path += ".exe"
 				self.binary_zip_hash = dict.get('download_hash_win', '')
-				self.binary_zip_size = dict.get('download_size_linux', 0)
+				self.binary_zip_size = dict.get('download_size_win', 0)
 			self.base_dir = Appstate.get_home() + "/AppData/Roaming/" + dict.get('base_dir_win', '')
 		Appstate.platform.MAC:
 			var file_path = dict.get('download_file_mac', '')
@@ -57,11 +57,12 @@ func _init(dict: Dictionary):
 				self.binary_zip_size = dict.get('download_size_mac', 0)
 			self.base_dir = Appstate.get_home() + "/Library/Application Support/" + dict.get('base_dir_mac', '')
 			
-	# If the chain doesn't specify the name of the executable, 
-	# fallback to the file name of the ZIP path.
+
+	# Look for both a version suffixed binary path, as well as one without
+	# a suffix.
 	self.executable_name = dict.get(
-		"executable_name" + Appstate.get_platform_config_suffix(), 
-		self.binary_zip_path.split("/")[-1], 
+		"binary_zip_path" + Appstate.get_platform_config_suffix(), 
+		dict.get("binary_zip_path", "")
 	)
 	
 	
@@ -72,7 +73,7 @@ func available_for_platform() -> bool:
 func is_ready_for_execution() -> bool:
 	if not available_for_platform():
 		return false
-	return FileAccess.file_exists(ProjectSettings.globalize_path(base_dir + "/" + executable_name))
+	return FileAccess.file_exists(ProjectSettings.globalize_path(get_start_path()))
 	
 	
 func write_conf(force_write := true):
