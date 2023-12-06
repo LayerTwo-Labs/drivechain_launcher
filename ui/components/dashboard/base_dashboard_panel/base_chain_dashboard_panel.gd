@@ -198,7 +198,6 @@ func _on_download_complete(result, response_code, _headers, body):
 # A prior implementation of this unzipped through using ZIPReader. 
 # However, this swallowed file types and permissions. Instead, we 
 # execute a program that handles this for us. 
-# TODO: handle Linux, Windows
 func unzip_file_and_setup_binary(base_dir: String, zip_path: String):
 	var prog = "unzip"
 	var args = [zip_path, "-d", base_dir]

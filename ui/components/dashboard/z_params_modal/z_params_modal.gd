@@ -11,7 +11,7 @@ var output
 
 func setup(_chain_provider: ChainProvider):
 	chain_provider = _chain_provider
-	if chain_provider.id == "zside":
+	if chain_provider.id == "zside" || chain_provider.id == "zsail":
 		zside_thread = Thread.new()
 		zside_thread.start(_zside_fetch_params_thread)
 		while zside_thread != null and zside_thread.is_alive():
@@ -25,11 +25,12 @@ func setup(_chain_provider: ChainProvider):
 		queue_free()
 		
 func _zside_fetch_params_thread():
-	var zside_params_name = "zside-fetch-params.sh"
-	var exit_code = OS.execute(ProjectSettings.globalize_path(chain_provider.base_dir + "/" + zside_params_name), [], [])
+	var script = ProjectSettings.globalize_path("res://zside-fetch-params.sh")
+	print("executing zcash params fetch script: ", script)
+	var exit_code = OS.execute(script, [], [])
 	
-	if exit_code != 0:
-		printerr("Error occured: %d" % exit_code)
+	assert(exit_code == OK, "Unable to execute params fetch script")	
+	print("successfully downnloaded zcash params")
 		
 		
 		
