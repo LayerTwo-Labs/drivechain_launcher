@@ -37,7 +37,7 @@ To run on macOS, unzip and mount the .dmg file:
 
 ```
 Depending on your macOS version, its possible that GateKeeper will not allow you to run the launcher.
-We are working on notarizing the macOS build so that this isnt a problem.
+We are working on notarizing the macOS build so that this isn't a problem.
 ```
 
 To run on Windows, unzip and run the .exe

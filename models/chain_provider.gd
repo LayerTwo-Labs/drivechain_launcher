@@ -25,7 +25,9 @@ func _init(dict: Dictionary):
 	self.display_name = dict.get('display_name', '')
 	self.description = dict.get('description', '')
 	self.repo_url = dict.get('repo_url', '')
-	self.binary_zip_path = dict.get('binary_zip_path', '')
+
+	var binary_zip_path_fallback = dict.get('binary_zip_path', '')
+	self.binary_zip_path = dict.get('binary_zip_path' + Appstate.get_platform_config_suffix(), binary_zip_path_fallback)
 	self.port = dict.get('port', -1)
 	self.slot = dict.get('slot', -1)
 	self.chain_type = dict.get('chain_type', 0)
@@ -45,7 +47,7 @@ func _init(dict: Dictionary):
 				self.download_url = dict.get('base_download_url') + "/" + file_path
 				self.binary_zip_path += ".exe"
 				self.binary_zip_hash = dict.get('download_hash_win', '')
-				self.binary_zip_size = dict.get('download_size_linux', 0)
+				self.binary_zip_size = dict.get('download_size_win', 0)
 			self.base_dir = Appstate.get_home() + "/AppData/Roaming/" + dict.get('base_dir_win', '')
 		Appstate.platform.MAC:
 			var file_path = dict.get('download_file_mac', '')
@@ -54,8 +56,14 @@ func _init(dict: Dictionary):
 				self.binary_zip_hash = dict.get('download_hash_mac', '')
 				self.binary_zip_size = dict.get('download_size_mac', 0)
 			self.base_dir = Appstate.get_home() + "/Library/Application Support/" + dict.get('base_dir_mac', '')
-			
-	self.executable_name = self.binary_zip_path.split("/")[-1]
+	print("Determined base directory for ", self.id, ": ", self.base_dir)		
+
+	# Look for both a version suffixed binary path, as well as one without
+	# a suffix.
+	self.executable_name = dict.get(
+		"binary_zip_path" + Appstate.get_platform_config_suffix(), 
+		dict.get("binary_zip_path", "")
+	)
 	
 	
 func available_for_platform() -> bool:
@@ -65,7 +73,7 @@ func available_for_platform() -> bool:
 func is_ready_for_execution() -> bool:
 	if not available_for_platform():
 		return false
-	return FileAccess.file_exists(ProjectSettings.globalize_path(base_dir + "/" + executable_name))
+	return FileAccess.file_exists(ProjectSettings.globalize_path(get_start_path()))
 	
 	
 func write_conf(force_write := true):
@@ -127,6 +135,7 @@ func read_conf():
 	
 	
 func write_start_script():
+	print("Writing start script: ", get_start_path())
 	if FileAccess.file_exists(get_start_path()):
 		DirAccess.remove_absolute(get_start_path())
 		
@@ -174,18 +183,23 @@ func write_dir():
 			
 			
 func start_chain():
-	match Appstate.get_platform():
-		Appstate.platform.LINUX,Appstate.platform.MAC,Appstate.platform.WIN:
-			if id == "zside":
-				var dir = DirAccess.open(ProjectSettings.globalize_path(Appstate.get_home() + "/.zcash-params"))
-				if dir == null:
-					Appstate.show_zparams_modal(self)
-				else:
-					var pid = OS.create_process(get_start_path(), [], false)
-					print("Process with started with pid: " + str(pid))
-			else:
-				var pid = OS.create_process(get_start_path(), [], false)
-				print("Process with started with pid: " + str(pid))
+	if id == "zside" || id == "zsail":
+		var dir = DirAccess.open(ProjectSettings.globalize_path(Appstate.get_home() + "/.zcash-params"))
+		if dir == null:
+			print("zcash params not present, showing download modal")
+			Appstate.show_zparams_modal(self)
+
+			# important: return here! once the params are finished downloading,
+			# the binary will be launched by the params fetched modal.
+			return 
+
+	var binary = get_start_path()
+	print("Starting binary: ", binary)
+
+	var pid = OS.create_process(binary, [], false)
+	assert(pid != -1, "could not start process: " + binary)
+	print("Process started with pid: " + str(pid))
+
 				
 				
 func get_start_path() -> String:
