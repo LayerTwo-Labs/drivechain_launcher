@@ -138,12 +138,13 @@ func write_start_script():
 	print("Writing start script: ", get_start_path())
 	if FileAccess.file_exists(get_start_path()):
 		DirAccess.remove_absolute(get_start_path())
+
+	var env = ""
+	if id == "testsail" || id == "ethsail" || id == "zsail":
+		env = "SIDESAIL_DATADIR="+base_dir
 		
 	var cmd = get_executable_path()
 	match id:
-		"testsail", "ethsail", "zsail":
-			cmd = "env SIDESAIL_DATADIR=" + base_dir + " " + cmd
-
 		"thunder","bitnames":
 			var drivechain = Appstate.get_drivechain_provider()
 			if drivechain == null:
@@ -163,13 +164,25 @@ func write_start_script():
 	match Appstate.get_platform():
 		Appstate.platform.LINUX:
 			file.store_line("#!/bin/bash")
+			if env != "":
+				file.store_line("export "+env)
+
 			file.store_line(cmd)
+
 		Appstate.platform.MAC:
 			file.store_line("#!/bin/bash")
 			cmd = cmd.replace("Application Support", "Application\\ Support")
+			if env != "":
+				file.store_line("export "+env)
+
 			file.store_line(cmd)
+
 		Appstate.platform.WIN:
+			if env != "":
+				file.store_line("set " + env)
+			
 			file.store_line("start " + cmd)
+
 			
 	file.close()
 	
