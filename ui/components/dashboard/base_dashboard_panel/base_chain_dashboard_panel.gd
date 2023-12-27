@@ -61,23 +61,15 @@ func update_view():
 		show_unsupported_state()
 		return
 	
-	if chain_provider.id == 'drivechain':
-		if not chain_provider.is_ready_for_execution():
-			show_download_state()
-		elif chain_provider.is_ready_for_execution() and chain_state.state != ChainState.c_state.RUNNING:
+	if not chain_provider.is_ready_for_execution():
+		show_download_state()
+	elif chain_provider.is_ready_for_execution() and chain_state.state != ChainState.c_state.RUNNING:
+		if chain_provider.id == 'drivechain' or Appstate.drivechain_running():
 			show_executable_state()
 		else:
-			show_running_state()
+			show_waiting_on_drivechain_state()
 	else:
-		if not chain_provider.is_ready_for_execution():
-			show_download_state()
-		elif chain_provider.is_ready_for_execution() and chain_state.state != ChainState.c_state.RUNNING:
-			if Appstate.drivechain_running():
-				show_executable_state()
-			else:
-				show_waiting_on_drivechain_state()
-		else:
-			show_running_state()
+		show_running_state()
 	
 func show_waiting_on_drivechain_state():
 	download_button.visible = false
@@ -206,11 +198,11 @@ func unzip_file_and_setup_binary(base_dir: String, zip_path: String):
 		args = ["-Command", 'Expand-Archive -Force ' + zip_path + ' ' + base_dir]
 
 
-	print("Unzipping ", zip_path, ": ", prog, " ", args)
-	assert(
-		OS.execute(prog, args) == OK,
-		"Was not able to unzip"
-	)
+	print("Unzipping ", zip_path, ": ", prog, " ", args, )
+
+	# We used to check for the exit code here. However, unzipping sometimes
+	# throw bad errors on symbolic links, but output the files just fine...
+	OS.execute(prog, args) 
 
 	chain_provider.write_start_script()
 	if Appstate.get_platform() != Appstate.platform.WIN:
