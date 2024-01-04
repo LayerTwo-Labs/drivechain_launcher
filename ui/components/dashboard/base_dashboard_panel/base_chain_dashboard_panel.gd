@@ -15,7 +15,7 @@ var progress_timer: Timer
 @onready var background = $BackgroundPattern
 @onready var start_button = $Margin/VBox/Footer/StartButton
 @onready var stop_button = $Margin/VBox/Footer/StopButton
-@onready var auto_mine_button = $Margin/VBox/Footer/Automine
+#@onready var auto_mine_button = $Margin/VBox/Footer/Automine # removed due to signet
 @onready var refresh_bmm_button = $Margin/VBox/Footer/RefreshBMM
 @onready var download_button = $Margin/VBox/Footer/VBox/DownloadButton
 @onready var progress_bar = $Margin/VBox/Footer/VBox/ProgressBar
@@ -75,7 +75,7 @@ func show_waiting_on_drivechain_state():
 	download_button.visible = false
 	start_button.visible = false
 	stop_button.visible = false
-	auto_mine_button.visible = false
+	#auto_mine_button.visible = false
 	refresh_bmm_button.visible = false
 	secondary_desc.visible = true
 	modulate = enabled_modulate
@@ -87,15 +87,17 @@ func show_running_state():
 	download_button.visible = false
 	modulate = enabled_modulate
 	
+	
 	if chain_provider.id == 'drivechain':
-		auto_mine_button.visible = true
-		auto_mine_button.set_pressed_no_signal(chain_state.automine)
+		#auto_mine_button.visible = false # changed to false due to signet, and removed 
+		#auto_mine_button.visible = true
+		#auto_mine_button.set_pressed_no_signal(chain_state.automine)
 		refresh_bmm_button.visible = false
 	else:
-		auto_mine_button.visible = false
+		#auto_mine_button.visible = false
 		refresh_bmm_button.visible = false
-		#refresh_bmm_button.visible = true
-		#refresh_bmm_button.set_pressed_no_signal(chain_state.refreshbmm)
+		refresh_bmm_button.visible = true
+		refresh_bmm_button.set_pressed_no_signal(chain_state.refreshbmm)
 		
 		
 func show_executable_state():
@@ -103,7 +105,7 @@ func show_executable_state():
 	start_button.visible = true
 	start_button.disabled = false
 	stop_button.visible = false
-	auto_mine_button.visible = false
+#	auto_mine_button.visible = false
 	refresh_bmm_button.visible = false
 	download_button.visible = false
 	modulate = enabled_modulate
@@ -113,7 +115,7 @@ func show_download_state():
 	settings_button.disabled = false
 	start_button.visible = false
 	stop_button.visible = false
-	auto_mine_button.visible = false
+#	auto_mine_button.visible = false
 	refresh_bmm_button.visible = false
 	download_button.visible = true
 	download_button.disabled = false
@@ -125,10 +127,10 @@ func show_unsupported_state():
 	download_button.visible = false
 	start_button.visible = false
 	stop_button.visible = false
-	auto_mine_button.visible = false
+#	auto_mine_button.visible = false
 	refresh_bmm_button.visible = false
 	secondary_desc.visible = true
-	secondary_desc.text = "[i]This sidechain is currently not available for this platform[/i]"
+	secondary_desc.text = "[i]This sidechain is currently not available for this platform -- try Linux instead.[/i]"
 	modulate = disabled_modulate
 	
 	
@@ -242,9 +244,9 @@ func _on_start_button_pressed():
 		var drivechain_state = Appstate.get_drivechain_state()
 		assert(drivechain_state != null)
 			
-		if await drivechain_state.needs_activation(chain_provider):
-			print("Activating sidechain: ", chain_provider.id)
-			await drivechain_state.request_create_sidechain_proposal(chain_provider)
+		#if await drivechain_state.needs_activation(chain_provider):
+			#print("Activating sidechain: ", chain_provider.id)
+			#await drivechain_state.request_create_sidechain_proposal(chain_provider)
 			
 	chain_provider.start_chain()
 		
