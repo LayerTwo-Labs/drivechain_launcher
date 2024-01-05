@@ -153,7 +153,7 @@ func write_start_script():
 			var data_dir = " -d " + ProjectSettings.globalize_path(base_dir + "/data")
 			var net_addr = " -n " + "127.0.0.1:" + str(port * 2)
 			var dc_addr = " -m " + "127.0.0.1:" + str(drivechain.port)
-			var rpc_addr = " -r" + "127.0.0.1:" + str(port)
+			var rpc_addr = " -r " + "127.0.0.1:" + str(port)
 			var dc_user = " -u " + drivechain.rpc_user
 			var dc_pass = " -p " + drivechain.rpc_password
 			cmd = cmd + data_dir + net_addr + dc_addr + dc_user + dc_pass + rpc_addr
