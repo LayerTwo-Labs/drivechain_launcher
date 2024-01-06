@@ -20,5 +20,7 @@ timeout = 1.0
 
 [node name="RefreshBMMRequest" type="HTTPRequest" parent="."]
 
+[node name="AddNodeRequest" type="HTTPRequest" parent="."]
+
 [connection signal="request_completed" from="GetBlockHeightRequest" to="." method="_on_get_block_height_request_completed"]
 [connection signal="request_completed" from="AutomineMainChainRequest" to="." method="_on_automine_mainchain_request_completed"]
