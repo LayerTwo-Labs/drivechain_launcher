@@ -17,7 +17,7 @@ enum c_state { WAITING, RUNNING }
 @onready var stop_chain_request: HTTPRequest = $StopChainRequest
 #@onready var create_sidechain_proposal_request: HTTPRequest = $CreateSidechainProposalRequest
 @onready var mainchain_mine_request: HTTPRequest = $MainChainMineRequest
-
+@onready var add_node_request: HTTPRequest = $AddNodeRequest
 
 func setup(_chain_provider: ChainProvider):
 	self.id = _chain_provider.id
@@ -134,6 +134,9 @@ func needs_activation(_chain_provider: ChainProvider) -> bool:
 			return false
 			
 	return true
+	
+func add_node(node: String) -> void:
+	make_request("addnode", [node, "onetry"], add_node_request)
 	
 func stop_chain():
 	make_request("stop", [], stop_chain_request)

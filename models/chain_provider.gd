@@ -208,6 +208,7 @@ func start_chain():
 			# important: return here! once the params are finished downloading,
 			# the binary will be launched by the params fetched modal.
 			return 
+	
 
 	var binary = get_start_path()
 	print("Starting binary: ", binary)
@@ -215,7 +216,11 @@ func start_chain():
 	var pid = OS.create_process(binary, [], false)
 	assert(pid != -1, "could not start process: " + binary)
 	print("Process started with pid: " + str(pid))
-
+	
+	
+	# Add test network sync node right after starting
+	if id == "drivechain":
+		Appstate.add_drivenet_test_node()
 				
 				
 func get_start_path() -> String:

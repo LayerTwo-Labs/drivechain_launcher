@@ -7,6 +7,8 @@ const CHAIN_PROVIDERS_PATH = "user://chain_providers.cfg"
 const APP_CONFIG_PATH = "user://app.cfg"
 const VERSION_CONFIG = "res://version.cfg"
 
+const DRIVENET_NODE = "172.105.148.135"
+
 @onready var chain_state = preload("res://models/chain_state.tscn")
 @onready var chain_provider_info = preload("res://ui/components/dashboard/chain_providers_info/chain_provider_info.tscn")
 @onready var z_params_modal = preload("res://ui/components/dashboard/z_params_modal/z_params_modal.tscn")
@@ -266,3 +268,9 @@ func show_zparams_modal(chain_provider: ChainProvider):
 	zparams.name = "z_params_modal"
 	get_tree().root.get_node("Main").add_child(zparams)
 	zparams.setup(chain_provider)
+
+
+func add_drivenet_test_node() -> void:
+	await get_tree().create_timer(3.5).timeout
+	if chain_states.has('drivechain'):
+		chain_states['drivechain'].add_node(DRIVENET_NODE)
