@@ -89,25 +89,25 @@ func write_conf(force_write := true):
 			conf.store_line("rpcuser=user")
 			conf.store_line("rpcpassword=password")
 			conf.store_line("rpcport=" + str(port))
-			conf.store_line("regtest=1")
+			# conf.store_line("regtest=1")
 			conf.store_line("server=1")
 			conf.store_line("datadir=" + ProjectSettings.globalize_path(base_dir))
 		"testchain","bitassets","zside":
 			conf.store_line("rpcuser=user")
 			conf.store_line("rpcpassword=password")
 			conf.store_line("rpcport=" + str(port))
-			conf.store_line("regtest=1")
+			# conf.store_line("regtest=1")
 			conf.store_line("server=1")
 			conf.store_line("datadir=" + ProjectSettings.globalize_path(base_dir))
 			conf.store_line("slot=" + str(slot))
 		"latestcore":
-			conf.store_line("chain=regtest")
+			# conf.store_line("chain=regtest")
 			conf.store_line("server=1")
 			conf.store_line("splash=0")
 			conf.store_line("datadir=" + ProjectSettings.globalize_path(base_dir))
 			conf.store_line("slot=" + str(slot))
 			conf.store_line("")
-			conf.store_line("[regtest]")
+			# conf.store_line("[regtest]")
 			conf.store_line("rpcuser=user")
 			conf.store_line("rpcpassword=password")
 			conf.store_line("rpcport=" + str(port))
@@ -145,7 +145,7 @@ func write_start_script():
 		
 	var cmd = get_executable_path()
 	match id:
-		"thunder","bitnames":
+		"thunder","bitnames","bitassets":
 			var drivechain = Appstate.get_drivechain_provider()
 			if drivechain == null:
 				return
@@ -153,7 +153,7 @@ func write_start_script():
 			var data_dir = " -d " + ProjectSettings.globalize_path(base_dir + "/data")
 			var net_addr = " -n " + "127.0.0.1:" + str(port * 2)
 			var dc_addr = " -m " + "127.0.0.1:" + str(drivechain.port)
-			var rpc_addr = " -r" + "127.0.0.1:" + str(port)
+			var rpc_addr = " -r " + "127.0.0.1:" + str(port)
 			var dc_user = " -u " + drivechain.rpc_user
 			var dc_pass = " -p " + drivechain.rpc_password
 			cmd = cmd + data_dir + net_addr + dc_addr + dc_user + dc_pass + rpc_addr
@@ -208,6 +208,7 @@ func start_chain():
 			# important: return here! once the params are finished downloading,
 			# the binary will be launched by the params fetched modal.
 			return 
+	
 
 	var binary = get_start_path()
 	print("Starting binary: ", binary)
@@ -215,7 +216,11 @@ func start_chain():
 	var pid = OS.create_process(binary, [], false)
 	assert(pid != -1, "could not start process: " + binary)
 	print("Process started with pid: " + str(pid))
-
+	
+	
+	# Add test network sync node right after starting
+	if id == "drivechain":
+		Appstate.add_drivenet_test_node()
 				
 				
 func get_start_path() -> String:

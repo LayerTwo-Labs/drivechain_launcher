@@ -132,16 +132,11 @@ size_flags_vertical = 8
 focus_mode = 0
 icon = ExtResource("8_sf64t")
 
-[node name="Automine" type="CheckButton" parent="Margin/VBox/Footer"]
-layout_mode = 2
-size_flags_vertical = 8
-focus_mode = 0
-text = "Automine"
-
 [node name="RefreshBMM" type="CheckButton" parent="Margin/VBox/Footer"]
 layout_mode = 2
 size_flags_vertical = 8
 focus_mode = 0
+disabled = true
 text = "Refresh BMM"
 
 [node name="BlockHeight" type="Label" parent="Margin/VBox/Footer"]
@@ -175,5 +170,4 @@ color = Color(0.207843, 0.517647, 0.894118, 1)
 [connection signal="pressed" from="Margin/VBox/Header/SettingsButton" to="." method="_on_info_button_pressed"]
 [connection signal="pressed" from="Margin/VBox/Footer/StartButton" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="Margin/VBox/Footer/StopButton" to="." method="_on_stop_button_pressed"]
-[connection signal="toggled" from="Margin/VBox/Footer/Automine" to="." method="_on_automine_toggled"]
 [connection signal="pressed" from="Margin/VBox/Footer/VBox/DownloadButton" to="." method="download"]
