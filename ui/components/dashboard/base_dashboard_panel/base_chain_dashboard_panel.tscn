@@ -28,10 +28,11 @@ corner_radius_bottom_left = 6
 [node name="BaseChainDashboardPanel" type="PanelContainer"]
 clip_children = 2
 clip_contents = true
-custom_minimum_size = Vector2(0, 200)
+custom_minimum_size = Vector2(0, 100)
 offset_right = 450.0
 offset_bottom = 200.0
 size_flags_horizontal = 3
+size_flags_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_0u1v5")
 script = ExtResource("1_6647v")
 
@@ -100,7 +101,6 @@ text = "A blank sidechain based on Bitcoin Core 16.99"
 autowrap_mode = 2
 
 [node name="SecondaryDescription" type="RichTextLabel" parent="Margin/VBox/Content"]
-visible = false
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_colors/default_color = Color(0.639216, 0.639216, 0.639216, 1)

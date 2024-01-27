@@ -11,24 +11,29 @@ bg_color = Color(0.141176, 0.141176, 0.141176, 1)
 [node name="LeftMenu" type="PanelContainer"]
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_right = 200.0
+offset_right = 1152.0
+offset_bottom = -598.0
 grow_vertical = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
+size_flags_vertical = 8
 theme_override_styles/panel = SubResource("StyleBoxFlat_c8gs8")
 script = ExtResource("1_yja75")
 
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="HBox" type="HBoxContainer" parent="."]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+size_flags_vertical = 8
+size_flags_stretch_ratio = 0.0
 theme_override_constants/separation = 0
 
-[node name="Spacer" type="Control" parent="VBox"]
+[node name="Spacer" type="Control" parent="HBox"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 
-[node name="DashboardButton" type="Button" parent="VBox"]
+[node name="DashboardButton" type="Button" parent="HBox"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+size_flags_vertical = 4
 focus_mode = 0
 theme = ExtResource("1_vs06l")
 toggle_mode = true
@@ -37,19 +42,25 @@ text = "DASHBOARD"
 icon = ExtResource("3_rgc2b")
 alignment = 0
 
-[node name="PlaygroundButton" type="Button" parent="VBox"]
+[node name="PlaygroundButton" type="Button" parent="HBox"]
 visible = false
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+size_flags_vertical = 4
 focus_mode = 0
 theme = ExtResource("1_vs06l")
 toggle_mode = true
 text = "PLAYGROUND"
 alignment = 0
 
-[node name="SettingsButton" type="Button" parent="VBox"]
+[node name="VSeparator" type="VSeparator" parent="HBox"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="SettingsButton" type="Button" parent="HBox"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+size_flags_vertical = 4
 focus_mode = 0
 theme = ExtResource("1_vs06l")
 toggle_mode = true
@@ -57,6 +68,6 @@ text = "SETTINGS"
 icon = ExtResource("4_cr7m3")
 alignment = 0
 
-[connection signal="toggled" from="VBox/DashboardButton" to="." method="_on_left_menu_button_toggled" binds= [0]]
-[connection signal="toggled" from="VBox/PlaygroundButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
-[connection signal="toggled" from="VBox/SettingsButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
+[connection signal="toggled" from="HBox/DashboardButton" to="." method="_on_left_menu_button_toggled" binds= [0]]
+[connection signal="toggled" from="HBox/PlaygroundButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
+[connection signal="toggled" from="HBox/SettingsButton" to="." method="_on_left_menu_button_toggled" binds= [1]]

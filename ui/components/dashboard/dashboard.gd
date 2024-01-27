@@ -1,7 +1,7 @@
 extends ScrollContainer
 
 @onready var drivechain = $VBox/Drivechain
-@onready var grid = $VBox/Grid
+@onready var grid = $VBox/Grid/HBox/VBox
 
 var panel = preload("res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.tscn")
 

@@ -1,32 +1,34 @@
 extends PanelContainer
 class_name BaseChainDashboardPanel
 
-var chain_provider: ChainProvider
-var chain_state: ChainState
+var chain_provider : ChainProvider
+var chain_state    : ChainState
 
-var download_req: HTTPRequest
-var progress_timer: Timer
+var download_req   : HTTPRequest
+var progress_timer : Timer
 
-@onready var title = $Margin/VBox/Header/Title
-@onready var desc = $Margin/VBox/Content/Description
-@onready var block_height = $Margin/VBox/Footer/BlockHeight
-@onready var secondary_desc = $Margin/VBox/Content/SecondaryDescription
-@onready var left_indicator = $LeftColor
-@onready var background = $BackgroundPattern
-@onready var start_button = $Margin/VBox/Footer/StartButton
-@onready var stop_button = $Margin/VBox/Footer/StopButton
-#@onready var auto_mine_button = $Margin/VBox/Footer/Automine # removed due to signet
-@onready var refresh_bmm_button = $Margin/VBox/Footer/RefreshBMM
-@onready var download_button = $Margin/VBox/Footer/VBox/DownloadButton
-@onready var progress_bar = $Margin/VBox/Footer/VBox/ProgressBar
-@onready var settings_button = $Margin/VBox/Header/SettingsButton
+@onready var title              : Control = $Margin/VBox/Header/Title
+@onready var desc               : Control = $Margin/VBox/Content/Description
+@onready var block_height       : Control = $Margin/VBox/Footer/BlockHeight
+@onready var secondary_desc     : Control = $Margin/VBox/Content/SecondaryDescription
+@onready var left_indicator     : Control = $LeftColor
+@onready var background         : Control = $BackgroundPattern
+@onready var start_button       : Control = $Margin/VBox/Footer/StartButton
+@onready var stop_button        : Control = $Margin/VBox/Footer/StopButton
+#@onready var auto_mine_button  : Control = $Margin/VBox/Footer/Automine # removed due to signet
+@onready var refresh_bmm_button : Control = $Margin/VBox/Footer/RefreshBMM
+@onready var download_button    : Control = $Margin/VBox/Footer/VBox/DownloadButton
+@onready var progress_bar       : Control = $Margin/VBox/Footer/VBox/ProgressBar
+@onready var settings_button    : Control = $Margin/VBox/Header/SettingsButton
 
-var enabled_modulate: Color
-var disabled_modulate: Color
+var enabled           : bool = true
+
+var enabled_modulate  : Color
+var disabled_modulate : Color
 
 func _ready():
 	Appstate.connect("chain_states_changed", self.update_view)
-	enabled_modulate = modulate
+	enabled_modulate  = modulate
 	disabled_modulate = modulate.darkened(0.3)
 	
 	

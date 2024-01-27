@@ -28,11 +28,22 @@ theme_override_constants/separation = 8
 [node name="Drivechain" type="VBoxContainer" parent="VBox"]
 layout_mode = 2
 
-[node name="Grid" type="GridContainer" parent="VBox"]
+[node name="BaseChainDashboardPanel" parent="VBox/Drivechain" instance=ExtResource("1_vxcbl")]
 layout_mode = 2
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
-columns = 2
 
-[node name="BaseChainDashboardPanel" parent="VBox/Grid" instance=ExtResource("1_vxcbl")]
+[node name="Grid" type="VBoxContainer" parent="VBox"]
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBox" type="HBoxContainer" parent="VBox/Grid"]
+layout_mode = 2
+
+[node name="Panel" type="Panel" parent="VBox/Grid/HBox"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="VBox" type="VBoxContainer" parent="VBox/Grid/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3

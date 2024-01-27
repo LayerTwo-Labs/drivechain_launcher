@@ -1,7 +1,7 @@
 extends CanvasLayer
 
-@onready var tab_container = $HBox/Content/TabContainer
-@onready var left_menu = $HBox/LeftMenu
+@onready var tab_container = $VBox/Content/TabContainer
+@onready var left_menu = $VBox/LeftMenu
 
 
 # Called when the node enters the scene tree for the first time.

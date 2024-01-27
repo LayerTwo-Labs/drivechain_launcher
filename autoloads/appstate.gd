@@ -2,23 +2,23 @@ extends Node2D
 
 enum platform { LINUX, MAC, WIN, UNSUPPORTED }
 
-const DEFAULT_CHAIN_PROVIDERS_PATH = "res://chain_providers.cfg"
-const CHAIN_PROVIDERS_PATH = "user://chain_providers.cfg"
-const APP_CONFIG_PATH = "user://app.cfg"
-const VERSION_CONFIG = "res://version.cfg"
+const DEFAULT_CHAIN_PROVIDERS_PATH : String = "res://chain_providers.cfg"
+const CHAIN_PROVIDERS_PATH         : String = "user://chain_providers.cfg"
+const APP_CONFIG_PATH              : String = "user://app.cfg"
+const VERSION_CONFIG               : String = "res://version.cfg"
 
-const DRIVENET_NODE = "172.105.148.135"
+const DRIVENET_NODE                : String = "172.105.148.135"
 
-@onready var chain_state = preload("res://models/chain_state.tscn")
-@onready var chain_provider_info = preload("res://ui/components/dashboard/chain_providers_info/chain_provider_info.tscn")
-@onready var z_params_modal = preload("res://ui/components/dashboard/z_params_modal/z_params_modal.tscn")
+@onready var chain_state           : Resource = preload("res://models/chain_state.tscn")
+@onready var chain_provider_info   : Resource = preload("res://ui/components/dashboard/chain_providers_info/chain_provider_info.tscn")
+@onready var z_params_modal        : Resource = preload("res://ui/components/dashboard/z_params_modal/z_params_modal.tscn")
 
-var chain_providers_config: ConfigFile
-var app_config: ConfigFile
-var version_config: ConfigFile
+var chain_providers_config : ConfigFile
+var app_config             : ConfigFile
+var version_config         : ConfigFile
 
-var chain_providers: Dictionary = {}
-var chain_states: Dictionary = {}
+var chain_providers        : Dictionary = {}
+var chain_states           : Dictionary = {}
 
 signal chain_providers_changed
 signal chain_states_changed
