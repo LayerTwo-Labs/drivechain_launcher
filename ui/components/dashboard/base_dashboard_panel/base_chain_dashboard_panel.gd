@@ -21,7 +21,7 @@ var progress_timer : Timer
 @onready var progress_bar       : Control = $Margin/VBox/Footer/VBox/ProgressBar
 @onready var settings_button    : Control = $Margin/VBox/Header/SettingsButton
 
-var enabled           : bool = true
+var available         : bool = true
 
 var enabled_modulate  : Color
 var disabled_modulate : Color
@@ -95,6 +95,7 @@ func show_running_state():
 		#auto_mine_button.visible = true
 		#auto_mine_button.set_pressed_no_signal(chain_state.automine)
 		refresh_bmm_button.visible = false
+		get_parent().get_parent().get_node("Label").hide()
 	else:
 		#auto_mine_button.visible = false
 		refresh_bmm_button.visible = false
@@ -111,6 +112,8 @@ func show_executable_state():
 	refresh_bmm_button.visible = false
 	download_button.visible = false
 	modulate = enabled_modulate
+	if chain_provider.id == 'drivechain':
+		get_parent().get_parent().get_node("Label").show()
 	
 	
 func show_download_state():
