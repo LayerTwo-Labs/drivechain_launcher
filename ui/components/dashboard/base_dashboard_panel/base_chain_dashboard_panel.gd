@@ -152,7 +152,7 @@ func download():
 	download_req.request_completed.connect(self._on_download_complete)
 	var err = download_req.request(chain_provider.download_url)
 	if err != OK:
-		push_error("An error occured")
+		push_error("An error occurred")
 		return
 		
 	download_button.disabled = true
