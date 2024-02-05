@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://yhgodesyh1pt"]
+[gd_scene load_steps=14 format=3 uid="uid://yhgodesyh1pt"]
 
 [ext_resource type="Texture2D" uid="uid://2xouba13q8q7" path="res://assets/images/pattern_33.png" id="1_13ux5"]
 [ext_resource type="Script" path="res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.gd" id="1_6647v"]
@@ -6,15 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://bd7416ly17qhn" path="res://assets/images/play-symbolic.svg" id="4_a5xlm"]
 [ext_resource type="FontFile" uid="uid://ciu7chyqqs4k7" path="res://assets/fonts/Saira_Expanded-Bold.ttf" id="4_njapg"]
 [ext_resource type="FontFile" uid="uid://dgxbgdcr3s84u" path="res://assets/fonts/Saira_Expanded-Regular.ttf" id="6_kg3t2"]
-[ext_resource type="Texture2D" uid="uid://u6al2fx1l7ia" path="res://assets/images/download-cloud-line.svg" id="6_qglv3"]
 [ext_resource type="Theme" uid="uid://b4iussektjaa5" path="res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_downloaded.tres" id="7_1bvyp"]
-[ext_resource type="Theme" uid="uid://crnt3bsai3744" path="res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_undownloaded.tres" id="7_bihi7"]
-[ext_resource type="Texture2D" uid="uid://u2c8qj3wcgro" path="res://assets/images/stop-symbolic.svg" id="8_sf64t"]
+[ext_resource type="Texture2D" uid="uid://srldhyvbmy57" path="res://assets/images/settings-4-line.svg" id="9_3krsb"]
 [ext_resource type="Script" path="res://ui/components/dashboard/base_dashboard_panel/ActionButton.gd" id="9_53my3"]
-[ext_resource type="Theme" uid="uid://bcvi5ljrnn8t4" path="res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_running.tres" id="11_c7v3q"]
-[ext_resource type="Texture2D" uid="uid://cx6bbyd1qg3u8" path="res://ui/geariconfinal2.png" id="13_5ideu"]
-[ext_resource type="Texture2D" uid="uid://dirsvxtym10jq" path="res://ui/trashpropersize.png" id="14_1jmio"]
-[ext_resource type="Texture2D" uid="uid://dldqmh6vyfrx8" path="res://ui/trash delete wallet.png" id="15_y34su"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0u1v5"]
 bg_color = Color(0.188235, 0.188235, 0.188235, 1)
@@ -30,6 +24,8 @@ corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2fadl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sxh2k"]
 
 [node name="BaseChainDashboardPanel" type="PanelContainer"]
 clip_children = 2
@@ -139,39 +135,57 @@ theme_override_font_sizes/font_size = 16
 text = "A blank sidechain based on Bitcoin Core 16.99"
 autowrap_mode = 2
 
-[node name="SecondaryDescription" type="RichTextLabel" parent="Margin/Footer/VBox"]
+[node name="SecondaryDescription" type="RichTextLabel" parent="Margin/VBox/Content"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(0.639216, 0.639216, 0.639216, 1)
+theme_override_font_sizes/normal_font_size = 13
+theme_override_font_sizes/bold_font_size = 13
+theme_override_font_sizes/italics_font_size = 13
+theme_override_font_sizes/bold_italics_font_size = 13
+theme_override_font_sizes/mono_font_size = 13
+bbcode_enabled = true
+fit_content = true
+scroll_following = true
+autowrap_mode = 2
+
+[node name="Footer" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/separation = 6
+
+[node name="ActionButton" type="Button" parent="Margin/VBox/Footer"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("7_1bvyp")
+icon = ExtResource("4_a5xlm")
+script = ExtResource("9_53my3")
+Download_Icon = "res://assets/images/download-cloud-line.svg"
+Run_Icon = "res://assets/images/play-symbolic.svg"
+Stop_Icon = "res://assets/images/stop-symbolic.svg"
+
+[node name="RefreshBMM" type="CheckButton" parent="Margin/VBox/Footer"]
+layout_mode = 2
+size_flags_vertical = 8
+focus_mode = 0
+disabled = true
+text = "Refresh BMM"
+
+[node name="BlockHeight" type="Label" parent="Margin/VBox/Footer"]
 visible = false
 layout_mode = 2
-size_flags_horizontal = 8
+theme_override_fonts/font = ExtResource("6_kg3t2")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_2fadl")
 
-[node name="SettingsButton" type="Button" parent="Margin/Footer"]
-custom_minimum_size = Vector2(45, 45)
+[node name="VSeparator" type="VSeparator" parent="Margin/VBox/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_sxh2k")
+
+[node name="Button" type="Button" parent="Margin/VBox/Footer"]
 layout_mode = 2
 size_flags_horizontal = 8
-size_flags_vertical = 4
-icon = ExtResource("13_5ideu")
-text_overrun_behavior = 4
-icon_alignment = 1
-
-[node name="SettingsButton2" type="Button" parent="Margin/Footer"]
-custom_minimum_size = Vector2(45, 45)
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 4
-tooltip_text = "Delete node, keep wallet
-"
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-icon = ExtResource("14_1jmio")
-icon_alignment = 1
-
-[node name="SettingsButton3" type="Button" parent="Margin/Footer"]
-custom_minimum_size = Vector2(45, 45)
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 4
-tooltip_text = "Delete node, delete wallet"
-icon = ExtResource("15_y34su")
-icon_alignment = 1
+icon = ExtResource("9_3krsb")
 
 [node name="LeftColor" type="ColorRect" parent="."]
 custom_minimum_size = Vector2(4, 0)
@@ -179,9 +193,5 @@ layout_mode = 2
 size_flags_horizontal = 0
 color = Color(0.207843, 0.517647, 0.894118, 1)
 
-[node name="Timer" type="Timer" parent="."]
-
-[connection signal="pressed" from="Margin/Footer/ActionButton" to="." method="_on_action_button_pressed"]
-[connection signal="pressed" from="Margin/Footer/SettingsButton" to="." method="_on_settings_button_pressed"]
-[connection signal="pressed" from="Margin/Footer/SettingsButton2" to="." method="_on_settings_button_2_pressed"]
-[connection signal="pressed" from="Margin/Footer/SettingsButton3" to="." method="_on_settings_button_3_pressed"]
+[connection signal="pressed" from="Margin/VBox/Header/SettingsButton" to="." method="_on_info_button_pressed"]
+[connection signal="pressed" from="Margin/VBox/Footer/ActionButton" to="." method="_on_action_button_pressed"]

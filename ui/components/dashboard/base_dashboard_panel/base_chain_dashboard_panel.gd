@@ -23,14 +23,12 @@ var cooldown_timer : Timer
 @onready var secondary_desc     : Control = $Margin/Footer/VBox/SecondaryDescription
 @onready var left_indicator     : Control = $LeftColor
 @onready var background         : Control = $BackgroundPattern
-@onready var action_button      : Control = $Margin/Footer/ActionButton
-@onready var description        : Control = $Margin/Footer/VBox/Description
+@onready var action_button       : Control = $Margin/VBox/Footer/ActionButton
 #@onready var auto_mine_button  : Control = $Margin/VBox/Footer/Automine # removed due to signet
-@onready var refresh_bmm_button : Control = $Margin/Footer/RefreshBMM
-@onready var progress_bar       : Control = $Margin/Footer/ProgressBar
-@onready var settings_button    : Control = $Margin/Footer/SettingsButton
-@onready var delete_node_button : Control = $Margin/Footer/SettingsButton2
-@onready var reset_confirm_scene = load("res://ui/components/settings/reset_confirm_scene.tscn")
+@onready var refresh_bmm_button : Control = $Margin/VBox/Footer/RefreshBMM
+@onready var progress_bar       : Control = $Margin/VBox/Footer/VBox/ProgressBar
+@onready var settings_button    : Control = $Margin/VBox/Header/SettingsButton
+
 var available         : bool = true
 
 var enabled_modulate  : Color
@@ -106,7 +104,7 @@ func update_view():
 	block_height.text = 'Block height: %d' % chain_state.height
 	
 func show_waiting_on_drivechain_state():
-	action_button.disabled = true
+	action_button.hide()
 	#auto_mine_button.visible = false
 	refresh_bmm_button.visible = false
 	secondary_desc.visible = true
@@ -115,11 +113,12 @@ func show_waiting_on_drivechain_state():
 	
 func show_running_state():
 	action_button.set_state(ActionButton.STOP)
-	action_button.disabled = false  # Ensure the button is enabled
-	action_button.modulate = enabled_modulate  # Reset button color to indicate active state
-
+	modulate = enabled_modulate
+	
+	
 	if chain_provider.id == 'drivechain':
 		refresh_bmm_button.visible = false
+		#start_button.show()
 		action_button.theme = load("res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_running.tres")
 		get_parent().get_parent().get_node("Label").hide()
 	else:
@@ -447,7 +446,11 @@ func initiate_download_process():
 	if err != OK:
 		push_error("An error occurred during download request.")
 		return
+<<<<<<< HEAD
 	
+=======
+		
+>>>>>>> 19eecc9 (Merged Download, Run, and Stop buttons in drivechain panels to a single "Action" button.)
 	action_button.disabled = true
 	
 	progress_timer = Timer.new()
@@ -567,6 +570,7 @@ func _on_info_button_pressed():
 	
 	
 
+<<<<<<< HEAD
 func _on_action_button_pressed():
 	if cooldown_timer.is_stopped():
 		match action_button.state:
@@ -858,3 +862,14 @@ func purge_directory():
 	
 	Appstate.purge(directory_text)
 	print("Directory purged: " + directory_text)
+=======
+
+func _on_action_button_pressed():
+	match action_button.state:
+		ActionButton.DOWNLOAD:
+			download()
+		ActionButton.RUN:
+			_on_start_button_pressed()
+		ActionButton.STOP:
+			_on_stop_button_pressed()
+>>>>>>> 19eecc9 (Merged Download, Run, and Stop buttons in drivechain panels to a single "Action" button.)

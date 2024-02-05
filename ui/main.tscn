@@ -33,4 +33,5 @@ visible = false
 layout_mode = 2
 
 [node name="LeftMenu" parent="VBox" instance=ExtResource("2_0lj2k")]
+visible = false
 layout_mode = 2
