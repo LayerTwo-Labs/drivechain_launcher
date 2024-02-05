@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://yhgodesyh1pt"]
+[gd_scene load_steps=14 format=3 uid="uid://yhgodesyh1pt"]
 
 [ext_resource type="Texture2D" uid="uid://2xouba13q8q7" path="res://assets/images/pattern_33.png" id="1_13ux5"]
 [ext_resource type="Script" path="res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.gd" id="1_6647v"]
@@ -7,8 +7,9 @@
 [ext_resource type="FontFile" uid="uid://ciu7chyqqs4k7" path="res://assets/fonts/Saira_Expanded-Bold.ttf" id="4_njapg"]
 [ext_resource type="Texture2D" uid="uid://vfwftvcbvob6" path="res://assets/images/info-symbolic 1.svg" id="5_pnoaf"]
 [ext_resource type="FontFile" uid="uid://dgxbgdcr3s84u" path="res://assets/fonts/Saira_Expanded-Regular.ttf" id="6_kg3t2"]
-[ext_resource type="Texture2D" uid="uid://u6al2fx1l7ia" path="res://assets/images/download-cloud-line.svg" id="6_qglv3"]
-[ext_resource type="Texture2D" uid="uid://u2c8qj3wcgro" path="res://assets/images/stop-symbolic.svg" id="8_sf64t"]
+[ext_resource type="Theme" uid="uid://b4iussektjaa5" path="res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_downloaded.tres" id="7_1bvyp"]
+[ext_resource type="Texture2D" uid="uid://srldhyvbmy57" path="res://assets/images/settings-4-line.svg" id="9_3krsb"]
+[ext_resource type="Script" path="res://ui/components/dashboard/base_dashboard_panel/ActionButton.gd" id="9_53my3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0u1v5"]
 bg_color = Color(0.188235, 0.188235, 0.188235, 1)
@@ -23,77 +24,9 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trvkb"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.207843, 0.517647, 0.894118, 0.196078)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-corner_detail = 5
-expand_margin_left = 1.0
-expand_margin_top = 1.0
-expand_margin_right = 1.0
-expand_margin_bottom = 1.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wwqu3"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.282353, 0.568627, 0.937255, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-corner_detail = 5
-expand_margin_left = 1.0
-expand_margin_top = 1.0
-expand_margin_right = 1.0
-expand_margin_bottom = 1.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_26yrd"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.207843, 0.517647, 0.894118, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-corner_detail = 5
-expand_margin_left = 1.0
-expand_margin_top = 1.0
-expand_margin_right = 1.0
-expand_margin_bottom = 1.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mymem"]
-content_margin_left = 5.0
-content_margin_top = 5.0
-content_margin_right = 5.0
-content_margin_bottom = 5.0
-bg_color = Color(0.207843, 0.517647, 0.894118, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-corner_detail = 5
-
-[sub_resource type="Theme" id="Theme_2tbig"]
-Button/colors/font_color = Color(1, 1, 1, 1)
-Button/constants/h_separation = 4
-Button/constants/icon_max_width = 24
-Button/font_sizes/font_size = 14
-Button/styles/disabled = SubResource("StyleBoxFlat_trvkb")
-Button/styles/hover = SubResource("StyleBoxFlat_wwqu3")
-Button/styles/normal = SubResource("StyleBoxFlat_26yrd")
-Button/styles/pressed = SubResource("StyleBoxFlat_mymem")
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2fadl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sxh2k"]
 
 [node name="BaseChainDashboardPanel" type="PanelContainer"]
 clip_children = 2
@@ -191,18 +124,15 @@ layout_mode = 2
 size_flags_vertical = 8
 theme_override_constants/separation = 6
 
-[node name="StartButton" type="Button" parent="Margin/VBox/Footer"]
+[node name="ActionButton" type="Button" parent="Margin/VBox/Footer"]
 layout_mode = 2
-size_flags_vertical = 8
 focus_mode = 0
-theme = SubResource("Theme_2tbig")
+theme = ExtResource("7_1bvyp")
 icon = ExtResource("4_a5xlm")
-
-[node name="StopButton" type="Button" parent="Margin/VBox/Footer"]
-layout_mode = 2
-size_flags_vertical = 8
-focus_mode = 0
-icon = ExtResource("8_sf64t")
+script = ExtResource("9_53my3")
+Download_Icon = "res://assets/images/download-cloud-line.svg"
+Run_Icon = "res://assets/images/play-symbolic.svg"
+Stop_Icon = "res://assets/images/stop-symbolic.svg"
 
 [node name="RefreshBMM" type="CheckButton" parent="Margin/VBox/Footer"]
 layout_mode = 2
@@ -212,27 +142,20 @@ disabled = true
 text = "Refresh BMM"
 
 [node name="BlockHeight" type="Label" parent="Margin/VBox/Footer"]
+visible = false
 layout_mode = 2
 theme_override_fonts/font = ExtResource("6_kg3t2")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_2fadl")
 
-[node name="VBox" type="VBoxContainer" parent="Margin/VBox/Footer"]
+[node name="VSeparator" type="VSeparator" parent="Margin/VBox/Footer"]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_sxh2k")
 
-[node name="ProgressBar" type="ProgressBar" parent="Margin/VBox/Footer/VBox"]
-visible = false
-custom_minimum_size = Vector2(0, 5)
+[node name="Button" type="Button" parent="Margin/VBox/Footer"]
 layout_mode = 2
-size_flags_vertical = 4
-show_percentage = false
-
-[node name="DownloadButton" type="Button" parent="Margin/VBox/Footer/VBox"]
-layout_mode = 2
-size_flags_vertical = 8
-focus_mode = 0
-theme = SubResource("Theme_2tbig")
-icon = ExtResource("6_qglv3")
+size_flags_horizontal = 8
+icon = ExtResource("9_3krsb")
 
 [node name="LeftColor" type="ColorRect" parent="."]
 custom_minimum_size = Vector2(4, 0)
@@ -241,6 +164,4 @@ size_flags_horizontal = 0
 color = Color(0.207843, 0.517647, 0.894118, 1)
 
 [connection signal="pressed" from="Margin/VBox/Header/SettingsButton" to="." method="_on_info_button_pressed"]
-[connection signal="pressed" from="Margin/VBox/Footer/StartButton" to="." method="_on_start_button_pressed"]
-[connection signal="pressed" from="Margin/VBox/Footer/StopButton" to="." method="_on_stop_button_pressed"]
-[connection signal="pressed" from="Margin/VBox/Footer/VBox/DownloadButton" to="." method="download"]
+[connection signal="pressed" from="Margin/VBox/Footer/ActionButton" to="." method="_on_action_button_pressed"]
