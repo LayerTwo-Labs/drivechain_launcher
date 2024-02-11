@@ -25,7 +25,7 @@ signal chain_states_changed
 
 func _ready():
 	if Appstate.get_platform() == platform.UNSUPPORTED:
-		push_error("Unsupported platfom")
+		push_error("Unsupported platform")
 		get_tree().quit()
 		
 	load_app_config()
@@ -128,7 +128,7 @@ func load_config():
 	chain_providers_config = ConfigFile.new()
 	var err = chain_providers_config.load(CHAIN_PROVIDERS_PATH)
 	if err != OK:
-		print(ProjectSettings.globalize_path(CHAIN_PROVIDERS_PATH) + " not found. Trying to load from embeded cfg")
+		print(ProjectSettings.globalize_path(CHAIN_PROVIDERS_PATH) + " not found. Trying to load from embedded cfg")
 		err = chain_providers_config.load(DEFAULT_CHAIN_PROVIDERS_PATH)
 		if err != OK:
 			print(ProjectSettings.globalize_path(DEFAULT_CHAIN_PROVIDERS_PATH) + " not found. Something went terribly wrong")
