@@ -7,17 +7,25 @@ var chain_state    : ChainState
 var download_req   : HTTPRequest
 var progress_timer : Timer
 
-@onready var title              : Control = $Margin/VBox/Header/Title
-@onready var desc               : Control = $Margin/VBox/Content/Description
-@onready var block_height       : Control = $Margin/VBox/Footer/BlockHeight
-@onready var secondary_desc     : Control = $Margin/VBox/Content/SecondaryDescription
+@export var drivechain_title_font_size : int = 32
+@export var drivechain_descr_font_size : int = 16
+@export var drivechain_minimum_height  : int = 100
+@export var subchain_title_font_size   : int = 20
+@export var subchain_descr_font_size   : int = 12
+@export var subchain_minimum_height    : int = 10
+
+@onready var title              : Control = $Margin/Footer/Title
+@onready var desc               : Control = $Margin/Footer/VBox/Description
+@onready var block_height       : Control = $Margin/Footer/BlockHeight
+@onready var secondary_desc     : Control = $Margin/Footer/VBox/SecondaryDescription
 @onready var left_indicator     : Control = $LeftColor
 @onready var background         : Control = $BackgroundPattern
-@onready var action_button       : Control = $Margin/VBox/Footer/ActionButton
+@onready var action_button      : Control = $Margin/Footer/ActionButton
+@onready var description        : Control = $Margin/Footer/VBox/Description
 #@onready var auto_mine_button  : Control = $Margin/VBox/Footer/Automine # removed due to signet
-@onready var refresh_bmm_button : Control = $Margin/VBox/Footer/RefreshBMM
-@onready var progress_bar       : Control = $Margin/VBox/Footer/VBox/ProgressBar
-@onready var settings_button    : Control = $Margin/VBox/Header/SettingsButton
+@onready var refresh_bmm_button : Control = $Margin/Footer/RefreshBMM
+@onready var progress_bar       : Control = $Margin/Footer/ProgressBar
+@onready var settings_button    : Control = $Margin/Footer/SettingsButton
 
 var available         : bool = true
 
@@ -30,15 +38,24 @@ func _ready():
 	disabled_modulate = modulate.darkened(0.3)
 	
 	
+	
 func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 	self.chain_provider = _chain_provider
 	self.chain_state = _chain_state
 	if chain_provider.chain_type == ChainProvider.c_type.MAIN:
 		left_indicator.visible = true
 		background.visible = true
+		title.add_theme_font_size_override("font_size", drivechain_title_font_size)
+		description.add_theme_font_size_override("font_size", drivechain_descr_font_size)
+		custom_minimum_size.y = drivechain_minimum_height
 	else:
 		left_indicator.visible = false
 		background.visible = false
+		title.add_theme_font_size_override("font_size", subchain_title_font_size)
+		description.add_theme_font_size_override("font_size", subchain_descr_font_size)
+		custom_minimum_size.y = subchain_minimum_height
+		size.y = subchain_minimum_height
+		#content.hide()
 		
 	title.text = chain_provider.display_name
 	desc.text = chain_provider.description
@@ -178,6 +195,7 @@ func _on_download_complete(result, response_code, _headers, body):
 	var save_game = FileAccess.open(path, FileAccess.WRITE)
 	save_game.store_buffer(body)
 	save_game.close()
+	action_button.disabled = false
 	
 	unzip_file_and_setup_binary(chain_provider.base_dir, path)
 	
@@ -272,3 +290,11 @@ func _on_action_button_pressed():
 			_on_start_button_pressed()
 		ActionButton.STOP:
 			_on_stop_button_pressed()
+
+
+func _on_focus_entered():
+	if chain_provider.chain_type == ChainProvider.c_type.MAIN: return
+
+
+func _on_focus_exited():
+	if chain_provider.chain_type == ChainProvider.c_type.MAIN: return
