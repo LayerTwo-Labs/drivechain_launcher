@@ -1,6 +1,7 @@
-[gd_resource type="Theme" load_steps=16 format=3 uid="uid://iix53v175t6k"]
+[gd_resource type="Theme" load_steps=17 format=3 uid="uid://iix53v175t6k"]
 
 [ext_resource type="FontFile" uid="uid://b1w37357tl3er" path="res://assets/fonts/Cantarell-Bold.ttf" id="1_n5qju"]
+[ext_resource type="FontFile" uid="uid://dgxbgdcr3s84u" path="res://assets/fonts/Saira_Expanded-Regular.ttf" id="1_odsgo"]
 [ext_resource type="FontFile" uid="uid://cb1hb3b6h6b40" path="res://assets/fonts/Cantarell-BoldItalic.ttf" id="2_g8qux"]
 [ext_resource type="FontFile" uid="uid://jcbeo7vsa1q3" path="res://assets/fonts/Cantarell-Italic.ttf" id="3_sdywu"]
 [ext_resource type="FontFile" uid="uid://ccfr6y00w3tjf" path="res://assets/fonts/Cantarell-Regular.ttf" id="4_1uy8h"]
@@ -167,8 +168,8 @@ corner_detail = 6
 [resource]
 Button/constants/h_separation = 4
 Button/constants/icon_max_width = 24
-Button/font_sizes/font_size = 12
-Button/fonts/font = ExtResource("1_n5qju")
+Button/font_sizes/font_size = 16
+Button/fonts/font = ExtResource("1_odsgo")
 Button/styles/disabled = SubResource("StyleBoxFlat_o5s05")
 Button/styles/hover = SubResource("StyleBoxFlat_ra3kd")
 Button/styles/normal = SubResource("StyleBoxFlat_xiqlv")

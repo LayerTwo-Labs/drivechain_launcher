@@ -1,14 +1,18 @@
-[gd_scene load_steps=12 format=3 uid="uid://yhgodesyh1pt"]
+[gd_scene load_steps=16 format=3 uid="uid://yhgodesyh1pt"]
 
 [ext_resource type="Texture2D" uid="uid://2xouba13q8q7" path="res://assets/images/pattern_33.png" id="1_13ux5"]
 [ext_resource type="Script" path="res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.gd" id="1_6647v"]
 [ext_resource type="Texture2D" uid="uid://drsftlr0wcb3m" path="res://assets/images/chain.svg" id="2_fp0rc"]
-[ext_resource type="FontFile" uid="uid://b1w37357tl3er" path="res://assets/fonts/Cantarell-Bold.ttf" id="3_ckr60"]
 [ext_resource type="Texture2D" uid="uid://bd7416ly17qhn" path="res://assets/images/play-symbolic.svg" id="4_a5xlm"]
-[ext_resource type="Theme" uid="uid://ckf7x64em5bhq" path="res://ui/themes/important_button_dark.tres" id="5_7y8kv"]
-[ext_resource type="Texture2D" uid="uid://vfwftvcbvob6" path="res://assets/images/info-symbolic 1.svg" id="5_pnoaf"]
+[ext_resource type="FontFile" uid="uid://ciu7chyqqs4k7" path="res://assets/fonts/Saira_Expanded-Bold.ttf" id="4_njapg"]
+[ext_resource type="FontFile" uid="uid://dgxbgdcr3s84u" path="res://assets/fonts/Saira_Expanded-Regular.ttf" id="6_kg3t2"]
 [ext_resource type="Texture2D" uid="uid://u6al2fx1l7ia" path="res://assets/images/download-cloud-line.svg" id="6_qglv3"]
+[ext_resource type="Theme" uid="uid://b4iussektjaa5" path="res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_downloaded.tres" id="7_1bvyp"]
+[ext_resource type="Theme" uid="uid://crnt3bsai3744" path="res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_undownloaded.tres" id="7_bihi7"]
 [ext_resource type="Texture2D" uid="uid://u2c8qj3wcgro" path="res://assets/images/stop-symbolic.svg" id="8_sf64t"]
+[ext_resource type="Script" path="res://ui/components/dashboard/base_dashboard_panel/ActionButton.gd" id="9_53my3"]
+[ext_resource type="Theme" uid="uid://bcvi5ljrnn8t4" path="res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_running.tres" id="11_c7v3q"]
+[ext_resource type="Texture2D" uid="uid://btvncw88xfvn" path="res://assets/images/info-settings.svg" id="13_cajt3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0u1v5"]
 bg_color = Color(0.188235, 0.188235, 0.188235, 1)
@@ -28,12 +32,14 @@ corner_radius_bottom_left = 6
 [node name="BaseChainDashboardPanel" type="PanelContainer"]
 clip_children = 2
 clip_contents = true
-custom_minimum_size = Vector2(0, 200)
-offset_right = 450.0
-offset_bottom = 200.0
+custom_minimum_size = Vector2(1000, 0)
+offset_right = 1025.0
+offset_bottom = 79.0
 size_flags_horizontal = 3
+size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_0u1v5")
 script = ExtResource("1_6647v")
+drivechain_title_font_size = 28
 
 [node name="BackgroundPattern" type="TextureRect" parent="."]
 modulate = Color(1, 1, 1, 0.0156863)
@@ -45,121 +51,103 @@ stretch_mode = 1
 
 [node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="VBox" type="VBoxContainer" parent="Margin"]
+[node name="Footer" type="HBoxContainer" parent="Margin"]
 layout_mode = 2
-theme_override_constants/separation = 16
+size_flags_vertical = 4
+theme_override_constants/separation = 6
 
-[node name="Header" type="HBoxContainer" parent="Margin/VBox"]
+[node name="ActionButton" type="Button" parent="Margin/Footer"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-size_flags_vertical = 0
-theme_override_constants/separation = 8
-
-[node name="Image" type="TextureRect" parent="Margin/VBox/Header"]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-texture = ExtResource("2_fp0rc")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Title" type="Label" parent="Margin/VBox/Header"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 1
-theme_override_constants/shadow_offset_y = 2
-theme_override_fonts/font = ExtResource("3_ckr60")
-theme_override_font_sizes/font_size = 22
-text = "Testchain"
-vertical_alignment = 1
-
-[node name="SettingsButton" type="Button" parent="Margin/VBox/Header"]
-layout_mode = 2
-size_flags_horizontal = 10
 size_flags_vertical = 4
 focus_mode = 0
-theme_override_colors/icon_normal_color = Color(0.854902, 0.854902, 0.854902, 1)
-theme_override_colors/icon_pressed_color = Color(0.854902, 0.854902, 0.854902, 1)
-theme_override_colors/icon_hover_color = Color(0.854902, 0.854902, 0.854902, 1)
-theme_override_colors/icon_hover_pressed_color = Color(0.854902, 0.854902, 0.854902, 1)
-theme_override_constants/icon_max_width = 16
-icon = ExtResource("5_pnoaf")
-flat = true
+theme = ExtResource("7_1bvyp")
+icon = ExtResource("4_a5xlm")
+expand_icon = true
+script = ExtResource("9_53my3")
+download_icon = ExtResource("6_qglv3")
+download_theme = ExtResource("7_bihi7")
+run_icon = ExtResource("4_a5xlm")
+run_theme = ExtResource("7_1bvyp")
+stop_icon = ExtResource("8_sf64t")
+stop_theme = ExtResource("11_c7v3q")
 
-[node name="Content" type="VBoxContainer" parent="Margin/VBox"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Description" type="Label" parent="Margin/VBox/Content"]
-layout_mode = 2
-text = "A blank sidechain based on Bitcoin Core 16.99"
-autowrap_mode = 2
-
-[node name="SecondaryDescription" type="RichTextLabel" parent="Margin/VBox/Content"]
+[node name="RefreshBMM" type="CheckButton" parent="Margin/Footer"]
 visible = false
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_colors/default_color = Color(0.639216, 0.639216, 0.639216, 1)
-theme_override_font_sizes/normal_font_size = 13
-theme_override_font_sizes/bold_font_size = 13
-theme_override_font_sizes/italics_font_size = 13
-theme_override_font_sizes/bold_italics_font_size = 13
-theme_override_font_sizes/mono_font_size = 13
-bbcode_enabled = true
-fit_content = true
-scroll_following = true
-autowrap_mode = 2
-
-[node name="Footer" type="HBoxContainer" parent="Margin/VBox"]
-layout_mode = 2
-size_flags_vertical = 8
-theme_override_constants/separation = 6
-
-[node name="StartButton" type="Button" parent="Margin/VBox/Footer"]
-layout_mode = 2
-size_flags_vertical = 8
-focus_mode = 0
-theme = ExtResource("5_7y8kv")
-icon = ExtResource("4_a5xlm")
-
-[node name="StopButton" type="Button" parent="Margin/VBox/Footer"]
-layout_mode = 2
-size_flags_vertical = 8
-focus_mode = 0
-icon = ExtResource("8_sf64t")
-
-[node name="RefreshBMM" type="CheckButton" parent="Margin/VBox/Footer"]
-layout_mode = 2
-size_flags_vertical = 8
 focus_mode = 0
 disabled = true
 text = "Refresh BMM"
 
-[node name="BlockHeight" type="Label" parent="Margin/VBox/Footer"]
+[node name="BlockHeight" type="Label" parent="Margin/Footer"]
+visible = false
 layout_mode = 2
+theme_override_fonts/font = ExtResource("6_kg3t2")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_2fadl")
 
-[node name="VBox" type="VBoxContainer" parent="Margin/VBox/Footer"]
-layout_mode = 2
-size_flags_horizontal = 10
-
-[node name="ProgressBar" type="ProgressBar" parent="Margin/VBox/Footer/VBox"]
+[node name="ProgressBar" type="ProgressBar" parent="Margin/Footer"]
 visible = false
-custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="Image" type="TextureRect" parent="Margin/Footer"]
+visible = false
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 size_flags_vertical = 4
-show_percentage = false
+texture = ExtResource("2_fp0rc")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="DownloadButton" type="Button" parent="Margin/VBox/Footer/VBox"]
+[node name="Title" type="Label" parent="Margin/Footer"]
 layout_mode = 2
-size_flags_vertical = 8
-focus_mode = 0
-theme = ExtResource("5_7y8kv")
-icon = ExtResource("6_qglv3")
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("4_njapg")
+theme_override_font_sizes/font_size = 28
+text = "Testchain"
+vertical_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="Margin/Footer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="VBox" type="VBoxContainer" parent="Margin/Footer"]
+custom_minimum_size = Vector2(425, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+
+[node name="Description" type="Label" parent="Margin/Footer/VBox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_kg3t2")
+theme_override_font_sizes/font_size = 16
+text = "A blank sidechain based on Bitcoin Core 16.99"
+autowrap_mode = 2
+
+[node name="SecondaryDescription" type="RichTextLabel" parent="Margin/Footer/VBox"]
+layout_mode = 2
+
+[node name="SettingsButton" type="Button" parent="Margin/Footer"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+icon = ExtResource("13_cajt3")
+icon_alignment = 1
 
 [node name="LeftColor" type="ColorRect" parent="."]
 custom_minimum_size = Vector2(4, 0)
@@ -167,7 +155,4 @@ layout_mode = 2
 size_flags_horizontal = 0
 color = Color(0.207843, 0.517647, 0.894118, 1)
 
-[connection signal="pressed" from="Margin/VBox/Header/SettingsButton" to="." method="_on_info_button_pressed"]
-[connection signal="pressed" from="Margin/VBox/Footer/StartButton" to="." method="_on_start_button_pressed"]
-[connection signal="pressed" from="Margin/VBox/Footer/StopButton" to="." method="_on_stop_button_pressed"]
-[connection signal="pressed" from="Margin/VBox/Footer/VBox/DownloadButton" to="." method="download"]
+[connection signal="pressed" from="Margin/Footer/ActionButton" to="." method="_on_action_button_pressed"]

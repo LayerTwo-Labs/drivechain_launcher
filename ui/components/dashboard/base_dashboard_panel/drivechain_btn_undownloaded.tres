@@ -1,13 +1,11 @@
-[gd_resource type="Theme" load_steps=6 format=3 uid="uid://ckf7x64em5bhq"]
-
-[ext_resource type="FontFile" uid="uid://dgxbgdcr3s84u" path="res://assets/fonts/Saira_Expanded-Regular.ttf" id="1_oa8fm"]
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://crnt3bsai3744"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trvkb"]
 content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
 content_margin_bottom = 4.0
-bg_color = Color(0.207843, 0.517647, 0.894118, 0.196078)
+bg_color = Color(0.890196, 0.490196, 0.203922, 0.196078)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -23,7 +21,7 @@ content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
 content_margin_bottom = 4.0
-bg_color = Color(0.282353, 0.568627, 0.937255, 1)
+bg_color = Color(1, 0.533333, 0, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -39,7 +37,7 @@ content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
 content_margin_bottom = 4.0
-bg_color = Color(0.207843, 0.517647, 0.894118, 1)
+bg_color = Color(1, 0.4, 0, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -49,26 +47,28 @@ expand_margin_left = 1.0
 expand_margin_top = 1.0
 expand_margin_right = 1.0
 expand_margin_bottom = 1.0
+shadow_color = Color(0, 0, 0, 0.313726)
+shadow_size = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mymem"]
 content_margin_left = 5.0
 content_margin_top = 5.0
 content_margin_right = 5.0
 content_margin_bottom = 5.0
-bg_color = Color(0.207843, 0.517647, 0.894118, 1)
+bg_color = Color(0.8, 0.266667, 0, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 corner_detail = 5
+shadow_color = Color(0, 0, 0, 0.145098)
+shadow_size = 1
 
 [resource]
-default_font_size = 16
 Button/colors/font_color = Color(1, 1, 1, 1)
 Button/constants/h_separation = 4
 Button/constants/icon_max_width = 24
-Button/font_sizes/font_size = 16
-Button/fonts/font = ExtResource("1_oa8fm")
+Button/font_sizes/font_size = 14
 Button/styles/disabled = SubResource("StyleBoxFlat_trvkb")
 Button/styles/hover = SubResource("StyleBoxFlat_wwqu3")
 Button/styles/normal = SubResource("StyleBoxFlat_26yrd")

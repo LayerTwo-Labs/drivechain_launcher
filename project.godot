@@ -22,6 +22,11 @@ config/windows_native_icon="res://icon.ico"
 
 Appstate="*res://autoloads/appstate.tscn"
 
+[display]
+
+window/size/viewport_width=1024
+window/size/viewport_height=640
+
 [filesystem]
 
 import/blender/enabled=false

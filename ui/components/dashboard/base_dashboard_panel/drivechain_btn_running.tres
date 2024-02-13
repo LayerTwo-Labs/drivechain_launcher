@@ -1,6 +1,4 @@
-[gd_resource type="Theme" load_steps=6 format=3 uid="uid://ckf7x64em5bhq"]
-
-[ext_resource type="FontFile" uid="uid://dgxbgdcr3s84u" path="res://assets/fonts/Saira_Expanded-Regular.ttf" id="1_oa8fm"]
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://bcvi5ljrnn8t4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trvkb"]
 content_margin_left = 4.0
@@ -39,7 +37,7 @@ content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
 content_margin_bottom = 4.0
-bg_color = Color(0.207843, 0.517647, 0.894118, 1)
+bg_color = Color(0, 0.8, 0, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -63,12 +61,10 @@ corner_radius_bottom_left = 4
 corner_detail = 5
 
 [resource]
-default_font_size = 16
 Button/colors/font_color = Color(1, 1, 1, 1)
 Button/constants/h_separation = 4
 Button/constants/icon_max_width = 24
-Button/font_sizes/font_size = 16
-Button/fonts/font = ExtResource("1_oa8fm")
+Button/font_sizes/font_size = 14
 Button/styles/disabled = SubResource("StyleBoxFlat_trvkb")
 Button/styles/hover = SubResource("StyleBoxFlat_wwqu3")
 Button/styles/normal = SubResource("StyleBoxFlat_26yrd")

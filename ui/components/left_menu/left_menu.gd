@@ -1,8 +1,8 @@
 extends PanelContainer
 
-@onready var dashboard_button := $VBox/DashboardButton
-@onready var playground_button := $VBox/PlaygroundButton
-@onready var settings_button := $VBox/SettingsButton
+@onready var dashboard_button := $HBox/DashboardButton
+@onready var playground_button := $HBox/PlaygroundButton
+@onready var settings_button := $HBox/SettingsButton
 
 signal left_menu_button_pressed(v: int)
 

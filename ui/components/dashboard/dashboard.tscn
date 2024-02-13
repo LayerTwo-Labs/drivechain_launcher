@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bwg823t4rnqpy"]
+[gd_scene load_steps=5 format=3 uid="uid://bwg823t4rnqpy"]
 
 [ext_resource type="PackedScene" uid="uid://yhgodesyh1pt" path="res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.tscn" id="1_vxcbl"]
 [ext_resource type="Script" path="res://ui/components/dashboard/dashboard.gd" id="1_xkw7t"]
+[ext_resource type="FontFile" uid="uid://bsnq76qepjdu4" path="res://assets/fonts/Saira_Expanded-Italic.ttf" id="3_enw07"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1mjr6"]
 content_margin_left = 8.0
@@ -28,11 +29,28 @@ theme_override_constants/separation = 8
 [node name="Drivechain" type="VBoxContainer" parent="VBox"]
 layout_mode = 2
 
-[node name="Grid" type="GridContainer" parent="VBox"]
+[node name="BaseChainDashboardPanel" parent="VBox/Drivechain" instance=ExtResource("1_vxcbl")]
 layout_mode = 2
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
-columns = 2
 
-[node name="BaseChainDashboardPanel" parent="VBox/Grid" instance=ExtResource("1_vxcbl")]
+[node name="Label" type="Label" parent="VBox"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_enw07")
+text = "The following services are dependent upon the above drivechain being running. Please install and run that first before continuing."
+autowrap_mode = 3
+
+[node name="Grid" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBox" type="HBoxContainer" parent="VBox/Grid"]
+layout_mode = 2
+
+[node name="Panel" type="Panel" parent="VBox/Grid/HBox"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="VBox" type="VBoxContainer" parent="VBox/Grid/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3

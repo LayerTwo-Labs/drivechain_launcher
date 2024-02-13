@@ -11,24 +11,38 @@ bg_color = Color(0.141176, 0.141176, 0.141176, 1)
 [node name="LeftMenu" type="PanelContainer"]
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_right = 200.0
+offset_right = 1024.0
+offset_bottom = -561.0
 grow_vertical = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
+size_flags_vertical = 8
 theme_override_styles/panel = SubResource("StyleBoxFlat_c8gs8")
 script = ExtResource("1_yja75")
 
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="HBox" type="HBoxContainer" parent="MarginContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+size_flags_vertical = 8
+size_flags_stretch_ratio = 0.0
 theme_override_constants/separation = 0
 
-[node name="Spacer" type="Control" parent="VBox"]
+[node name="Spacer" type="Control" parent="MarginContainer/HBox"]
+visible = false
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 
-[node name="DashboardButton" type="Button" parent="VBox"]
+[node name="DashboardButton" type="Button" parent="MarginContainer/HBox"]
+visible = false
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+size_flags_vertical = 4
 focus_mode = 0
 theme = ExtResource("1_vs06l")
 toggle_mode = true
@@ -37,19 +51,22 @@ text = "DASHBOARD"
 icon = ExtResource("3_rgc2b")
 alignment = 0
 
-[node name="PlaygroundButton" type="Button" parent="VBox"]
+[node name="PlaygroundButton" type="Button" parent="MarginContainer/HBox"]
 visible = false
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+size_flags_vertical = 4
 focus_mode = 0
 theme = ExtResource("1_vs06l")
 toggle_mode = true
 text = "PLAYGROUND"
 alignment = 0
 
-[node name="SettingsButton" type="Button" parent="VBox"]
+[node name="SettingsButton" type="Button" parent="MarginContainer/HBox"]
+visible = false
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+size_flags_vertical = 4
 focus_mode = 0
 theme = ExtResource("1_vs06l")
 toggle_mode = true
@@ -57,6 +74,15 @@ text = "SETTINGS"
 icon = ExtResource("4_cr7m3")
 alignment = 0
 
-[connection signal="toggled" from="VBox/DashboardButton" to="." method="_on_left_menu_button_toggled" binds= [0]]
-[connection signal="toggled" from="VBox/PlaygroundButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
-[connection signal="toggled" from="VBox/SettingsButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
+[node name="Quotes" type="Label" parent="MarginContainer/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 10
+text = "\"Used to the conditions of a capitalistic environment, the average American takes it for granted that every year business makes something new and better accessible to him. Looking backward upon the years of his own life, he realizes that many implements that were totally unknown in the days of his youth and many others which at that time could be enjoyed only by a small minority are now standard equipment of almost every household.\"
+--Ludwig von Mises"
+horizontal_alignment = 2
+autowrap_mode = 2
+
+[connection signal="toggled" from="MarginContainer/HBox/DashboardButton" to="." method="_on_left_menu_button_toggled" binds= [0]]
+[connection signal="toggled" from="MarginContainer/HBox/PlaygroundButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
+[connection signal="toggled" from="MarginContainer/HBox/SettingsButton" to="." method="_on_left_menu_button_toggled" binds= [1]]

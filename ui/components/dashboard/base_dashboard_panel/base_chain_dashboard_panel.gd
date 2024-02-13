@@ -1,33 +1,42 @@
 extends PanelContainer
 class_name BaseChainDashboardPanel
 
-var chain_provider: ChainProvider
-var chain_state: ChainState
+var chain_provider : ChainProvider
+var chain_state    : ChainState
 
-var download_req: HTTPRequest
-var progress_timer: Timer
+var download_req   : HTTPRequest
+var progress_timer : Timer
 
-@onready var title = $Margin/VBox/Header/Title
-@onready var desc = $Margin/VBox/Content/Description
-@onready var block_height = $Margin/VBox/Footer/BlockHeight
-@onready var secondary_desc = $Margin/VBox/Content/SecondaryDescription
-@onready var left_indicator = $LeftColor
-@onready var background = $BackgroundPattern
-@onready var start_button = $Margin/VBox/Footer/StartButton
-@onready var stop_button = $Margin/VBox/Footer/StopButton
-#@onready var auto_mine_button = $Margin/VBox/Footer/Automine # removed due to signet
-@onready var refresh_bmm_button = $Margin/VBox/Footer/RefreshBMM
-@onready var download_button = $Margin/VBox/Footer/VBox/DownloadButton
-@onready var progress_bar = $Margin/VBox/Footer/VBox/ProgressBar
-@onready var settings_button = $Margin/VBox/Header/SettingsButton
+@export var drivechain_title_font_size : int = 32
+@export var drivechain_descr_font_size : int = 16
+@export var drivechain_minimum_height  : int = 100
+@export var subchain_title_font_size   : int = 20
+@export var subchain_descr_font_size   : int = 12
+@export var subchain_minimum_height    : int = 10
 
-var enabled_modulate: Color
-var disabled_modulate: Color
+@onready var title              : Control = $Margin/Footer/Title
+@onready var desc               : Control = $Margin/Footer/VBox/Description
+@onready var block_height       : Control = $Margin/Footer/BlockHeight
+@onready var secondary_desc     : Control = $Margin/Footer/VBox/SecondaryDescription
+@onready var left_indicator     : Control = $LeftColor
+@onready var background         : Control = $BackgroundPattern
+@onready var action_button      : Control = $Margin/Footer/ActionButton
+@onready var description        : Control = $Margin/Footer/VBox/Description
+#@onready var auto_mine_button  : Control = $Margin/VBox/Footer/Automine # removed due to signet
+@onready var refresh_bmm_button : Control = $Margin/Footer/RefreshBMM
+@onready var progress_bar       : Control = $Margin/Footer/ProgressBar
+@onready var settings_button    : Control = $Margin/Footer/SettingsButton
+
+var available         : bool = true
+
+var enabled_modulate  : Color
+var disabled_modulate : Color
 
 func _ready():
 	Appstate.connect("chain_states_changed", self.update_view)
-	enabled_modulate = modulate
+	enabled_modulate  = modulate
 	disabled_modulate = modulate.darkened(0.3)
+	
 	
 	
 func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
@@ -36,14 +45,22 @@ func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 	if chain_provider.chain_type == ChainProvider.c_type.MAIN:
 		left_indicator.visible = true
 		background.visible = true
+		title.add_theme_font_size_override("font_size", drivechain_title_font_size)
+		description.add_theme_font_size_override("font_size", drivechain_descr_font_size)
+		custom_minimum_size.y = drivechain_minimum_height
 	else:
 		left_indicator.visible = false
 		background.visible = false
+		title.add_theme_font_size_override("font_size", subchain_title_font_size)
+		description.add_theme_font_size_override("font_size", subchain_descr_font_size)
+		custom_minimum_size.y = subchain_minimum_height
+		size.y = subchain_minimum_height
+		#content.hide()
 		
 	title.text = chain_provider.display_name
 	desc.text = chain_provider.description
 	block_height.visible = chain_state.state == ChainState.c_state.RUNNING
-	download_button.text = str(int(_chain_provider.binary_zip_size * 0.000001)) + " mb"
+	action_button.text = str(int(_chain_provider.binary_zip_size * 0.000001)) + " mb"
 	#download_button.tooltip_text = _chain_provider.download_url
 	
 	update_view()
@@ -72,9 +89,7 @@ func update_view():
 		show_running_state()
 	
 func show_waiting_on_drivechain_state():
-	download_button.visible = false
-	start_button.visible = false
-	stop_button.visible = false
+	action_button.hide()
 	#auto_mine_button.visible = false
 	refresh_bmm_button.visible = false
 	secondary_desc.visible = true
@@ -82,9 +97,7 @@ func show_waiting_on_drivechain_state():
 	
 	
 func show_running_state():
-	start_button.visible = false
-	stop_button.visible = true
-	download_button.visible = false
+	action_button.set_state(ActionButton.STOP)
 	modulate = enabled_modulate
 	
 	
@@ -93,6 +106,9 @@ func show_running_state():
 		#auto_mine_button.visible = true
 		#auto_mine_button.set_pressed_no_signal(chain_state.automine)
 		refresh_bmm_button.visible = false
+		#start_button.show()
+		action_button.theme = load("res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_running.tres")
+		get_parent().get_parent().get_node("Label").hide()
 	else:
 		#auto_mine_button.visible = false
 		refresh_bmm_button.visible = false
@@ -102,31 +118,25 @@ func show_running_state():
 		
 func show_executable_state():
 	settings_button.disabled = false
-	start_button.visible = true
-	start_button.disabled = false
-	stop_button.visible = false
+	action_button.set_state(ActionButton.RUN)
 #	auto_mine_button.visible = false
 	refresh_bmm_button.visible = false
-	download_button.visible = false
 	modulate = enabled_modulate
+	if chain_provider.id == 'drivechain':
+		get_parent().get_parent().get_node("Label").show()
 	
 	
 func show_download_state():
 	settings_button.disabled = false
-	start_button.visible = false
-	stop_button.visible = false
 #	auto_mine_button.visible = false
 	refresh_bmm_button.visible = false
-	download_button.visible = true
-	download_button.disabled = false
+	action_button.set_state(ActionButton.DOWNLOAD)
 	modulate = enabled_modulate
 	
 	
 func show_unsupported_state():
 	settings_button.disabled = true
-	download_button.visible = false
-	start_button.visible = false
-	stop_button.visible = false
+	action_button.hide()
 #	auto_mine_button.visible = false
 	refresh_bmm_button.visible = false
 	secondary_desc.visible = true
@@ -155,7 +165,7 @@ func download():
 		push_error("An error occurred")
 		return
 		
-	download_button.disabled = true
+	action_button.disabled = true
 	
 	progress_timer = Timer.new()
 	add_child(progress_timer)
@@ -185,6 +195,7 @@ func _on_download_complete(result, response_code, _headers, body):
 	var save_game = FileAccess.open(path, FileAccess.WRITE)
 	save_game.store_buffer(body)
 	save_game.close()
+	action_button.disabled = false
 	
 	unzip_file_and_setup_binary(chain_provider.base_dir, path)
 	
@@ -232,9 +243,9 @@ func reset_download():
 	remove_child(progress_timer)
 	progress_timer.queue_free()
 	
-	download_button.visible = false
+	
 	progress_bar.visible = false
-	start_button.disabled = false
+	action_button.set_state(ActionButton.RUN)
 
 
 func _on_start_button_pressed():
@@ -250,7 +261,7 @@ func _on_start_button_pressed():
 			
 	chain_provider.start_chain()
 		
-	start_button.disabled = true
+	action_button.set_state(ActionButton.RUN)
 	
 	
 func _on_stop_button_pressed():
@@ -269,3 +280,21 @@ func _on_info_button_pressed():
 	Appstate.show_chain_provider_info(self.chain_provider)
 	
 	
+
+
+func _on_action_button_pressed():
+	match action_button.state:
+		ActionButton.DOWNLOAD:
+			download()
+		ActionButton.RUN:
+			_on_start_button_pressed()
+		ActionButton.STOP:
+			_on_stop_button_pressed()
+
+
+func _on_focus_entered():
+	if chain_provider.chain_type == ChainProvider.c_type.MAIN: return
+
+
+func _on_focus_exited():
+	if chain_provider.chain_type == ChainProvider.c_type.MAIN: return
