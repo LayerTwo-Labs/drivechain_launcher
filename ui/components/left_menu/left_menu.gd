@@ -22,3 +22,9 @@ func _on_left_menu_button_toggled(button_pressed, v):
 				#playground_button.set_pressed_no_signal(false)
 				
 	left_menu_button_pressed.emit(v)
+
+
+func _on_close_button_pressed():
+	var shutter_tween : Tween = create_tween()
+	shutter_tween.parallel().tween_property( $MarginContainer, "scale", Vector2(1.0,0.0), 0.5 )
+	shutter_tween.parallel().tween_property( self, "size/y", 0.0, 0.5 )

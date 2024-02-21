@@ -48,6 +48,8 @@ func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 		title.add_theme_font_size_override("font_size", drivechain_title_font_size)
 		description.add_theme_font_size_override("font_size", drivechain_descr_font_size)
 		custom_minimum_size.y = drivechain_minimum_height
+		action_button.is_drivechain = true
+		action_button.check_state()
 	else:
 		left_indicator.visible = false
 		background.visible = false

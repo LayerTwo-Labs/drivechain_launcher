@@ -1,0 +1,17 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://njti2ej2wc50"
+
+[deps]
+
+files=["res://assets/csv/quotes.Samuel Adams.translation"]
+
+source_file="res://assets/csv/quotes.csv"
+dest_files=["res://assets/csv/quotes.Samuel Adams.translation"]
+
+[params]
+
+compress=true
+delimiter=0

@@ -1,19 +1,26 @@
-[gd_scene load_steps=6 format=3 uid="uid://dwhtby81ylt3s"]
+[gd_scene load_steps=10 format=3 uid="uid://dwhtby81ylt3s"]
 
 [ext_resource type="Theme" uid="uid://deiietf7bytje" path="res://ui/components/left_menu/left_menu_button.tres" id="1_vs06l"]
 [ext_resource type="Script" path="res://ui/components/left_menu/left_menu.gd" id="1_yja75"]
+[ext_resource type="Texture2D" uid="uid://b3cf3lw2nhpjs" path="res://assets/images/close.svg" id="2_ahqh1"]
+[ext_resource type="Texture2D" uid="uid://blq6pvspmkcbj" path="res://assets/images/prev.svg" id="3_3lhq3"]
 [ext_resource type="Texture2D" uid="uid://djtv7qiy8hkat" path="res://assets/images/dashboard-3-line.svg" id="3_rgc2b"]
 [ext_resource type="Texture2D" uid="uid://srldhyvbmy57" path="res://assets/images/settings-4-line.svg" id="4_cr7m3"]
+[ext_resource type="Texture2D" uid="uid://c5ddyq86urmmy" path="res://assets/images/next.svg" id="7_k0tsh"]
+[ext_resource type="Script" path="res://ui/components/left_menu/Quotes.gd" id="7_kx1k8"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c8gs8"]
 bg_color = Color(0.141176, 0.141176, 0.141176, 1)
 
 [node name="LeftMenu" type="PanelContainer"]
-anchors_preset = 9
+clip_contents = true
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 1024.0
-offset_bottom = -561.0
-grow_vertical = 2
+offset_top = -79.0
+grow_horizontal = 2
+grow_vertical = 0
 size_flags_horizontal = 3
 size_flags_vertical = 8
 theme_override_styles/panel = SubResource("StyleBoxFlat_c8gs8")
@@ -21,7 +28,7 @@ script = ExtResource("1_yja75")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 100
+theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
@@ -33,9 +40,22 @@ size_flags_vertical = 8
 size_flags_stretch_ratio = 0.0
 theme_override_constants/separation = 0
 
+[node name="CloseButton" type="Button" parent="MarginContainer/HBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = ExtResource("2_ahqh1")
+flat = true
+
+[node name="PrevButton" type="Button" parent="MarginContainer/HBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = ExtResource("3_3lhq3")
+flat = true
+
 [node name="Spacer" type="Control" parent="MarginContainer/HBox"]
-visible = false
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(10, 50)
 layout_mode = 2
 
 [node name="DashboardButton" type="Button" parent="MarginContainer/HBox"]
@@ -75,6 +95,7 @@ icon = ExtResource("4_cr7m3")
 alignment = 0
 
 [node name="Quotes" type="Label" parent="MarginContainer/HBox"]
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 10
@@ -82,7 +103,22 @@ text = "\"Used to the conditions of a capitalistic environment, the average Amer
 --Ludwig von Mises"
 horizontal_alignment = 2
 autowrap_mode = 2
+script = ExtResource("7_kx1k8")
 
+[node name="Spacer2" type="Control" parent="MarginContainer/HBox"]
+custom_minimum_size = Vector2(10, 50)
+layout_mode = 2
+
+[node name="NextButton" type="Button" parent="MarginContainer/HBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = ExtResource("7_k0tsh")
+flat = true
+
+[connection signal="pressed" from="MarginContainer/HBox/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBox/PrevButton" to="MarginContainer/HBox/Quotes" method="_on_prev_button_pressed"]
 [connection signal="toggled" from="MarginContainer/HBox/DashboardButton" to="." method="_on_left_menu_button_toggled" binds= [0]]
 [connection signal="toggled" from="MarginContainer/HBox/PlaygroundButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
 [connection signal="toggled" from="MarginContainer/HBox/SettingsButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
+[connection signal="pressed" from="MarginContainer/HBox/NextButton" to="MarginContainer/HBox/Quotes" method="_on_next_button_pressed"]
