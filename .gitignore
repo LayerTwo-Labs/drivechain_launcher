@@ -1,2 +1,5 @@
 # Godot 4+ specific ignores
 .godot/
+
+# Built artifacts go here
+build
