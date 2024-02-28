@@ -32,6 +32,7 @@ var available         : bool = true
 var enabled_modulate  : Color
 var disabled_modulate : Color
 
+
 func _ready():
 	Appstate.connect("chain_states_changed", self.update_view)
 	enabled_modulate  = modulate
@@ -91,7 +92,7 @@ func update_view():
 		show_running_state()
 	
 func show_waiting_on_drivechain_state():
-	action_button.hide()
+	action_button.disabled = true
 	#auto_mine_button.visible = false
 	refresh_bmm_button.visible = false
 	secondary_desc.visible = true
@@ -300,3 +301,7 @@ func _on_focus_entered():
 
 func _on_focus_exited():
 	if chain_provider.chain_type == ChainProvider.c_type.MAIN: return
+
+
+func _on_settings_button_pressed():
+	Appstate.show_chain_provider_info(chain_provider)

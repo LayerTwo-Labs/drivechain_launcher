@@ -40,12 +40,13 @@ size_flags_vertical = 8
 size_flags_stretch_ratio = 0.0
 theme_override_constants/separation = 0
 
-[node name="CloseButton" type="Button" parent="MarginContainer/HBox"]
+[node name="SettingsButton" type="Button" parent="MarginContainer/HBox"]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-icon = ExtResource("2_ahqh1")
-flat = true
+focus_mode = 0
+theme = ExtResource("1_vs06l")
+toggle_mode = true
+icon = ExtResource("4_cr7m3")
+alignment = 0
 
 [node name="PrevButton" type="Button" parent="MarginContainer/HBox"]
 layout_mode = 2
@@ -82,18 +83,6 @@ toggle_mode = true
 text = "PLAYGROUND"
 alignment = 0
 
-[node name="SettingsButton" type="Button" parent="MarginContainer/HBox"]
-visible = false
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-size_flags_vertical = 4
-focus_mode = 0
-theme = ExtResource("1_vs06l")
-toggle_mode = true
-text = "SETTINGS"
-icon = ExtResource("4_cr7m3")
-alignment = 0
-
 [node name="Quotes" type="Label" parent="MarginContainer/HBox"]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
@@ -116,9 +105,16 @@ size_flags_vertical = 4
 icon = ExtResource("7_k0tsh")
 flat = true
 
-[connection signal="pressed" from="MarginContainer/HBox/CloseButton" to="." method="_on_close_button_pressed"]
+[node name="CloseButton" type="Button" parent="MarginContainer/HBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = ExtResource("2_ahqh1")
+flat = true
+
+[connection signal="toggled" from="MarginContainer/HBox/SettingsButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
 [connection signal="pressed" from="MarginContainer/HBox/PrevButton" to="MarginContainer/HBox/Quotes" method="_on_prev_button_pressed"]
 [connection signal="toggled" from="MarginContainer/HBox/DashboardButton" to="." method="_on_left_menu_button_toggled" binds= [0]]
 [connection signal="toggled" from="MarginContainer/HBox/PlaygroundButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
-[connection signal="toggled" from="MarginContainer/HBox/SettingsButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
 [connection signal="pressed" from="MarginContainer/HBox/NextButton" to="MarginContainer/HBox/Quotes" method="_on_next_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBox/CloseButton" to="." method="_on_close_button_pressed"]

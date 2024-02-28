@@ -15,6 +15,7 @@ const state_name : Array[String] = [
 ]
 
 var is_drivechain : bool = false
+var shimmer_tween : Tween 
 
 @export_enum("Download", "Run", "Stop") var state          : int              = DOWNLOAD
 @export                                 var show_icon      : bool             = true
@@ -43,7 +44,8 @@ func set_state(new_state:int):
 	set_text(state_name[state])
 	set_button_icon(state_icon[state])
 	set_theme(state_theme[state])
-	check_state()
+	shimmer()
+	disabled = false
 
 func check_state():
 	if state == DOWNLOAD and is_drivechain:
@@ -51,7 +53,11 @@ func check_state():
 	pass
 
 func shimmer():
-	var shimmer_tween : Tween = create_tween()
+	if !(state == DOWNLOAD and is_drivechain):
+		if shimmer_tween: shimmer_tween.stop()
+		return
+	shimmer_tween = create_tween()
 	shimmer_tween.tween_property(self, "modulate", Color(1.0,1.0,1.0,0.5),0.5)
 	shimmer_tween.tween_property(self, "modulate", Color(1.0,1.0,1.0,1.5),0.5)
 	shimmer_tween.tween_callback(shimmer).set_delay(0.75)
+
