@@ -156,3 +156,4 @@ size_flags_horizontal = 0
 color = Color(0.207843, 0.517647, 0.894118, 1)
 
 [connection signal="pressed" from="Margin/Footer/ActionButton" to="." method="_on_action_button_pressed"]
+[connection signal="pressed" from="Margin/Footer/SettingsButton" to="." method="_on_settings_button_pressed"]

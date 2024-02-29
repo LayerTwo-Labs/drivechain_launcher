@@ -32,6 +32,7 @@ var available         : bool = true
 var enabled_modulate  : Color
 var disabled_modulate : Color
 
+
 func _ready():
 	Appstate.connect("chain_states_changed", self.update_view)
 	enabled_modulate  = modulate
@@ -49,7 +50,6 @@ func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 		description.add_theme_font_size_override("font_size", drivechain_descr_font_size)
 		custom_minimum_size.y = drivechain_minimum_height
 		action_button.is_drivechain = true
-		action_button.check_state()
 	else:
 		left_indicator.visible = false
 		background.visible = false
@@ -59,6 +59,7 @@ func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 		size.y = subchain_minimum_height
 		#content.hide()
 		
+	action_button.check_state()
 	title.text = chain_provider.display_name
 	desc.text = chain_provider.description
 	block_height.visible = chain_state.state == ChainState.c_state.RUNNING
@@ -83,6 +84,7 @@ func update_view():
 	if not chain_provider.is_ready_for_execution():
 		show_download_state()
 	elif chain_provider.is_ready_for_execution() and chain_state.state != ChainState.c_state.RUNNING:
+		action_button.set_state(ActionButton.RUN)
 		if chain_provider.id == 'drivechain' or Appstate.drivechain_running():
 			show_executable_state()
 		else:
@@ -91,7 +93,7 @@ func update_view():
 		show_running_state()
 	
 func show_waiting_on_drivechain_state():
-	action_button.hide()
+	action_button.disabled = true
 	#auto_mine_button.visible = false
 	refresh_bmm_button.visible = false
 	secondary_desc.visible = true
@@ -300,3 +302,7 @@ func _on_focus_entered():
 
 func _on_focus_exited():
 	if chain_provider.chain_type == ChainProvider.c_type.MAIN: return
+
+
+func _on_settings_button_pressed():
+	Appstate.show_chain_provider_info(chain_provider)
