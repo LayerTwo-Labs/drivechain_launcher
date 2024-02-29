@@ -38,7 +38,6 @@ func _ready():
 	set_state(state)
 
 func set_state(new_state:int):
-	if new_state == prev_state: return
 	prev_state = state
 	state = new_state
 	set_text(state_name[state])
