@@ -1,0 +1,74 @@
+name: Build Launcher
+on:
+  pull_request:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    # both Windows and Linux builds run on Ubuntu
+    runs-on: ${{ matrix.build == 'macos' && 'macos' || 'ubuntu' }}-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        build: [macos, windows, linux]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: chickensoft-games/setup-godot@v1
+        with:
+          version: 4.2.1
+          use-dotnet: false
+
+      - name: Verify Setup
+        run: |
+          godot --version
+
+      - name: Import certificate to Keychain
+        if: ${{ matrix.build == 'macos' }}
+        run: |
+          echo "${{ secrets.MACOS_CERTIFICATE }}" | base64 --decode > certificate.p12
+          KEYCHAIN_PASSWORD=$(uuidgen)
+          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security import ./certificate.p12 -k ~/Library/Keychains/build.keychain -P ${{ secrets.MACOS_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" ~/Library/Keychains/build.keychain
+        env:
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+
+      - name: Setup notarization credentials
+        if: ${{ matrix.build == 'macos' }}
+        run: |
+          echo ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY }} | base64 --decode > notarization_api_key.p8
+
+      - name: Export build
+        run: |
+          name="${{fromJSON('{"windows": "Windows Desktop", "macos": "macOS", "linux": "Linux/X11"}')[matrix.build] }}"
+          godot --headless --export-debug "$name" --verbose 2>&1 | tee build.log
+
+        env:
+          GODOT_MACOS_NOTARIZATION_API_KEY_ID:
+            ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY_ID }}
+          GODOT_MACOS_NOTARIZATION_API_KEY: ./notarization_api_key.p8
+          GODOT_MACOS_NOTARIZATION_API_UUID:
+            ${{ secrets.GODOT_MACOS_NOTARIZATION_API_UUID }}
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: drivechain_launcher_${{ matrix.build }}
+          if-no-files-found: error
+          path: build/drivechain_launcher-*
+
+      - name: Wait for notarization to finish
+        if: ${{ matrix.build == 'macos' }}
+        run: |
+          request_id=$(grep 'Notarization request UUID' build.log | rev | cut -d ' ' -f 1 | rev | tr -d '"')
+
+          xcrun notarytool wait $request_id \
+            --issuer ${{ secrets.GODOT_MACOS_NOTARIZATION_API_UUID }} \
+            --key-id ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY_ID }} \
+            --key ./notarization_api_key.p8
