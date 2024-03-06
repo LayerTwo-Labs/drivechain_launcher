@@ -106,6 +106,7 @@ icon = ExtResource("7_k0tsh")
 flat = true
 
 [node name="CloseButton" type="Button" parent="MarginContainer/HBox"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
