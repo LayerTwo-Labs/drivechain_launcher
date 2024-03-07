@@ -1,30 +1,19 @@
 extends PanelContainer
 
-@onready var dashboard_button := $MarginContainer/HBox/DashboardButton
-@onready var playground_button := $MarginContainer/HBox/PlaygroundButton
-@onready var settings_button := $MarginContainer/HBox/SettingsButton
+var          settings_shown    : int  = 0
+
+@onready var dashboard_button  : Node = $MarginContainer/HBox/DashboardButton
+@onready var playground_button : Node = $MarginContainer/HBox/PlaygroundButton
+@onready var settings_button   : Node = $MarginContainer/HBox/SettingsButton
 
 signal left_menu_button_pressed(v: int)
 
 func _on_left_menu_button_toggled(button_pressed, v):
-	settings_button.set_pressed_no_signal(false)
-	return
-	match v:
-		0:
-			if button_pressed:
-				settings_button.set_pressed_no_signal(false)
-				#playground_button.set_pressed_no_signal(false)
-				
-		#1:
-		#	if button_pressed:
-		#		dashboard_button.set_pressed_no_signal(false)
-		#		settings_button.set_pressed_no_signal(false)
-		1:
-			if button_pressed:
-				dashboard_button.set_pressed_no_signal(false)
-				#playground_button.set_pressed_no_signal(false)
-				
-	left_menu_button_pressed.emit(v)
+	
+	settings_shown = 1-settings_shown
+	
+	left_menu_button_pressed.emit(settings_shown)
+	
 
 
 func _on_close_button_pressed():
