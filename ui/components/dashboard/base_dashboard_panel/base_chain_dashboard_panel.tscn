@@ -109,7 +109,6 @@ stretch_mode = 5
 
 [node name="Title" type="Label" parent="Margin/Footer"]
 layout_mode = 2
-size_flags_vertical = 0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 1
@@ -128,7 +127,7 @@ size_flags_vertical = 4
 [node name="VBox" type="VBoxContainer" parent="Margin/Footer"]
 custom_minimum_size = Vector2(425, 0)
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_horizontal = 8
 size_flags_vertical = 4
 
 [node name="Description" type="Label" parent="Margin/Footer/VBox"]
@@ -139,7 +138,9 @@ text = "A blank sidechain based on Bitcoin Core 16.99"
 autowrap_mode = 2
 
 [node name="SecondaryDescription" type="RichTextLabel" parent="Margin/Footer/VBox"]
+visible = false
 layout_mode = 2
+size_flags_horizontal = 8
 
 [node name="SettingsButton" type="Button" parent="Margin/Footer"]
 custom_minimum_size = Vector2(45, 45)
