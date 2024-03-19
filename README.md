@@ -41,7 +41,8 @@ From the GUI, these templates can be downloaded like this:
 
 1. "Project" menu in the toolbar
 2. "Export" item within the "Project" menu
-3. "Download and install"
+3. "Manage Export Templates"
+4. "Download and Install"
 
 ## Important
 
