@@ -10,21 +10,37 @@ func _ready():
 	change_quote(0)
 	pass # Replace with function body.
 
-func format_quote( csv_line : Array )->String:
-	prints( "CSV Line: ", csv_line )
-	return "\"" + csv_line[0] + "\"\n\t- " + csv_line[1]
-	pass
+func format_quote(csv_line: Array) -> String:
+	prints("CSV Line: ", csv_line)
+	return csv_line[0] + "\n\t- " + csv_line[1]
 
+	
 func load_quotes():
-	var file = FileAccess.open( "res://assets/csv/quotes.txt", FileAccess.READ )
+	var file_path = "res://assets/data/quotes.json"
 	
-	while !file.eof_reached():
-		var csv_line : Array = Array( file.get_csv_line() ) 
-		if csv_line.size() < 2: continue
-		quotes.append( format_quote( csv_line ) )
-	
-	file.close()
-	print(quotes)
+	if FileAccess.file_exists(file_path):
+		var file = FileAccess.open(file_path, FileAccess.READ)
+		if file:
+			var content = file.get_as_text()
+			file.close()
+			
+			var json = JSON.new()
+			var error_parse = json.parse(content)
+			if error_parse == OK:
+				var data = json.get_data()
+				for item in data:
+					var quote_text = item["quote"]
+					var author = item["author"]
+					quotes.append("\"" + quote_text + "\"\n\t- " + author)
+			else:
+				push_error("Failed to parse JSON with error: " + str(error_parse))
+		else:
+			push_error("Failed to open JSON file at path: " + file_path)
+	else:
+		push_error("JSON file does not exist at path: " + file_path)
+
+
+
 
 func change_quote( index : int ):
 	text = quotes[index]
