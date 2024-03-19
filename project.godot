@@ -27,6 +27,10 @@ Appstate="*res://autoloads/appstate.tscn"
 window/size/viewport_width=1024
 window/size/viewport_height=640
 
+[dotnet]
+
+project/assembly_name="drivechain_launcher"
+
 [filesystem]
 
 import/blender/enabled=false
