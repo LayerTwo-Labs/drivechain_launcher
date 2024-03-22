@@ -75,42 +75,19 @@ func reset_everything():
 	for i in chain_states:
 		chain_states[i].stop_chain()
 		await get_tree().create_timer(0.1).timeout
-		remove_child(chain_states[i])
 		chain_states[i].cleanup()
+		remove_child(chain_states[i])
 
-	for i in chain_providers:
-		var base_dir = ProjectSettings.globalize_path(chain_providers[i].base_dir)
-		if OS.get_name() == "Windows":
-			var bat_file = "delete_folder.bat"
-			var bat_content = "@echo off\n" + "rmdir /s /q \"" + base_dir.replace("/", "\\") + "\""
-			var file = FileAccess.open(bat_file, FileAccess.WRITE)
-			file.store_string(bat_content)
-			file.close()
-			OS.execute(bat_file, [], [])
-			OS.move_to_trash(bat_file)
-		else:
-			var err = OS.move_to_trash(base_dir)
-			if err != OK:
-				print(err)
+	if OS.get_name() == "Windows":
+		execute_cleanup_script_windows()
+	else:
+		perform_cleanup_non_windows()
+
 
 	chain_states.clear()
 	chain_providers.clear()
 
-	var user_data_dir = ProjectSettings.globalize_path(OS.get_user_data_dir())
-	if OS.get_name() == "Windows":
-		var bat_file = "delete_user_data.bat"
-		var bat_content = "@echo off\n" + "rmdir /s /q \"" + user_data_dir.replace("/", "\\") + "\""
-		var file = FileAccess.open(bat_file, FileAccess.WRITE)
-		file.store_string(bat_content)
-		file.close()
-		OS.execute(bat_file, [], [])
-		OS.move_to_trash(bat_file)
-	else:
-		var err = OS.move_to_trash(user_data_dir)
-		if err != OK:
-			print(err)
-			return
-
+	# Reload configurations and setup
 	load_version_config()
 	load_config()
 	save_config()
@@ -119,8 +96,39 @@ func reset_everything():
 	setup_chain_states()
 
 	chain_providers_changed.emit()
-
 	start_chain_states()
+
+func execute_cleanup_script_windows():
+	var script_path = ProjectSettings.globalize_path("res:///cleanup_drivechain_data.bat")
+	var arguments = PackedStringArray()
+	var output = []
+	
+	print("Executing cleanup script at: ", script_path)  # Log the resolved script path
+
+	var exit_code = OS.execute(script_path, arguments, output, true, true)  # Enable capturing output and blocking execution
+	if exit_code != 0:
+		print("Cleanup script encountered an error with exit code: ", exit_code)
+	else:
+		print("Cleanup script executed successfully.")
+	
+	for line in output:
+		print(line)  # Log each line of output from the script
+
+	get_tree().quit()
+
+
+
+
+
+func perform_cleanup_non_windows():
+	var user_data_dir = OS.get_user_data_dir()
+	var err = OS.move_to_trash(user_data_dir)
+	if err != OK:
+		print("Error deleting user data: ", err)
+
+
+
+
 	
 func load_version_config():
 	version_config = ConfigFile.new()
