@@ -70,39 +70,57 @@ func update_display_scale(scale_factor: float):
 	app_config.set_value("", "scale_factor", scale_factor)
 	app_config.save(APP_CONFIG_PATH)
 	
-	
+
 func reset_everything():
-	
 	for i in chain_states:
 		chain_states[i].stop_chain()
 		await get_tree().create_timer(0.1).timeout
 		remove_child(chain_states[i])
 		chain_states[i].cleanup()
-		
+
 	for i in chain_providers:
-		var err = OS.move_to_trash(ProjectSettings.globalize_path(chain_providers[i].base_dir))
-		if err != OK:
-			print(err)
-		
+		var base_dir = ProjectSettings.globalize_path(chain_providers[i].base_dir)
+		if OS.get_name() == "Windows":
+			var bat_file = "delete_folder.bat"
+			var bat_content = "@echo off\n" + "rmdir /s /q \"" + base_dir.replace("/", "\\") + "\""
+			var file = FileAccess.open(bat_file, FileAccess.WRITE)
+			file.store_string(bat_content)
+			file.close()
+			OS.execute(bat_file, [], [])
+			OS.move_to_trash(bat_file)
+		else:
+			var err = OS.move_to_trash(base_dir)
+			if err != OK:
+				print(err)
+
 	chain_states.clear()
 	chain_providers.clear()
-	
-	var err = OS.move_to_trash(ProjectSettings.globalize_path(OS.get_user_data_dir()))
-	if err != OK:
-		print(err)
-		return
-		
+
+	var user_data_dir = ProjectSettings.globalize_path(OS.get_user_data_dir())
+	if OS.get_name() == "Windows":
+		var bat_file = "delete_user_data.bat"
+		var bat_content = "@echo off\n" + "rmdir /s /q \"" + user_data_dir.replace("/", "\\") + "\""
+		var file = FileAccess.open(bat_file, FileAccess.WRITE)
+		file.store_string(bat_content)
+		file.close()
+		OS.execute(bat_file, [], [])
+		OS.move_to_trash(bat_file)
+	else:
+		var err = OS.move_to_trash(user_data_dir)
+		if err != OK:
+			print(err)
+			return
+
 	load_version_config()
 	load_config()
 	save_config()
 	setup_directories()
 	setup_confs()
 	setup_chain_states()
-	
+
 	chain_providers_changed.emit()
-	
+
 	start_chain_states()
-	
 	
 func load_version_config():
 	version_config = ConfigFile.new()

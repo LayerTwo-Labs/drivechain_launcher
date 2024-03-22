@@ -13,8 +13,16 @@ func _ready():
 
 
 func _on_reset_button_pressed():
-	Appstate.reset_everything()
+	var confirmation_dialog = ConfirmationDialog.new()
+	confirmation_dialog.dialog_text = "Are you sure you want to reset everything?"
+	add_child(confirmation_dialog)
+	confirmation_dialog.popup_centered()
+	confirmation_dialog.connect("confirmed", Callable(self, "_on_confirmation_confirmed"))
 
+
+# This method is called when the confirmation dialog is confirmed
+func _on_confirmation_confirmed():
+	Appstate.reset_everything()
 
 func _on_app_data_open_pressed():
 	open_file(OS.get_user_data_dir())
