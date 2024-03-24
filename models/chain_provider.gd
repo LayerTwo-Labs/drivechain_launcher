@@ -88,29 +88,16 @@ func write_conf(force_write := true):
 		"drivechain":
 			conf.store_line("rpcuser=user")
 			conf.store_line("rpcpassword=password")
-			conf.store_line("rpcport=" + str(port))
-			# conf.store_line("regtest=1")
 			conf.store_line("server=1")
-			conf.store_line("datadir=" + ProjectSettings.globalize_path(base_dir))
 		"testchain","bitassets","zside":
 			conf.store_line("rpcuser=user")
 			conf.store_line("rpcpassword=password")
-			conf.store_line("rpcport=" + str(port))
-			# conf.store_line("regtest=1")
 			conf.store_line("server=1")
-			conf.store_line("datadir=" + ProjectSettings.globalize_path(base_dir))
-			conf.store_line("slot=" + str(slot))
 		"latestcore":
-			# conf.store_line("chain=regtest")
 			conf.store_line("server=1")
 			conf.store_line("splash=0")
-			conf.store_line("datadir=" + ProjectSettings.globalize_path(base_dir))
-			conf.store_line("slot=" + str(slot))
-			conf.store_line("")
-			# conf.store_line("[regtest]")
 			conf.store_line("rpcuser=user")
 			conf.store_line("rpcpassword=password")
-			conf.store_line("rpcport=" + str(port))
 			
 	conf.close()
 	
