@@ -7,6 +7,9 @@ var chain_state    : ChainState
 var download_req   : HTTPRequest
 var progress_timer : Timer
 
+var cooldown_timer : Timer
+
+
 @export var drivechain_title_font_size : int = 32
 @export var drivechain_descr_font_size : int = 16
 @export var drivechain_minimum_height  : int = 100
@@ -34,11 +37,19 @@ var disabled_modulate : Color
 
 
 func _ready():
+	cooldown_timer = Timer.new()
+	add_child(cooldown_timer)
+	cooldown_timer.wait_time = 2.0  # Cooldown period in seconds
+	cooldown_timer.one_shot = true  # Timer stops after the time expires
+	cooldown_timer.connect("timeout", Callable(self, "_on_cooldown_timer_timeout"))
 	Appstate.connect("chain_states_changed", self.update_view)
 	enabled_modulate  = modulate
 	disabled_modulate = modulate.darkened(0.3)
 	
-	
+func _on_cooldown_timer_timeout():
+	action_button.disabled = false # Re-enable the button
+	action_button.modulate = enabled_modulate # Reset button color to normal
+
 	
 func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 	self.chain_provider = _chain_provider
@@ -102,22 +113,21 @@ func show_waiting_on_drivechain_state():
 	
 func show_running_state():
 	action_button.set_state(ActionButton.STOP)
-	modulate = enabled_modulate
-	
-	
+	action_button.disabled = false  # Ensure the button is enabled
+	action_button.modulate = enabled_modulate  # Reset button color to indicate active state
+
 	if chain_provider.id == 'drivechain':
-		#auto_mine_button.visible = false # changed to false due to signet, and removed 
-		#auto_mine_button.visible = true
-		#auto_mine_button.set_pressed_no_signal(chain_state.automine)
 		refresh_bmm_button.visible = false
-		#start_button.show()
 		action_button.theme = load("res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_running.tres")
 		get_parent().get_parent().get_node("Label").hide()
 	else:
-		#auto_mine_button.visible = false
-		refresh_bmm_button.visible = false
 		refresh_bmm_button.visible = true
 		refresh_bmm_button.set_pressed_no_signal(chain_state.refreshbmm)
+
+	# Stop any cooldown timer that might be running since the state is now running
+	if not cooldown_timer.is_stopped():
+		cooldown_timer.stop()
+
 		
 		
 func show_executable_state():
@@ -274,6 +284,14 @@ func _on_stop_button_pressed():
 			Appstate.chain_states[k].stop_chain()
 	else:
 		chain_state.stop_chain()
+
+	# Reset the button's appearance
+	action_button.disabled = false
+	action_button.modulate = enabled_modulate
+
+	# Stop the cooldown timer if it's running
+	if not cooldown_timer.is_stopped():
+		cooldown_timer.stop()
 	
 	
 func _on_automine_toggled(button_pressed):
@@ -285,16 +303,24 @@ func _on_info_button_pressed():
 	
 	
 
-
 func _on_action_button_pressed():
-	match action_button.state:
-		ActionButton.DOWNLOAD:
-			download()
-		ActionButton.RUN:
-			_on_start_button_pressed()
-		ActionButton.STOP:
-			_on_stop_button_pressed()
+	if cooldown_timer.is_stopped():
+		match action_button.state:
+			ActionButton.DOWNLOAD:
+				download()
+			ActionButton.RUN:
+				_on_start_button_pressed()
+			ActionButton.STOP:
+				_on_stop_button_pressed()
+		if action_button.state == ActionButton.RUN:
+			start_cooldown()  # Only start cooldown if we're attempting to run
+	else:
+		print("Action is on cooldown. Please wait.")
 
+func start_cooldown():
+	cooldown_timer.start() # Start the cooldown timer
+	action_button.disabled = true  # Disable the button
+	action_button.modulate = disabled_modulate # Grey out the button
 
 func _on_focus_entered():
 	if chain_provider.chain_type == ChainProvider.c_type.MAIN: return
