@@ -129,7 +129,19 @@ size_flags_vertical = 10
 layout_mode = 2
 size_flags_vertical = 10
 
-[node name="ResetButton" type="Button" parent="VBox/Footer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBox/Footer"]
+layout_mode = 2
+
+[node name="GoBackButton" type="Button" parent="VBox/Footer/HBoxContainer"]
+layout_mode = 2
+text = "Hide Settings"
+
+[node name="VSeparator" type="VSeparator" parent="VBox/Footer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ResetButton" type="Button" parent="VBox/Footer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 2
@@ -138,4 +150,5 @@ text = "Reset Everything"
 [connection signal="pressed" from="VBox/DirectoriesSettings/AppDataDir/Open" to="." method="_on_app_data_open_pressed"]
 [connection signal="pressed" from="VBox/DirectoriesSettings/DrivechainDataDir/Open" to="." method="_on_drivechain_data_open_pressed"]
 [connection signal="value_changed" from="VBox/AppSettings/HBox/ScaleSpin" to="." method="_on_scale_spin_value_changed"]
-[connection signal="pressed" from="VBox/Footer/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="VBox/Footer/HBoxContainer/GoBackButton" to="." method="_on_hide_button_pressed"]
+[connection signal="pressed" from="VBox/Footer/HBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]

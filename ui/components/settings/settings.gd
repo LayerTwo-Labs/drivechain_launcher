@@ -4,6 +4,7 @@ extends ScrollContainer
 @onready var drivechain_dir = $VBox/DirectoriesSettings/DrivechainDataDir/Value
 @onready var scale_spin = $VBox/AppSettings/HBox/ScaleSpin
 
+signal hide_settings
 
 func _ready():
 	var user_data_dir : String = ProjectSettings.globalize_path(OS.get_user_data_dir())
@@ -43,3 +44,7 @@ func open_file(value: String):
 
 func _on_scale_spin_value_changed(value):
 	Appstate.update_display_scale(value)
+
+
+func _on_hide_button_pressed():
+	hide_settings.emit(0)
