@@ -6,8 +6,14 @@ extends ScrollContainer
 
 
 func _ready():
-	app_dir.placeholder_text = ProjectSettings.globalize_path(OS.get_user_data_dir())
-	drivechain_dir.placeholder_text = ProjectSettings.globalize_path(Appstate.get_drivechain_dir())
+	var user_data_dir : String = ProjectSettings.globalize_path(OS.get_user_data_dir())
+	var user_drivechain_dir : String = ProjectSettings.globalize_path(Appstate.get_drivechain_dir())
+	if Appstate.get_platform() == Appstate.platform.WIN:
+		app_dir.placeholder_text        = "\\".join(user_data_dir.split("/"))
+		drivechain_dir.placeholder_text = "\\".join(user_drivechain_dir.split("/"))
+	else:
+		app_dir.placeholder_text        = user_data_dir
+		drivechain_dir.placeholder_text = user_drivechain_dir
 	var scale_factor = get_tree().root.get_content_scale_factor()
 	scale_spin.value = scale_factor
 
