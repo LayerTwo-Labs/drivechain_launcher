@@ -18,7 +18,11 @@ func setup(_chain_provider: ChainProvider):
 	remote_zip_button.text = url_split[url_split.size()-1]
 	
 	remote_hash.text = chain_provider.binary_zip_hash
-	directory.text = ProjectSettings.globalize_path(chain_provider.base_dir)
+	var directory_text : String = ProjectSettings.globalize_path(chain_provider.base_dir)
+	if Appstate.get_platform() == Appstate.platform.WIN:
+		directory.text = "\\".join(directory_text.split("/"))
+	else:
+		directory.text = directory_text
 	var local_sha = chain_provider.get_local_zip_hash()
 	if local_sha != null and local_sha != "":
 		local_hash.text = local_sha
