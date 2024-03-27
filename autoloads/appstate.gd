@@ -72,48 +72,58 @@ func update_display_scale(scale_factor: float):
 	
 
 func reset_everything():
+	print("Starting reset process...")
 	
 	for i in chain_states:
+		print("Stopping chain:", i)
 		chain_states[i].stop_chain()
 		await get_tree().create_timer(0.1).timeout
+		print("Removing chain state child:", i)
 		remove_child(chain_states[i])
+		print("Cleaning up chain state:", i)
 		chain_states[i].cleanup()
-		
+	if OS.get_name() == "Windows":
+		print("Executing Windows-specific cleanup...")
+		execute_cleanup_script_windows()  # Windows-specific cleanup 
+		return
+	print("Removing chain providers...")
 	for i in chain_providers:
+		print("Moving chain provider to trash:", i)
 		var err = OS.move_to_trash(ProjectSettings.globalize_path(chain_providers[i].base_dir))
 		if err != OK:
-			print(err)
+			print("Error moving to trash:", err)
 		
+	print("Clearing chain states...")
 	chain_states.clear()
+	print("Clearing chain providers...")
 	chain_providers.clear()
 	
-	if OS.get_name() == "Windows":
-		execute_cleanup_script_windows()  # Windows-specific cleanup
-		
+	print("Moving user data directory to trash...")
 	var err = OS.move_to_trash(ProjectSettings.globalize_path(OS.get_user_data_dir()))
 	if err != OK:
-		print(err)
+		print("Error moving user data directory to trash:", err)
 		return
-		#
 	
+	print("Loading version configuration...")
 	load_version_config()
+	print("Loading configuration...")
 	load_config()
+	print("Saving configuration...")
 	save_config()
+	print("Setting up directories...")
 	setup_directories()
+	print("Setting up configurations...")
 	setup_confs()
+	print("Setting up chain states...")
 	setup_chain_states()
 	
+	print("Emitting chain providers changed signal...")
 	chain_providers_changed.emit()
 	
+	print("Starting chain states...")
 	start_chain_states()
 	
-	
-
-	## Perform platform-specific cleanup
-	#if OS.get_name() == "Windows":
-		#execute_cleanup_script_windows()
-	#else:
-		#perform_cleanup_non_windows()
+	print("Reset process completed successfully.")
 
 
 func create_cleanup_batch_script():
