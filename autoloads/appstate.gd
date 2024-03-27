@@ -72,32 +72,48 @@ func update_display_scale(scale_factor: float):
 	
 
 func reset_everything():
+	
 	for i in chain_states:
 		chain_states[i].stop_chain()
 		await get_tree().create_timer(0.1).timeout
-		chain_states[i].cleanup()
 		remove_child(chain_states[i])
-
-	if OS.get_name() == "Windows":
-		execute_cleanup_script_windows()
-	else:
-		perform_cleanup_non_windows()
-
-
+		chain_states[i].cleanup()
+		
+	for i in chain_providers:
+		var err = OS.move_to_trash(ProjectSettings.globalize_path(chain_providers[i].base_dir))
+		if err != OK:
+			print(err)
+		
 	chain_states.clear()
 	chain_providers.clear()
-
-	# Reload configurations and setup
+	
+	if OS.get_name() == "Windows":
+		execute_cleanup_script_windows()  # Windows-specific cleanup
+		
+	var err = OS.move_to_trash(ProjectSettings.globalize_path(OS.get_user_data_dir()))
+	if err != OK:
+		print(err)
+		return
+		#
+	
 	load_version_config()
 	load_config()
 	save_config()
 	setup_directories()
 	setup_confs()
 	setup_chain_states()
-
+	
 	chain_providers_changed.emit()
+	
 	start_chain_states()
+	
+	
 
+	## Perform platform-specific cleanup
+	#if OS.get_name() == "Windows":
+		#execute_cleanup_script_windows()
+	#else:
+		#perform_cleanup_non_windows()
 
 
 func create_cleanup_batch_script():
@@ -190,13 +206,6 @@ func execute_cleanup_script_windows():
 
 	# Now you can quit the application safely
 	get_tree().quit()
-
-
-func perform_cleanup_non_windows():
-	var user_data_dir = OS.get_user_data_dir()
-	var err = OS.move_to_trash(user_data_dir)
-	if err != OK:
-		print("Error deleting user data: ", err)
 
 
 
