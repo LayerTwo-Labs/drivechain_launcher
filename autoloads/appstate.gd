@@ -39,7 +39,7 @@ func _ready():
 	chain_providers_changed.emit()
 	
 	start_chain_states()
-	
+	create_cleanup_batch_script()
 	
 func load_app_config():
 	
@@ -70,39 +70,156 @@ func update_display_scale(scale_factor: float):
 	app_config.set_value("", "scale_factor", scale_factor)
 	app_config.save(APP_CONFIG_PATH)
 	
-	
+
 func reset_everything():
+	print("Starting reset process...")
 	
 	for i in chain_states:
+		print("Stopping chain:", i)
 		chain_states[i].stop_chain()
 		await get_tree().create_timer(0.1).timeout
+		print("Removing chain state child:", i)
 		remove_child(chain_states[i])
+		print("Cleaning up chain state:", i)
 		chain_states[i].cleanup()
-		
+	if OS.get_name() == "Windows":
+		print("Executing Windows-specific cleanup...")
+		execute_cleanup_script_windows()  # Windows-specific cleanup 
+		return
+	print("Removing chain providers...")
 	for i in chain_providers:
+		print("Moving chain provider to trash:", i)
 		var err = OS.move_to_trash(ProjectSettings.globalize_path(chain_providers[i].base_dir))
 		if err != OK:
-			print(err)
+			print("Error moving to trash:", err)
 		
+	print("Clearing chain states...")
 	chain_states.clear()
+	print("Clearing chain providers...")
 	chain_providers.clear()
 	
+	print("Moving user data directory to trash...")
 	var err = OS.move_to_trash(ProjectSettings.globalize_path(OS.get_user_data_dir()))
 	if err != OK:
-		print(err)
+		print("Error moving user data directory to trash:", err)
 		return
-		
+	
+	print("Loading version configuration...")
 	load_version_config()
+	print("Loading configuration...")
 	load_config()
+	print("Saving configuration...")
 	save_config()
+	print("Setting up directories...")
 	setup_directories()
+	print("Setting up configurations...")
 	setup_confs()
+	print("Setting up chain states...")
 	setup_chain_states()
 	
+	print("Emitting chain providers changed signal...")
 	chain_providers_changed.emit()
 	
+	print("Starting chain states...")
 	start_chain_states()
 	
+	print("Reset process completed successfully.")
+
+
+func create_cleanup_batch_script():
+	var script_path := "user://cleanup_drivechain_data.bat"
+	var launcher_path := OS.get_executable_path() # Dynamically obtain the launcher's executable path
+
+	# Start the script content with an explicit type declaration
+	var script_content: String = """
+	@echo off
+
+	REM Define the directory names
+	SET DRIVECHAIN_DIR=Drivechain
+	SET LAUNCHER_DIR=drivechain_launcher
+	SET LAUNCHER_SIDECHAINS_DIR=drivechain_launcher_sidechains
+	SET TESTCHAIN_DIR=Testchain
+	SET CFG_FILE=chain_providers.cfg
+	REM Define the name of the config file to delete
+
+	REM Introduce a short delay
+	timeout /t 1 /nobreak
+
+	REM Delete the Drivechain directory
+	IF EXIST "%APPDATA%\\%DRIVECHAIN_DIR%" (
+		ECHO Deleting the Drivechain directory...
+		RMDIR /S /Q "%APPDATA%\\%DRIVECHAIN_DIR%"
+		ECHO Deletion complete.
+	) ELSE (
+		ECHO Drivechain directory not found.
+	)
+
+	REM Delete the drivechain_launcher_sidechains directory
+	IF EXIST "%APPDATA%\\%LAUNCHER_SIDECHAINS_DIR%" (
+		ECHO Deleting the drivechain_launcher_sidechains directory...
+		RMDIR /S /Q "%APPDATA%\\%LAUNCHER_SIDECHAINS_DIR%"
+		ECHO Deletion complete.
+	) ELSE (
+		ECHO drivechain_launcher_sidechains directory not found.
+	)
+
+	REM Delete only the chain_providers.cfg file in the Drivechain Launcher directory
+	IF EXIST "%APPDATA%\\%LAUNCHER_DIR%\\%CFG_FILE%" (
+		ECHO Deleting the %CFG_FILE% file...
+		DEL "%APPDATA%\\%LAUNCHER_DIR%\\%CFG_FILE%"
+		ECHO %CFG_FILE% deletion complete.
+	) ELSE (
+		ECHO %CFG_FILE% file not found in the Drivechain Launcher directory.
+	)
+
+	REM Start the Drivechain Launcher
+	SET LAUNCHER_PATH="{launcher_path}"
+	IF "%LAUNCHER_PATH%"=="" (
+		ECHO Launcher path not provided. Exiting.
+		exit
+	) ELSE (
+		ECHO Launcher path: %LAUNCHER_PATH%
+		timeout /t 1 /nobreak
+		REM Short delay before restart to ensure cleanup has finished
+		start "" "%LAUNCHER_PATH%"
+		ECHO Drivechain Launcher has been started.
+	)
+	"""
+
+	# Replace {launcher_path} with the actual launcher path in the script content
+	script_content = script_content.replace("{launcher_path}", launcher_path)
+
+   # Write the batch script to the file
+	var file := FileAccess.open(script_path, FileAccess.WRITE)
+	if file:
+		file.store_string(script_content)
+		file.close()
+		print("Cleanup batch script created successfully at: ", script_path)
+	else:
+		print("Failed to create batch script.")
+
+func execute_cleanup_script_windows():
+	print("Starting detached cleanup script...")
+
+	var script_path := "user://cleanup_drivechain_data.bat"
+	script_path = ProjectSettings.globalize_path(script_path)  # Convert to an absolute OS path
+
+	# Prepare the arguments for the script execution. Since it's a .bat file, use cmd.exe to run it
+	var arguments := PackedStringArray(["/c", script_path])
+
+	# Use create_process to start the batch script in a separate process
+	var pid = OS.create_process("cmd.exe", arguments, false)
+	if pid != -1:
+		print("Detached cleanup script started with PID:", pid)
+	else:
+		print("Failed to start detached cleanup script.")
+
+	# Now you can quit the application safely
+	get_tree().quit()
+
+
+
+
 	
 func load_version_config():
 	version_config = ConfigFile.new()
