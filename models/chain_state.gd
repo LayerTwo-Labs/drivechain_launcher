@@ -48,34 +48,53 @@ func make_request(method: String, params: Variant, http_request: HTTPRequest):
 	var jsonrpc := JSONRPC.new()
 	var req = jsonrpc.make_request(method, params, 1)
 	
-	http_request.request("http://127.0.0.1:" + str(chain_provider.port), headers, HTTPClient.METHOD_POST, JSON.stringify(req))
+	var request_url = "http://127.0.0.1:" + str(chain_provider.port)
+	var request_data = JSON.stringify(req)
 	
+	print("Debug: Request URL: ", request_url)  # Log the request URL
+	print("Debug: Request Data: ", request_data)  # Log the request data
+	
+	http_request.request(request_url, headers, HTTPClient.METHOD_POST, request_data)
+
 	
 func get_result(response_code, body) -> Dictionary:
 	var res = {}
 	var json = JSON.new()
+	print("Debug: Response Code received: ", response_code)  # Log the response code
 	if response_code != 200:
 		if body != null:
 			var err = json.parse(body.get_string_from_utf8())
 			if err == OK:
-				print(json.get_data())
+				var error_response = json.get_data()
+				print("Debug: Error Response received: ", error_response)  # Log the error response
+				# Consider handling specific errors here based on error_response content
+			else:
+				print("Debug: Error parsing JSON response.")
 	else:
 		var err = json.parse(body.get_string_from_utf8())
 		if err == OK:
 			res = json.get_data() as Dictionary
-			
+			print("Debug: Successful response: ", res)  # Log successful responses
+		else:
+			print("Debug: Error parsing successful JSON response.")
 	return res
+
 	
 	
 func request_block_height():
-	make_request("getblockcount", [], get_block_height_request)
+	if chain_provider.id == "ethsail":
+		make_request("eth_blockNumber", [], get_block_height_request)
+	else:
+		make_request("getblockcount", [], get_block_height_request)
+
 	
 	
 func _on_get_block_height_request_completed(_result, response_code, _headers, body):
 	var res = get_result(response_code, body)
 	if res.has("result"):
-		if height != res.result:
-			height = res.result
+		var new_height = int(res.result) if typeof(res.result) == TYPE_STRING else res.result
+		if height != new_height:
+			height = new_height
 			Appstate.chain_states_changed.emit()
 		if not state == c_state.RUNNING:
 			state = c_state.RUNNING
@@ -84,8 +103,9 @@ func _on_get_block_height_request_completed(_result, response_code, _headers, bo
 		if not state == c_state.WAITING:
 			state = c_state.WAITING
 			Appstate.chain_states_changed.emit()
+
 			
-	await get_tree().create_timer(1).timeout
+	await get_tree().create_timer(10).timeout #change back to 1 after done debugging!!!
 	request_block_height()
 	
 	
