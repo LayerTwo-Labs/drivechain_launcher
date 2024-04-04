@@ -96,7 +96,7 @@ func _on_get_block_height_request_completed(_result, response_code, _headers, bo
 			Appstate.chain_states_changed.emit()
 
 			
-	await get_tree().create_timer(10).timeout #change back to 1 after done debugging!!!
+	await get_tree().create_timer(1).timeout 
 	request_block_height()
 	
 	
