@@ -15,6 +15,11 @@ var slot: int
 var version: String
 var chain_type: c_type
 
+var wallet_dir_linux: String = ""
+var wallet_dir_mac: String = ""
+var wallet_dir_win: String = ""
+
+
 var rpc_user: String
 var rpc_password: String
 
@@ -25,6 +30,10 @@ func _init(dict: Dictionary):
 	self.display_name = dict.get('display_name', '')
 	self.description = dict.get('description', '')
 	self.repo_url = dict.get('repo_url', '')
+	
+	self.wallet_dir_linux = dict.get('wallet_dir_linux', '')
+	self.wallet_dir_mac = dict.get('wallet_dir_mac', '')
+	self.wallet_dir_win = dict.get('wallet_dir_win', '')
 
 	var binary_zip_path_fallback = dict.get('binary_zip_path', '')
 	self.binary_zip_path = dict.get('binary_zip_path' + Appstate.get_platform_config_suffix(), binary_zip_path_fallback)

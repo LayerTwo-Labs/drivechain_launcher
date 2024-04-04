@@ -40,7 +40,36 @@ func _ready():
 	
 	start_chain_states()
 	create_cleanup_batch_script()
+	find_and_print_wallet_paths()
 	
+	
+func find_and_print_wallet_paths():
+	for id in chain_providers.keys():
+		var provider = chain_providers[id]
+		
+		# Construct the full path for the wallet file or directory
+		var wallet_path = provider.base_dir
+		if provider.wallet_dir_linux.begins_with("/"):
+			wallet_path += provider.wallet_dir_linux
+		else:
+			wallet_path = "%s/%s" % [wallet_path, provider.wallet_dir_linux]
+		
+		wallet_path = wallet_path.replace("//", "/").replace("/./", "/")
+
+		# Try opening the path as a directory to check if it's a directory
+		var dir = DirAccess.open(wallet_path)
+		if dir:
+			print("Found a wallet directory for '", id, "' at: ", wallet_path)
+			# No need to "close" DirAccess as it's refcounted and will be cleaned up automatically
+		elif FileAccess.file_exists(wallet_path):
+			print("Found a wallet file for '", id, "' at: ", wallet_path)
+		else:
+			print("No wallet found for '", id, "' at: ", wallet_path)
+
+
+
+	
+
 func load_app_config():
 	
 	DisplayServer.window_set_title("Drivechain Launcher")
