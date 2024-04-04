@@ -347,7 +347,7 @@ func get_home() -> String:
 func get_drivechain_dir() -> String:
 	match get_platform():
 		Appstate.platform.LINUX:
-			return get_home() + "/.drivechain"
+			return get_home() + "/drivechain"
 		Appstate.platform.WIN:
 			return get_home() + "\\AppData\\Roaming\\Drivechain"
 		Appstate.platform.MAC:
