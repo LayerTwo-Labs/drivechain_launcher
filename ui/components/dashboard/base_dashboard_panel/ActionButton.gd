@@ -34,7 +34,6 @@ var shimmer_tween : Tween
 
 
 func _ready():
-	prints("State Icon: ", state_icon)
 	set_state(state)
 
 func set_state(new_state:int):

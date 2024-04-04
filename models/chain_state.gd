@@ -51,33 +51,24 @@ func make_request(method: String, params: Variant, http_request: HTTPRequest):
 	var request_url = "http://127.0.0.1:" + str(chain_provider.port)
 	var request_data = JSON.stringify(req)
 	
-	print("Debug: Request URL: ", request_url)  # Log the request URL
-	print("Debug: Request Data: ", request_data)  # Log the request data
-	
 	http_request.request(request_url, headers, HTTPClient.METHOD_POST, request_data)
 
-	
 func get_result(response_code, body) -> Dictionary:
 	var res = {}
 	var json = JSON.new()
-	print("Debug: Response Code received: ", response_code)  # Log the response code
 	if response_code != 200:
 		if body != null:
 			var err = json.parse(body.get_string_from_utf8())
 			if err == OK:
-				var error_response = json.get_data()
-				print("Debug: Error Response received: ", error_response)  # Log the error response
-				# Consider handling specific errors here based on error_response content
-			else:
-				print("Debug: Error parsing JSON response.")
+				res = json.get_data()
+				# Here you might handle specific errors based on res content
 	else:
 		var err = json.parse(body.get_string_from_utf8())
 		if err == OK:
 			res = json.get_data() as Dictionary
-			print("Debug: Successful response: ", res)  # Log successful responses
-		else:
-			print("Debug: Error parsing successful JSON response.")
+			# Here you might process successful responses
 	return res
+
 
 	
 	
