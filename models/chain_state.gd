@@ -48,11 +48,9 @@ func make_request(method: String, params: Variant, http_request: HTTPRequest):
 	var jsonrpc := JSONRPC.new()
 	var req = jsonrpc.make_request(method, params, 1)
 	
-	var request_url = "http://127.0.0.1:" + str(chain_provider.port)
-	var request_data = JSON.stringify(req)
+	http_request.request("http://127.0.0.1:" + str(chain_provider.port), headers, HTTPClient.METHOD_POST, JSON.stringify(req))
 	
-	http_request.request(request_url, headers, HTTPClient.METHOD_POST, request_data)
-
+	
 func get_result(response_code, body) -> Dictionary:
 	var res = {}
 	var json = JSON.new()
@@ -60,32 +58,24 @@ func get_result(response_code, body) -> Dictionary:
 		if body != null:
 			var err = json.parse(body.get_string_from_utf8())
 			if err == OK:
-				res = json.get_data()
-				# Here you might handle specific errors based on res content
+				print(json.get_data())
 	else:
 		var err = json.parse(body.get_string_from_utf8())
 		if err == OK:
 			res = json.get_data() as Dictionary
-			# Here you might process successful responses
+			
 	return res
-
-
 	
 	
 func request_block_height():
-	if chain_provider.id == "ethsail":
-		make_request("eth_blockNumber", [], get_block_height_request)
-	else:
-		make_request("getblockcount", [], get_block_height_request)
-
+	make_request("getblockcount", [], get_block_height_request)
 	
 	
 func _on_get_block_height_request_completed(_result, response_code, _headers, body):
 	var res = get_result(response_code, body)
 	if res.has("result"):
-		var new_height = int(res.result) if typeof(res.result) == TYPE_STRING else res.result
-		if height != new_height:
-			height = new_height
+		if height != res.result:
+			height = res.result
 			Appstate.chain_states_changed.emit()
 		if not state == c_state.RUNNING:
 			state = c_state.RUNNING
@@ -94,9 +84,8 @@ func _on_get_block_height_request_completed(_result, response_code, _headers, bo
 		if not state == c_state.WAITING:
 			state = c_state.WAITING
 			Appstate.chain_states_changed.emit()
-
 			
-	await get_tree().create_timer(1).timeout 
+	await get_tree().create_timer(1).timeout
 	request_block_height()
 	
 	
