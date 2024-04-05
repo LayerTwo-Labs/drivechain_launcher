@@ -41,12 +41,6 @@ func _ready():
 	start_chain_states()
 	create_cleanup_batch_script()
 	find_and_print_wallet_paths()
-	
-	
-
-
-
-
 
 func find_and_print_wallet_paths():
 	for id in chain_providers.keys():
@@ -71,10 +65,6 @@ func find_and_print_wallet_paths():
 		else:
 			print("No wallet found for '", id, "' at: ", wallet_path)
 
-
-
-	
-
 func load_app_config():
 	
 	DisplayServer.window_set_title("Drivechain Launcher")
@@ -91,7 +81,6 @@ func load_app_config():
 		
 	update_display_scale(scale_factor)
 	
-	
 func update_display_scale(scale_factor: float):
 	scale_factor = clampf(scale_factor, 1, 2)
 	var screen_size = DisplayServer.screen_get_size(0)
@@ -104,6 +93,7 @@ func update_display_scale(scale_factor: float):
 	app_config.set_value("", "scale_factor", scale_factor)
 	app_config.save(APP_CONFIG_PATH)
 	
+
 func purge_except_backup(base_dir: String, keep_dir_name: String):
 	var dir = DirAccess.open(base_dir)
 	if dir:
@@ -122,42 +112,38 @@ func purge_except_backup(base_dir: String, keep_dir_name: String):
 	else:
 		print("Failed to open directory: %s" % base_dir)
 
-func setup_wallets_backup_directory():
-	# Determine the base directory for storing backups within the user data directory.
-	var backup_dir_name = "wallets_backup"
-	# Correctly construct the backup directory path.
-	var backup_dir_path = OS.get_user_data_dir() + "/" + backup_dir_name
 
-	# Attempt to create the backup directory.
-	var dir_access = DirAccess.open(OS.get_user_data_dir())
+func setup_wallets_backup_directory():
+	var backup_dir_name := "wallets_backup"
+	var user_data_dir := OS.get_user_data_dir()
+	var backup_dir_path := "%s/%s" % [user_data_dir, backup_dir_name]
+
+	var dir_access = DirAccess.open(user_data_dir)
 	if dir_access:
-		# Attempt to change to the backup directory to check if it exists.
-		if dir_access.change_dir(backup_dir_path) != OK:
-			# Since changing to the backup directory failed, it does not exist, and we attempt to create it.
-			# Make dir_access point to the root directory to create the backup directory at the correct path.
-			dir_access.change_dir(OS.get_user_data_dir())
-			var error = dir_access.make_dir_recursive(backup_dir_path)
+		if not dir_access.dir_exists(backup_dir_name):
+			var error = dir_access.make_dir_recursive(backup_dir_name)
 			if error != OK:
 				print("Failed to create wallets backup directory at: %s" % backup_dir_path)
 			else:
 				print("Wallets backup directory successfully created at: %s" % backup_dir_path)
 		else:
 			print("Wallets backup directory already exists at: %s" % backup_dir_path)
+		dir_access.list_dir_end()
 	else:
 		print("Failed to access user data directory.")
 
 
 func reset_everything():
 	print("Starting reset process...")
-	
+
 	# Setup the backup directory before purging to ensure it's not deleted.
 	setup_wallets_backup_directory()
-
+	
 	# Purge directories while preserving the wallets_backup folder.
 	var user_data_dir = OS.get_user_data_dir()
-	var drivechain_launcher_dir = user_data_dir + "/drivechain_launcher"  # Concatenate using "/"
-	purge_except_backup(drivechain_launcher_dir, "wallets_backup")
-	print("Purged drivechain_launcher directory except for wallets_backup")
+
+	purge_except_backup(user_data_dir, "wallets_backup")
+
 
 	# Remaining operations on chains and configurations.
 	for i in chain_states:
@@ -190,6 +176,8 @@ func reset_everything():
 
 	print("Saving configuration...")
 	save_config()
+	
+	load_app_config()
 
 	print("Setting up directories...")
 	setup_directories()
@@ -205,14 +193,14 @@ func reset_everything():
 
 	print("Starting chain states...")
 	start_chain_states()
+	
+	create_cleanup_batch_script()
 
 	print("Reset process completed successfully.")
 
-
-
 func create_cleanup_batch_script():
 	var script_path := "user://cleanup_drivechain_data.bat"
-	var launcher_path := OS.get_executable_path() # Dynamically obtain the launcher's executable path
+	var launcher_path := OS.get_executable_path() # Dynamically obtain the launcher's executab	create_cleanup_batch_script()le path
 
 	# Start the script content with an explicit type declaration
 	var script_content: String = """
