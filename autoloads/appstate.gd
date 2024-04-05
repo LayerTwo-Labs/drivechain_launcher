@@ -43,6 +43,11 @@ func _ready():
 	find_and_print_wallet_paths()
 	
 	
+
+
+
+
+
 func find_and_print_wallet_paths():
 	for id in chain_providers.keys():
 		var provider = chain_providers[id]
@@ -99,60 +104,110 @@ func update_display_scale(scale_factor: float):
 	app_config.set_value("", "scale_factor", scale_factor)
 	app_config.save(APP_CONFIG_PATH)
 	
+func purge_except_backup(base_dir: String, keep_dir_name: String):
+	var dir = DirAccess.open(base_dir)
+	if dir:
+		dir.list_dir_begin()
+		var filename = dir.get_next()
+		while filename != "":
+			if filename != keep_dir_name:
+				var full_path = base_dir + "/" + filename  # Corrected path concatenation
+				if dir.current_is_dir():
+					purge_except_backup(full_path, "")
+					dir.remove(full_path)  # Remove the directory after clearing it
+				else:
+					dir.remove(full_path)  # Directly remove file
+			filename = dir.get_next()
+		dir.list_dir_end()
+	else:
+		print("Failed to open directory: %s" % base_dir)
+
+func setup_wallets_backup_directory():
+	# Determine the base directory for storing backups within the user data directory.
+	var backup_dir_name = "wallets_backup"
+	# Correctly construct the backup directory path.
+	var backup_dir_path = OS.get_user_data_dir() + "/" + backup_dir_name
+
+	# Attempt to create the backup directory.
+	var dir_access = DirAccess.open(OS.get_user_data_dir())
+	if dir_access:
+		# Attempt to change to the backup directory to check if it exists.
+		if dir_access.change_dir(backup_dir_path) != OK:
+			# Since changing to the backup directory failed, it does not exist, and we attempt to create it.
+			# Make dir_access point to the root directory to create the backup directory at the correct path.
+			dir_access.change_dir(OS.get_user_data_dir())
+			var error = dir_access.make_dir_recursive(backup_dir_path)
+			if error != OK:
+				print("Failed to create wallets backup directory at: %s" % backup_dir_path)
+			else:
+				print("Wallets backup directory successfully created at: %s" % backup_dir_path)
+		else:
+			print("Wallets backup directory already exists at: %s" % backup_dir_path)
+	else:
+		print("Failed to access user data directory.")
+
 
 func reset_everything():
 	print("Starting reset process...")
 	
+	# Setup the backup directory before purging to ensure it's not deleted.
+	setup_wallets_backup_directory()
+
+	# Purge directories while preserving the wallets_backup folder.
+	var user_data_dir = OS.get_user_data_dir()
+	var drivechain_launcher_dir = user_data_dir + "/drivechain_launcher"  # Concatenate using "/"
+	purge_except_backup(drivechain_launcher_dir, "wallets_backup")
+	print("Purged drivechain_launcher directory except for wallets_backup")
+
+	# Remaining operations on chains and configurations.
 	for i in chain_states:
-		print("Stopping chain:", i)
+		print("Stopping chain: %s" % i)
 		chain_states[i].stop_chain()
 		await get_tree().create_timer(0.1).timeout
-		print("Removing chain state child:", i)
+		print("Removing chain state child: %s" % i)
 		remove_child(chain_states[i])
-		print("Cleaning up chain state:", i)
+		print("Cleaning up chain state: %s, with data: %s" % [i, str(chain_states[i])])
 		chain_states[i].cleanup()
+
 	if OS.get_name() == "Windows":
 		print("Executing Windows-specific cleanup...")
 		execute_cleanup_script_windows()  # Windows-specific cleanup 
 		return
-	print("Removing chain providers...")
-	for i in chain_providers:
-		print("Moving chain provider to trash:", i)
-		var err = OS.move_to_trash(ProjectSettings.globalize_path(chain_providers[i].base_dir))
-		if err != OK:
-			print("Error moving to trash:", err)
-		
+
 	print("Clearing chain states...")
 	chain_states.clear()
+	print("Chain states after clearing: %s" % str(chain_states))
+
 	print("Clearing chain providers...")
 	chain_providers.clear()
-	
-	print("Moving user data directory to trash...")
-	var err = OS.move_to_trash(ProjectSettings.globalize_path(OS.get_user_data_dir()))
-	if err != OK:
-		print("Error moving user data directory to trash:", err)
-		return
-	
+	print("Chain providers after clearing: %s" % str(chain_providers))
+
 	print("Loading version configuration...")
 	load_version_config()
+
 	print("Loading configuration...")
 	load_config()
+
 	print("Saving configuration...")
 	save_config()
+
 	print("Setting up directories...")
 	setup_directories()
+
 	print("Setting up configurations...")
 	setup_confs()
+
 	print("Setting up chain states...")
 	setup_chain_states()
-	
+
 	print("Emitting chain providers changed signal...")
 	chain_providers_changed.emit()
-	
+
 	print("Starting chain states...")
 	start_chain_states()
-	
+
 	print("Reset process completed successfully.")
+
 
 
 func create_cleanup_batch_script():
