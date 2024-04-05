@@ -201,10 +201,9 @@ func start_chain():
 		#if dir == null:
 			#print("zcash params not present, showing download modal")
 			#Appstate.show_zparams_modal(self)
-
+#
 			## important: return here! once the params are finished downloading,
 			## the binary will be launched by the params fetched modal.
-
 			#return 
 	
 
