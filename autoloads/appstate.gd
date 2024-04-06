@@ -40,30 +40,56 @@ func _ready():
 	
 	start_chain_states()
 	create_cleanup_batch_script()
-	find_and_print_wallet_paths()
+	#find_and_print_wallet_paths()
 
-func find_and_print_wallet_paths():
+func backup_wallets():
+	var backup_dir_path = setup_wallets_backup_directory()
 	for id in chain_providers.keys():
 		var provider = chain_providers[id]
-		
-		# Construct the full path for the wallet file or directory
+
+		# Constructing the wallet path
 		var wallet_path = provider.base_dir
 		if provider.wallet_dir_linux.begins_with("/"):
 			wallet_path += provider.wallet_dir_linux
 		else:
 			wallet_path = "%s/%s" % [wallet_path, provider.wallet_dir_linux]
-		
 		wallet_path = wallet_path.replace("//", "/").replace("/./", "/")
 
-		# Try opening the path as a directory to check if it's a directory
-		var dir = DirAccess.open(wallet_path)
-		if dir:
-			print("Found a wallet directory for '", id, "' at: ", wallet_path)
-			# No need to "close" DirAccess as it's refcounted and will be cleaned up automatically
-		elif FileAccess.file_exists(wallet_path):
-			print("Found a wallet file for '", id, "' at: ", wallet_path)
+		# Determine the system command based on the OS
+		var command: String
+		var arguments: PackedStringArray
+		var target_backup_path = "%s/%s" % [backup_dir_path, id.replace("/", "_")]
+		var output: Array = []
+
+		match OS.get_name():
+			"Windows":
+				command = "xcopy"
+				arguments = PackedStringArray([wallet_path + "\\", target_backup_path + "\\", "/E", "/I", "/Q"])
+			"Linux", "macOS", "FreeBSD":
+				command = "cp"
+				arguments = PackedStringArray(["-r", wallet_path, target_backup_path])
+			_:
+				print("OS not supported for direct folder copy.")
+				return
+
+		# Execute the command
+		var result = OS.execute(command, arguments, output, false, false)
+		if result == OK:
+			print("Successfully backed up wallet for '", id, "' to: ", target_backup_path)
 		else:
-			print("No wallet found for '", id, "' at: ", wallet_path)
+			var output_str = array_to_string(output)
+			print("Failed to back up wallet for '", id, "'. Command output: ", output_str)
+
+func array_to_string(array: Array) -> String:
+	var result: String = ""
+	for i in array:
+		result += str(i) + "\n"
+	return result.strip_edges(true, false)
+
+
+
+
+
 
 func load_app_config():
 	
@@ -136,6 +162,7 @@ func setup_wallets_backup_directory():
 
 
 func reset_everything():
+	backup_wallets()
 	print("Starting reset process...")
 	# Setup the backup directory before purging to ensure it's not deleted.
 	setup_wallets_backup_directory()
