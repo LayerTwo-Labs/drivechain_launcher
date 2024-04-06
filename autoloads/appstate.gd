@@ -39,7 +39,7 @@ func _ready():
 	chain_providers_changed.emit()
 	
 	start_chain_states()
-	#create_cleanup_batch_script()
+	create_cleanup_batch_script()
 	find_and_print_wallet_paths()
 
 func find_and_print_wallet_paths():
@@ -158,6 +158,13 @@ func reset_everything():
 		print("Executing Windows-specific cleanup...")
 		execute_cleanup_script_windows()  # Windows-specific cleanup 
 		return
+	
+	print("Removing chain providers...")
+	for i in chain_providers:
+		print("Moving chain provider to trash:", i)
+		var err = OS.move_to_trash(ProjectSettings.globalize_path(chain_providers[i].base_dir))
+		if err != OK:
+			print("Error moving to trash:", err)
 
 	print("Clearing chain states...")
 	chain_states.clear()
