@@ -131,6 +131,8 @@ func setup_wallets_backup_directory():
 		dir_access.list_dir_end()
 	else:
 		print("Failed to access user data directory.")
+	return backup_dir_path
+
 
 
 func reset_everything():

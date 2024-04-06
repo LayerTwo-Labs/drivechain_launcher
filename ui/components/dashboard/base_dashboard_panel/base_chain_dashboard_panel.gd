@@ -159,6 +159,7 @@ func show_unsupported_state():
 	
 	
 func download():
+	print("downloading ", chain_provider.id)
 	if not chain_provider.available_for_platform():
 		return
 		
