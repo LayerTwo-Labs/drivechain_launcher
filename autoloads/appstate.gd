@@ -39,7 +39,7 @@ func _ready():
 	chain_providers_changed.emit()
 	
 	start_chain_states()
-	create_cleanup_batch_script()
+	#create_cleanup_batch_script()
 	find_and_print_wallet_paths()
 
 func find_and_print_wallet_paths():
@@ -135,7 +135,6 @@ func setup_wallets_backup_directory():
 
 func reset_everything():
 	print("Starting reset process...")
-
 	# Setup the backup directory before purging to ensure it's not deleted.
 	setup_wallets_backup_directory()
 	
@@ -271,6 +270,7 @@ func create_cleanup_batch_script():
 		print("Failed to create batch script.")
 
 func execute_cleanup_script_windows():
+	create_cleanup_batch_script()
 	print("Starting detached cleanup script...")
 
 	var script_path := "user://cleanup_drivechain_data.bat"
