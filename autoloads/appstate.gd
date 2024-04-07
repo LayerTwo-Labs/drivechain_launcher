@@ -42,25 +42,41 @@ func _ready():
 	create_cleanup_batch_script()
 	#find_and_print_wallet_paths()
 
+const WALLET_INFO_PATH := "user://wallets_backup/wallet_info.dat"
+
 func backup_wallets():
+	print("Starting backup process...")
 	var backup_dir_path = setup_wallets_backup_directory()
+	print("Backup directory path: ", backup_dir_path)
+	
+	var wallet_paths_info = {}
+	print("Enumerating chain providers...")
+	
 	for id in chain_providers.keys():
+		print("Processing provider with ID: ", id)
 		var provider = chain_providers[id]
 
 		# Constructing the wallet path
+		print("Base directory for provider: ", provider.base_dir)
 		var wallet_path = provider.base_dir
 		if provider.wallet_dir_linux.begins_with("/"):
 			wallet_path += provider.wallet_dir_linux
 		else:
 			wallet_path = "%s/%s" % [wallet_path, provider.wallet_dir_linux]
 		wallet_path = wallet_path.replace("//", "/").replace("/./", "/")
+		print("Constructed wallet path: ", wallet_path)
+		
+		# Save original path info
+		wallet_paths_info[id] = wallet_path
 
 		# Determine the system command based on the OS
 		var command: String
 		var arguments: PackedStringArray
 		var target_backup_path = "%s/%s" % [backup_dir_path, id.replace("/", "_")]
+		print("Target backup path: ", target_backup_path)
 		var output: Array = []
 
+		print("Determining command based on OS: ", OS.get_name())
 		match OS.get_name():
 			"Windows":
 				command = "xcopy"
@@ -72,13 +88,28 @@ func backup_wallets():
 				print("OS not supported for direct folder copy.")
 				return
 
+		print("Executing command: ", command, " with arguments: ", arguments)
 		# Execute the command
 		var result = OS.execute(command, arguments, output, false, false)
 		if result == OK:
 			print("Successfully backed up wallet for '", id, "' to: ", target_backup_path)
 		else:
 			var output_str = array_to_string(output)
-			print("Failed to back up wallet for '", id, "'. Command output: ", output_str)
+			print("Failed to back up wallet for '", id)
+			
+
+	# After backing up all wallets, save the wallet_paths_info dictionary for later restoration
+	print("Saving wallet paths info to file.")
+	var file = FileAccess.open(WALLET_INFO_PATH, FileAccess.WRITE)
+	if file != null:
+		file.store_var(wallet_paths_info)
+		file.close()
+		print("Wallet paths info successfully saved.")
+	else:
+		print("Failed to open file for writing: " + WALLET_INFO_PATH)
+
+
+
 
 func array_to_string(array: Array) -> String:
 	var result: String = ""
