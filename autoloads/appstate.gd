@@ -48,14 +48,13 @@ func backup_wallets():
 	print("Starting backup process...")
 	var backup_dir_path = setup_wallets_backup_directory()
 	print("Backup directory path: ", backup_dir_path)
-	
 	var wallet_paths_info = {}
-	print("Enumerating chain providers...")
 	
+	print("Enumerating chain providers...")
 	for id in chain_providers.keys():
 		print("Processing provider with ID: ", id)
 		var provider = chain_providers[id]
-
+		
 		# Constructing the wallet path
 		print("Base directory for provider: ", provider.base_dir)
 		var wallet_path = provider.base_dir
@@ -68,14 +67,23 @@ func backup_wallets():
 		
 		# Save original path info
 		wallet_paths_info[id] = wallet_path
-
+		
 		# Determine the system command based on the OS
 		var command: String
 		var arguments: PackedStringArray
 		var target_backup_path = "%s/%s" % [backup_dir_path, id.replace("/", "_")]
 		print("Target backup path: ", target_backup_path)
+		
+		# Check if the backup directory already exists
+		var dir_access = DirAccess.open(backup_dir_path)
+		if dir_access.dir_exists(target_backup_path):
+			print("Existing backup found. Clearing the backup directory...")
+			var remove_result = dir_access.remove(target_backup_path)
+			if remove_result != OK:
+				print("Failed to remove existing backup directory: ", target_backup_path)
+				continue
+		
 		var output: Array = []
-
 		print("Determining command based on OS: ", OS.get_name())
 		match OS.get_name():
 			"Windows":
@@ -87,7 +95,7 @@ func backup_wallets():
 			_:
 				print("OS not supported for direct folder copy.")
 				return
-
+		
 		print("Executing command: ", command, " with arguments: ", arguments)
 		# Execute the command
 		var result = OS.execute(command, arguments, output, false, false)
@@ -95,9 +103,8 @@ func backup_wallets():
 			print("Successfully backed up wallet for '", id, "' to: ", target_backup_path)
 		else:
 			var output_str = array_to_string(output)
-			print("Failed to back up wallet for '", id)
-			
-
+			print("Failed to back up wallet for ", id)
+	
 	# After backing up all wallets, save the wallet_paths_info dictionary for later restoration
 	print("Saving wallet paths info to JSON file.")
 	var json_text := JSON.stringify(wallet_paths_info)
@@ -110,18 +117,11 @@ func backup_wallets():
 	else:
 		print("Failed to open JSON file for writing: ", WALLET_INFO_PATH)
 
-
-
 func array_to_string(array: Array) -> String:
 	var result: String = ""
 	for i in array:
 		result += str(i) + "\n"
 	return result.strip_edges(true, false)
-
-
-
-
-
 
 func load_app_config():
 	
@@ -186,6 +186,7 @@ func setup_wallets_backup_directory():
 				print("Wallets backup directory successfully created at: %s" % backup_dir_path)
 		else:
 			print("Wallets backup directory already exists at: %s" % backup_dir_path)
+			print("Clearing ")
 		dir_access.list_dir_end()
 	else:
 		print("Failed to access user data directory.")

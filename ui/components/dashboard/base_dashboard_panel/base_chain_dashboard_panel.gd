@@ -157,41 +157,95 @@ func show_unsupported_state():
 	secondary_desc.text = "[i]This sidechain is currently not available for this platform -- try Linux instead.[/i]"
 	modulate = disabled_modulate
 	
-	
+const WALLET_INFO_PATH = "user://wallets_backup/wallet_info.json"
+
 func download():
-	print("downloading ", chain_provider.id)
+	print("Starting download process...")
+	print("Chain provider ID: ", chain_provider.id)
+	
+	# Check if the chain provider is available for the current platform
 	if not chain_provider.available_for_platform():
+		print("Chain provider is not available for this platform.")
 		return
-		
+
+	# Check for existing wallet backup before download
+	var backup_info = check_for_wallet_backup(chain_provider.id)
+	print("Wallet backup check completed.")
+	print("Wallet backup exists: ", backup_info["exists"])
+	print("Wallet backup location: ", backup_info["location"])
+
+	# Continue with the original download logic
+	print("Setting up download requirements...")
+	setup_download_requirements()
+	print("Initiating download process...")
+	initiate_download_process()
+
+func check_for_wallet_backup(id):
+	print("Checking for wallet backup. ID: ", id)
+	var wallet_paths_info = load_wallet_paths_info()
+	#print("Loaded wallet paths info: ", wallet_paths_info)
+	if wallet_paths_info and wallet_paths_info.has(id):
+		var backup_location = wallet_paths_info[id]
+		print("Found backup location in info: ", backup_location)
+		if FileAccess.file_exists(backup_location):
+			print("Backup file exists at location.")
+			return {"exists": true, "location": backup_location}
+		else:
+			print("No backup file found at the specified location.")
+	else:
+		print("No backup information found for ID: ", id)
+	return {"exists": false, "location": ""}
+
+func load_wallet_paths_info():
+	print("Loading wallet paths info from: ", WALLET_INFO_PATH)
+	var file = FileAccess.open(WALLET_INFO_PATH, FileAccess.ModeFlags.READ)
+	if file != null:
+		var json_text = file.get_as_text()
+		file.close()
+		print("Wallet paths JSON text: ", json_text)
+		var json = JSON.new()
+		var error = json.parse(json_text)
+		if error == OK:
+			print("Successfully parsed JSON. Data: ", json.data)
+			return json.data
+		else:
+			print("Failed to parse JSON. Error: ", error)
+	else:
+		print("Failed to open file at path: ", WALLET_INFO_PATH)
+	return {}
+
+
+
+
+func setup_download_requirements():
 	if download_req != null:
 		remove_child(download_req)
-		
+	
 	if progress_timer != null:
 		progress_timer.stop()
 		remove_child(progress_timer)
-		
-	print("Downloading ", chain_provider.display_name, " from " ,  chain_provider.download_url)
+
+func initiate_download_process():
+	print("Downloading ", chain_provider.display_name, " from ", chain_provider.download_url)
 	download_req = HTTPRequest.new()
 	add_child(download_req)
-	
 	download_req.request_completed.connect(self._on_download_complete)
+	
 	var err = download_req.request(chain_provider.download_url)
 	if err != OK:
-		push_error("An error occurred")
+		push_error("An error occurred during download request.")
 		return
-		
+	
 	action_button.disabled = true
 	
 	progress_timer = Timer.new()
 	add_child(progress_timer)
-	
 	progress_timer.wait_time = 0.1
 	progress_timer.timeout.connect(self._on_download_progress)
 	progress_timer.start()
-	
 	progress_bar.visible = true
 	
-	
+
 func _on_download_progress():
 	if download_req != null:
 		var bodySize: float = download_req.get_body_size()
