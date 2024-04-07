@@ -42,7 +42,7 @@ func _ready():
 	create_cleanup_batch_script()
 	#find_and_print_wallet_paths()
 
-const WALLET_INFO_PATH := "user://wallets_backup/wallet_info.dat"
+const WALLET_INFO_PATH := "user://wallets_backup/wallet_info.json"
 
 func backup_wallets():
 	print("Starting backup process...")
@@ -99,15 +99,16 @@ func backup_wallets():
 			
 
 	# After backing up all wallets, save the wallet_paths_info dictionary for later restoration
-	print("Saving wallet paths info to file.")
-	var file = FileAccess.open(WALLET_INFO_PATH, FileAccess.WRITE)
+	print("Saving wallet paths info to JSON file.")
+	var json_text := JSON.stringify(wallet_paths_info)
+	var file := FileAccess.open(WALLET_INFO_PATH, FileAccess.ModeFlags.WRITE)
 	if file != null:
-		file.store_var(wallet_paths_info)
+		file.store_string(json_text)
+		file.flush()  # Make sure data is written to disk
 		file.close()
-		print("Wallet paths info successfully saved.")
+		print("Wallet paths info successfully saved in JSON format.")
 	else:
-		print("Failed to open file for writing: " + WALLET_INFO_PATH)
-
+		print("Failed to open JSON file for writing: ", WALLET_INFO_PATH)
 
 
 
