@@ -178,28 +178,24 @@ func setup_wallets_backup_directory():
 
 	var dir_access = DirAccess.open(user_data_dir)
 	if dir_access:
-		if not dir_access.dir_exists(backup_dir_name):
-			var error = dir_access.make_dir_recursive(backup_dir_name)
-			if error != OK:
-				print("Failed to create wallets backup directory at: %s" % backup_dir_path)
-			else:
-				print("Wallets backup directory successfully created at: %s" % backup_dir_path)
-		else:
+		if dir_access.dir_exists(backup_dir_name):
 			print("Wallets backup directory already exists at: %s" % backup_dir_path)
-			print("Clearing ")
+			clear_backup_directory(backup_dir_path)
+		# Create the directory after clearing it.
+		var error = dir_access.make_dir_recursive(backup_dir_name)
+		if error != OK:
+			print("Failed to create wallets backup directory at: %s" % backup_dir_path)
+		else:
+			print("Wallets backup directory successfully created at: %s" % backup_dir_path)
 		dir_access.list_dir_end()
 	else:
 		print("Failed to access user data directory.")
 	return backup_dir_path
 
 
-
 func reset_everything():
 	backup_wallets()
 	print("Starting reset process...")
-	# Setup the backup directory before purging to ensure it's not deleted.
-	setup_wallets_backup_directory()
-	
 	# Purge directories while preserving the wallets_backup folder.
 	var user_data_dir = OS.get_user_data_dir()
 
@@ -265,6 +261,37 @@ func reset_everything():
 	create_cleanup_batch_script()
 
 	print("Reset process completed successfully.")
+
+func clear_backup_directory(target_backup_path: String) -> void:
+	print("\nAttempting to clear backup directory at: ", target_backup_path, "\n")
+
+	var command: String
+	var arguments: Array = []
+	var output: Array = []
+	var exit_code: int
+
+	# Determine the command based on the operating system
+	if OS.get_name() == "Windows":
+		command = "cmd"
+		arguments = ["/c", "rd", "/s", "/q", target_backup_path]  # Use rd to remove directory
+	else:  # Assuming Unix-like system
+		command = "rm"
+		arguments = ["-rf", target_backup_path]  # Use rm to remove, -rf for recursive force
+
+	# Execute the command and capture output
+	exit_code = OS.execute(command, arguments, output, true)
+
+	# Check the result
+	if exit_code == OK:
+		print("Successfully cleared the backup directory: ", target_backup_path, "\n")
+	else:
+		# Assuming 'output' is an array of strings:
+		var output_str := ""
+		for line in output:
+			output_str += line + "\n"
+		output_str = output_str.strip_edges(true, false) # Remove trailing newline
+
+
 
 func create_cleanup_batch_script():
 	var script_path := "user://cleanup_drivechain_data.bat"
@@ -334,7 +361,7 @@ func create_cleanup_batch_script():
 	if file:
 		file.store_string(script_content)
 		file.close()
-		print("Cleanup batch script created successfully at: ", script_path)
+		#print("Cleanup batch script created successfully at: ", script_path)
 	else:
 		print("Failed to create batch script.")
 

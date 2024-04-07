@@ -159,42 +159,99 @@ func show_unsupported_state():
 	
 const WALLET_INFO_PATH = "user://wallets_backup/wallet_info.json"
 
+#func clear_backup_directory(target_backup_path: String) -> void:
+	#print("\nAttempting to clear backup directory at: ", target_backup_path, "\n")
+#
+	#var command: String
+	#var arguments: Array = []
+	#var output: Array = []
+	#var exit_code: int
+#
+	## Determine the command based on the operating system
+	#if OS.get_name() == "Windows":
+		#command = "cmd"
+		#arguments = ["/c", "rd", "/s", "/q", target_backup_path]  # Use rd to remove directory
+	#else:  # Assuming Unix-like system
+		#command = "rm"
+		#arguments = ["-rf", target_backup_path]  # Use rm to remove, -rf for recursive force
+#
+	## Execute the command and capture output
+	#exit_code = OS.execute(command, arguments, output, true)
+#
+	## Check the result
+	#if exit_code == OK:
+		#print("Successfully cleared the backup directory: ", target_backup_path, "\n")
+	#else:
+		## Assuming 'output' is an array of strings:
+		#var output_str := ""
+		#for line in output:
+			#output_str += line + "\n"
+		#output_str = output_str.strip_edges(true, false) # Remove trailing newline
+#
+
+
 func download():
-	print("Starting download process...")
-	print("Chain provider ID: ", chain_provider.id)
-	
-	# Check if the chain provider is available for the current platform
-	if not chain_provider.available_for_platform():
-		print("Chain provider is not available for this platform.")
-		return
+	print("\nStarting download process...\n")
+	print("Chain provider ID: ", chain_provider.id, "\n")
 
 	# Check for existing wallet backup before download
 	var backup_info = check_for_wallet_backup(chain_provider.id)
-	print("Wallet backup check completed.")
-	print("Wallet backup exists: ", backup_info["exists"])
-	print("Wallet backup location: ", backup_info["location"])
+	if backup_info["exists"]:
+		print("Backup exists. Preparing for restoration...\n")
 
-	# Continue with the original download logic
-	print("Setting up download requirements...")
+		# The backup path where the wallet backup is currently located
+		var backup_path = backup_info["backup_path"]
+
+		# The original intended location where the wallet should be restored
+		var target_path = backup_info["original_path"]
+		print("Backup path: ", backup_path, "\n")
+		print("Restoration target path: ", target_path, "\n")
+
+		# Ensure directory structure for the target path
+		ensure_directory_structure(target_path)
+
+		# Move file from backup location to the original intended location
+		move_file(backup_path, target_path)
+		print("Restoration completed.\n")
+	else:
+		print("No backup found for restoration.\n")
+
+	# Continue with the original download logic regardless of backup restoration
+	print("Setting up download requirements...\n")
 	setup_download_requirements()
-	print("Initiating download process...")
+	print("Initiating download process...\n")
 	initiate_download_process()
+
+
+
+
+
+const BACKUP_DIR_NAME := "wallets_backup"
 
 func check_for_wallet_backup(id):
 	print("Checking for wallet backup. ID: ", id)
-	var wallet_paths_info = load_wallet_paths_info()
-	#print("Loaded wallet paths info: ", wallet_paths_info)
-	if wallet_paths_info and wallet_paths_info.has(id):
-		var backup_location = wallet_paths_info[id]
-		print("Found backup location in info: ", backup_location)
-		if FileAccess.file_exists(backup_location):
-			print("Backup file exists at location.")
-			return {"exists": true, "location": backup_location}
+	var user_data_dir := OS.get_user_data_dir()
+	var backup_dir_path := "%s/%s" % [user_data_dir, BACKUP_DIR_NAME]
+	var backup_file_path := "%s/%s" % [backup_dir_path, id]  # Use the ID to form the backup file path without assuming an extension.
+	
+	# Correct usage of DirAccess to check for directories
+	var dir_access = DirAccess.open(backup_dir_path)
+	if dir_access:
+		if dir_access.file_exists(backup_file_path) or dir_access.dir_exists(backup_file_path):
+			print("Backup exists at location: ", backup_file_path)
+			return {
+				"exists": true,
+				"backup_path": backup_file_path,
+				"original_path": load_wallet_paths_info()[id]  # Load the original path to where the wallet should be restored.
+			}
 		else:
-			print("No backup file found at the specified location.")
+			print("No backup file or directory found at the specified backup location: ", backup_file_path)
+
 	else:
-		print("No backup information found for ID: ", id)
-	return {"exists": false, "location": ""}
+		print("Failed to access backup directory.")
+
+	return {"exists": false, "backup_path": "", "original_path": ""}
+
 
 func load_wallet_paths_info():
 	print("Loading wallet paths info from: ", WALLET_INFO_PATH)
@@ -202,7 +259,6 @@ func load_wallet_paths_info():
 	if file != null:
 		var json_text = file.get_as_text()
 		file.close()
-		print("Wallet paths JSON text: ", json_text)
 		var json = JSON.new()
 		var error = json.parse(json_text)
 		if error == OK:
