@@ -213,6 +213,44 @@ func load_wallet_paths_info():
 	else:
 		print("Failed to open file at path: ", WALLET_INFO_PATH)
 	return {}
+	
+func ensure_directory_structure(target_path: String):
+	# Ensure target_path is absolute; adjust logic if necessary.
+	if not DirAccess.dir_exists_absolute(target_path.get_base_dir()):
+		var error = DirAccess.make_dir_recursive_absolute(target_path.get_base_dir())
+		if error != OK:
+			print("Failed to create directory structure for: ", target_path)
+		else:
+			print("Directory structure created for: ", target_path)
+	else:
+		print("Directory already exists: ", target_path)
+
+func move_file(source_path: String, target_path: String):
+	var command: String
+	var arguments: PackedStringArray
+	var output = [] # Correctly initialize an array for the output
+	# Determine the operating system to use the appropriate command
+	if OS.get_name() == "Windows":
+		# On Windows, use "cmd /c move"
+		command = "cmd"
+		arguments = ["/c", "move", source_path, target_path]
+	else:
+		# On Unix-like systems, use "mv"
+		command = "mv"
+		arguments = [source_path, target_path]
+	
+	# Execute the command
+	var result = OS.execute(command, arguments, output, true, false)
+	if result == OK:
+		print("File moved successfully.")
+		for line in output:
+			print(line) # Print each line of output (if any)
+	else:
+		print("Failed to move file. Exit code: ", result)
+		for line in output:
+			print(line) # Print each line of output to diagnose the error
+
+
 
 
 
