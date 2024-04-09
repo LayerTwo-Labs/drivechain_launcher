@@ -186,15 +186,15 @@ func write_dir():
 			
 			
 func start_chain():
-	if id == "zside" || id == "zsail":
-		var dir = DirAccess.open(ProjectSettings.globalize_path(Appstate.get_home() + "/.zcash-params"))
-		if dir == null:
-			print("zcash params not present, showing download modal")
-			Appstate.show_zparams_modal(self)
-
-			# important: return here! once the params are finished downloading,
-			# the binary will be launched by the params fetched modal.
-			return 
+	#if id == "zside" || id == "zsail":
+		#var dir = DirAccess.open(ProjectSettings.globalize_path(Appstate.get_home() + "/.zcash-params"))
+		#if dir == null:
+			#print("zcash params not present, showing download modal")
+			#Appstate.show_zparams_modal(self)
+#
+			## important: return here! once the params are finished downloading,
+			## the binary will be launched by the params fetched modal.
+			#return 
 	
 
 	var binary = get_start_path()
