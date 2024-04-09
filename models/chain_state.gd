@@ -68,15 +68,23 @@ func get_result(response_code, body) -> Dictionary:
 	
 	
 func request_block_height():
-	make_request("getblockcount", [], get_block_height_request)
+	if chain_provider.id == "ethsail":
+		make_request("eth_blockNumber", [], get_block_height_request)
+	else:
+		make_request("getblockcount", [], get_block_height_request)
 	
 	
 func _on_get_block_height_request_completed(_result, response_code, _headers, body):
 	var res = get_result(response_code, body)
 	if res.has("result"):
-		if height != res.result:
-			height = res.result
+		# Directly use the string with '0x' prefix to convert hex to int
+		var result_height = int(res["result"])
+		
+		# Now compare the integer values
+		if height != result_height:
+			height = result_height
 			Appstate.chain_states_changed.emit()
+
 		if not state == c_state.RUNNING:
 			state = c_state.RUNNING
 			Appstate.chain_states_changed.emit()
@@ -84,9 +92,13 @@ func _on_get_block_height_request_completed(_result, response_code, _headers, bo
 		if not state == c_state.WAITING:
 			state = c_state.WAITING
 			Appstate.chain_states_changed.emit()
-			
+	
 	await get_tree().create_timer(1).timeout
 	request_block_height()
+
+
+
+
 	
 	
 #func request_automine():
