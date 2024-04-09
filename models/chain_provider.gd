@@ -188,11 +188,11 @@ func write_dir():
 	var dir = ProjectSettings.globalize_path(base_dir)
 	if not DirAccess.dir_exists_absolute(dir):
 		var err = DirAccess.make_dir_recursive_absolute(dir)
-		if err != OK:
-			print("Unable to create directory: " + dir)
-		else:
-			print("Sidechain directory found: " + dir)
-			
+		#if err != OK:
+			#print("Unable to create directory: " + dir)
+		#else:
+			#print("Sidechain directory found: " + dir)
+			#
 			
 			
 func start_chain():

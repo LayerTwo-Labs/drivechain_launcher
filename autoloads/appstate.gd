@@ -45,26 +45,30 @@ func _ready():
 const WALLET_INFO_PATH := "user://wallets_backup/wallet_info.json"
 
 func backup_wallets():
-	print("Starting backup process...")
+	print("Starting backup process...\n")
 	var backup_dir_path = setup_wallets_backup_directory()
-	print("Backup directory path: ", backup_dir_path)
+	print("Backup directory path: ", backup_dir_path, "\n")
 	var wallet_paths_info = {}
 	
-	print("Enumerating chain providers...")
+	print("Enumerating chain providers...\n")
 	for id in chain_providers.keys():
-		print("Processing provider with ID: ", id)
+		print("--------------------------------Processing provider with ID: ", id, "----------------------------------------------\n")
 		var provider = chain_providers[id]
 		
-		# Constructing the wallet path
-		print("Base directory for provider: ", provider.base_dir)
-		var wallet_path = provider.base_dir
-		if provider.wallet_dir_linux.begins_with("/"):
-			wallet_path += provider.wallet_dir_linux
+		var wallet_path: String
+		if id == "ethsail":
+			# Dynamically construct the wallet path for "ethsail" to ensure it works for any user.
+			wallet_path = get_ethsail_wallet_path()
 		else:
-			wallet_path = "%s/%s" % [wallet_path, provider.wallet_dir_linux]
-		wallet_path = wallet_path.replace("//", "/").replace("/./", "/")
-		print("Constructed wallet path: ", wallet_path)
+			# Constructing the wallet path for other providers
+			wallet_path = provider.base_dir
+			if provider.wallet_dir_linux.begins_with("/"):
+				wallet_path += provider.wallet_dir_linux
+			else:
+				wallet_path = "%s/%s" % [wallet_path, provider.wallet_dir_linux]
+			wallet_path = wallet_path.replace("//", "/").replace("/./", "/")
 		
+		print("Constructed wallet path: ", wallet_path, "\n")
 		# Save original path info
 		wallet_paths_info[id] = wallet_path
 		
@@ -72,19 +76,19 @@ func backup_wallets():
 		var command: String
 		var arguments: PackedStringArray
 		var target_backup_path = "%s/%s" % [backup_dir_path, id.replace("/", "_")]
-		print("Target backup path: ", target_backup_path)
+		print("Target backup path: ", target_backup_path, "\n")
 		
 		# Check if the backup directory already exists
 		var dir_access = DirAccess.open(backup_dir_path)
 		if dir_access.dir_exists(target_backup_path):
-			print("Existing backup found. Clearing the backup directory...")
+			print("Existing backup found. Clearing the backup directory...\n")
 			var remove_result = dir_access.remove(target_backup_path)
 			if remove_result != OK:
-				print("Failed to remove existing backup directory: ", target_backup_path)
+				print("Failed to remove existing backup directory: ", target_backup_path, "\n")
 				continue
 		
 		var output: Array = []
-		print("Determining command based on OS: ", OS.get_name())
+		print("Determining command based on OS: ", OS.get_name(), "\n")
 		match OS.get_name():
 			"Windows":
 				command = "xcopy"
@@ -93,35 +97,58 @@ func backup_wallets():
 				command = "cp"
 				arguments = PackedStringArray(["-r", wallet_path, target_backup_path])
 			_:
-				print("OS not supported for direct folder copy.")
+				print("OS not supported for direct folder copy.\n")
 				return
 		
-		print("Executing command: ", command, " with arguments: ", arguments)
+		print("Executing command: ", command, " with arguments: ", arguments, "\n")
 		# Execute the command
 		var result = OS.execute(command, arguments, output, false, false)
 		if result == OK:
-			print("Successfully backed up wallet for '", id, "' to: ", target_backup_path)
+			print("Successfully backed up wallet for '", id, "' to: ", target_backup_path, "\n")
 		else:
 			var output_str = array_to_string(output)
-			print("Failed to back up wallet for ", id)
+			print("Failed to back up wallet for ", id, "\n")
 	
 	# After backing up all wallets, save the wallet_paths_info dictionary for later restoration
-	print("Saving wallet paths info to JSON file.")
+	print("Saving wallet paths info to JSON file.\n")
 	var json_text := JSON.stringify(wallet_paths_info)
 	var file := FileAccess.open(WALLET_INFO_PATH, FileAccess.ModeFlags.WRITE)
 	if file != null:
 		file.store_string(json_text)
 		file.flush()  # Make sure data is written to disk
 		file.close()
-		print("Wallet paths info successfully saved in JSON format.")
+		print("Wallet paths info successfully saved in JSON format.\n")
 	else:
-		print("Failed to open JSON file for writing: ", WALLET_INFO_PATH)
+		print("Failed to open JSON file for writing: ", WALLET_INFO_PATH, "\n")
+
 
 func array_to_string(array: Array) -> String:
 	var result: String = ""
 	for i in array:
 		result += str(i) + "\n"
 	return result.strip_edges(true, false)
+
+func get_ethsail_wallet_path() -> String:
+	var home_dir_path: String = OS.get_environment("HOME") if OS.get_name() in ["Linux", "macOS"] else OS.get_environment("USERPROFILE")
+	return "%s/.ethereum/keystore" % home_dir_path
+
+func get_keystore_path() -> String:
+	var home_dir: String
+	if OS.get_name() == "Windows":
+		home_dir = OS.get_environment("USERPROFILE")
+	else: # Assuming Unix-like for anything not Windows
+		home_dir = OS.get_environment("HOME")
+	
+	# Construct the keystore path based on the platform
+	var keystore_path: String
+	if OS.get_name() == "Windows":
+		# On Windows, Ethereum wallets might be stored in a location like this, but adjust as needed
+		keystore_path = "%s/AppData/Roaming/Ethereum/keystore" % home_dir
+	else:
+		# On Unix-like systems, it's often directly under the user's home directory
+		keystore_path = "%s/.ethereum/keystore" % home_dir
+	
+	return keystore_path
 
 func load_app_config():
 	
@@ -204,12 +231,12 @@ func reset_everything():
 
 	# Remaining operations on chains and configurations.
 	for i in chain_states:
-		print("Stopping chain: %s" % i)
+		#print("Stopping chain: %s" % i)
 		chain_states[i].stop_chain()
 		await get_tree().create_timer(0.1).timeout
-		print("Removing chain state child: %s" % i)
+		#print("Removing chain state child: %s" % i)
 		remove_child(chain_states[i])
-		print("Cleaning up chain state: %s, with data: %s" % [i, str(chain_states[i])])
+		#print("Cleaning up chain state: %s, with data: %s" % [i, str(chain_states[i])])
 		chain_states[i].cleanup()
 
 	if OS.get_name() == "Windows":
@@ -219,18 +246,18 @@ func reset_everything():
 	
 	print("Removing chain providers...")
 	for i in chain_providers:
-		print("Moving chain provider to trash:", i)
+		#print("Moving chain provider to trash:", i)
 		var err = OS.move_to_trash(ProjectSettings.globalize_path(chain_providers[i].base_dir))
 		if err != OK:
 			print("Error moving to trash:", err)
 
 	print("Clearing chain states...")
 	chain_states.clear()
-	print("Chain states after clearing: %s" % str(chain_states))
+	#print("Chain states after clearing: %s" % str(chain_states))
 
 	print("Clearing chain providers...")
 	chain_providers.clear()
-	print("Chain providers after clearing: %s" % str(chain_providers))
+	#print("Chain providers after clearing: %s" % str(chain_providers))
 
 	print("Loading version configuration...")
 	load_version_config()
@@ -263,7 +290,7 @@ func reset_everything():
 	print("Reset process completed successfully.")
 
 func clear_backup_directory(target_backup_path: String) -> void:
-	print("\nAttempting to clear backup directory at: ", target_backup_path, "\n")
+	print("\nAttempting to clear backup directory \n")
 
 	var command: String
 	var arguments: Array = []
@@ -283,7 +310,7 @@ func clear_backup_directory(target_backup_path: String) -> void:
 
 	# Check the result
 	if exit_code == OK:
-		print("Successfully cleared the backup directory: ", target_backup_path, "\n")
+		print("Successfully cleared the backup directory \n")
 	else:
 		# Assuming 'output' is an array of strings:
 		var output_str := ""
