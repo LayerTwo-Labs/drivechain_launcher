@@ -19,6 +19,8 @@ var version_config         : ConfigFile
 
 var chain_providers        : Dictionary = {}
 var chain_states           : Dictionary = {}
+var ethsail_pid: int = -1
+
 
 signal chain_providers_changed
 signal chain_states_changed

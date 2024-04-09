@@ -214,6 +214,9 @@ func start_chain():
 	assert(pid != -1, "could not start process: " + binary)
 	print("Process started with pid: " + str(pid))
 	
+	# Store PID for ethsail
+	if id == "ethsail":
+		Appstate.ethsail_pid = pid
 	
 	# Add test network sync node right after starting
 	if id == "drivechain":
