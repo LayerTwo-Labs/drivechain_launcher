@@ -391,9 +391,9 @@ func unzip_file_and_setup_binary(base_dir: String, zip_path: String):
 		OS.execute("chmod", ["+x", start_path])
 		OS.execute("chmod", ["+x", bin_path])
 
-		# This will error on non-zcash chains, but that's OK. Just swallow it.
-		var zside_params_name = "zside-fetch-params.sh"
-		OS.execute("chmod", ["+x", ProjectSettings.globalize_path(chain_provider.base_dir + "/" + zside_params_name)])
+		## This will error on non-zcash chains, but that's OK. Just swallow it.
+		#var zside_params_name = "zside-fetch-params.sh"
+		#OS.execute("chmod", ["+x", ProjectSettings.globalize_path(chain_provider.base_dir + "/" + zside_params_name)])
 
 	update_view()
 	
