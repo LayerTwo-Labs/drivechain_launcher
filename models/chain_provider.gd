@@ -99,7 +99,7 @@ func write_conf(force_write := true):
 			conf.store_line("rpcuser=user")
 			conf.store_line("rpcpassword=password")
 			conf.store_line("server=1")
-		"testchain","bitassets","zside":
+		"testchain","bitassets","zsail":
 			conf.store_line("rpcuser=user")
 			conf.store_line("rpcpassword=password")
 			conf.store_line("server=1")
