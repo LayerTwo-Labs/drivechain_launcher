@@ -195,36 +195,32 @@ func download():
 	print("Chain provider ID: ", chain_provider.id, "\n")
 
 	# Check for existing wallet backup before download
-	var backup_info = check_for_wallet_backup(chain_provider.id)
-	if backup_info["exists"]:
-		print("Backup exists. Preparing for restoration...\n")
-
-		# The backup path where the wallet backup is currently located
-		var backup_path = backup_info["backup_path"]
-
-		# The original intended location where the wallet should be restored
-		var target_path = backup_info["original_path"]
-		print("Backup path: ", backup_path, "\n")
-		print("Restoration target path: ", target_path, "\n")
-
-		# Ensure directory structure for the target path
-		ensure_directory_structure(target_path)
-
-		# Move file from backup location to the original intended location
-		move_file(backup_path, target_path)
-		print("Restoration completed.\n")
-	else:
-		print("No backup found for restoration.\n")
+	#var backup_info = check_for_wallet_backup(chain_provider.id)
+	#if backup_info["exists"]:
+		#print("Backup exists. Preparing for restoration...\n")
+#
+		## The backup path where the wallet backup is currently located
+		#var backup_path = backup_info["backup_path"]
+#
+		## The original intended location where the wallet should be restored
+		#var target_path = backup_info["original_path"]
+		#print("Backup path: ", backup_path, "\n")
+		#print("Restoration target path: ", target_path, "\n")
+#
+		## Ensure directory structure for the target path
+		#ensure_directory_structure(target_path)
+#
+		## Move file from backup location to the original intended location
+		#move_file(backup_path, target_path)
+		#print("Restoration completed.\n")
+	#else:
+		#print("No backup found for restoration.\n")
 
 	# Continue with the original download logic regardless of backup restoration
 	print("Setting up download requirements...\n")
 	setup_download_requirements()
 	print("Initiating download process...\n")
 	initiate_download_process()
-
-
-
-
 
 const BACKUP_DIR_NAME := "wallets_backup"
 
@@ -246,12 +242,10 @@ func check_for_wallet_backup(id):
 			}
 		else:
 			print("No backup file or directory found at the specified backup location: ", backup_file_path)
-
 	else:
 		print("Failed to access backup directory.")
 
 	return {"exists": false, "backup_path": "", "original_path": ""}
-
 
 func load_wallet_paths_info():
 	print("Loading wallet paths info from: ", WALLET_INFO_PATH)
@@ -305,11 +299,6 @@ func move_file(source_path: String, target_path: String):
 		print("Failed to move file. Exit code: ", result)
 		for line in output:
 			print(line) # Print each line of output to diagnose the error
-
-
-
-
-
 
 func setup_download_requirements():
 	if download_req != null:

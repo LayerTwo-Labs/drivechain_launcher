@@ -182,6 +182,8 @@ func update_display_scale(scale_factor: float):
 	
 
 func purge_except_backup(base_dir: String, keep_dir_name: String):
+	delete_zcash_directory()
+	delete_ethereum_directory()
 	var dir = DirAccess.open(base_dir)
 	if dir:
 		dir.list_dir_begin()
@@ -198,6 +200,77 @@ func purge_except_backup(base_dir: String, keep_dir_name: String):
 		dir.list_dir_end()
 	else:
 		print("Failed to open directory: %s" % base_dir)
+
+
+func delete_ethereum_directory():
+	var os_name = OS.get_name()
+	var command = ""
+	var arguments = PackedStringArray()
+	var output = Array()
+	var error_output = Array()
+	var home_path = OS.get_environment("HOME") if OS.get_name() == "Linux" else OS.get_environment("USERPROFILE") # X11 is Linux
+	var ethereum_path = home_path + "/.ethereum" if OS.get_name() == "Linux" else home_path + "\\.ethereum"
+	
+	if os_name == "Windows":
+		command = "cmd.exe"
+		arguments.push_back("/C")
+		var deletion_command = "rmdir /s /q \"" + ethereum_path + "\""
+		arguments.push_back(deletion_command)
+	elif os_name == "Linux":
+		command = "sh"
+		arguments.push_back("-c")
+		var deletion_command = "rm -rf \"" + ethereum_path + "\""
+		arguments.push_back(deletion_command)
+	else:
+		print("Unsupported operating system: " + os_name)
+		return
+	
+	print("Attempting to delete: " + ethereum_path)
+	
+	var result = OS.execute(command, arguments, output, true, true)
+	if result == OK and output.size() == 0:
+		print("Successfully deleted: " + ethereum_path)
+	else:
+		print("Failed to delete: " + ethereum_path)
+		if output.size() > 0:
+			print("Reason: " + output[0])
+		else:
+			print("Reason: Unknown error.")
+
+func delete_zcash_directory():
+	var os_name = OS.get_name()
+	var command = ""
+	var arguments = PackedStringArray()
+	var output = Array()
+	var error_output = Array()
+	var home_path = OS.get_environment("HOME") if OS.get_name() == "Linux" else OS.get_environment("USERPROFILE") # X11 is Linux
+	var zcash_path = home_path + "/.zcash" if OS.get_name() == "Linux" else home_path + "\\.zcash"
+	
+	if os_name == "Windows":
+		command = "cmd.exe"
+		arguments.push_back("/C")
+		var deletion_command = "rmdir /s /q \"" + zcash_path + "\""
+		arguments.push_back(deletion_command)
+	elif os_name == "Linux":
+		command = "sh"
+		arguments.push_back("-c")
+		var deletion_command = "rm -rf \"" + zcash_path + "\""
+		arguments.push_back(deletion_command)
+	else:
+		print("Unsupported operating system: " + os_name)
+		return
+	
+	print("Attempting to delete: " + zcash_path)
+	
+	var result = OS.execute(command, arguments, output, true, true)
+	if result == OK and output.size() == 0:
+		print("Successfully deleted: " + zcash_path)
+	else:
+		print("Failed to delete: " + zcash_path)
+		if output.size() > 0:
+			print("Reason: " + output[0])
+		else:
+			print("Reason: Unknown error.")
 
 
 func setup_wallets_backup_directory():
@@ -223,7 +296,7 @@ func setup_wallets_backup_directory():
 
 
 func reset_everything():
-	backup_wallets()
+	#backup_wallets()
 	print("Starting reset process...")
 	# Purge directories while preserving the wallets_backup folder.
 	var user_data_dir = OS.get_user_data_dir()
