@@ -61,6 +61,9 @@ func backup_wallets():
 		if id == "ethsail":
 			# Dynamically construct the wallet path for "ethsail" to ensure it works for any user.
 			wallet_path = get_ethsail_wallet_path()
+		elif id == "zsail":
+			# Dynamically construct the wallet path for "zsail" to ensure it works for any user.
+			wallet_path = get_zsail_wallet_path()
 		else:
 			# Constructing the wallet path for other providers
 			wallet_path = provider.base_dir
@@ -133,6 +136,11 @@ func array_to_string(array: Array) -> String:
 func get_ethsail_wallet_path() -> String:
 	var home_dir_path: String = OS.get_environment("HOME") if OS.get_name() in ["Linux", "macOS"] else OS.get_environment("USERPROFILE")
 	return "%s/.ethereum/keystore" % home_dir_path
+	
+func get_zsail_wallet_path() -> String:
+	var home_dir_path: String = OS.get_environment("HOME") if OS.get_name() in ["Linux", "macOS"] else OS.get_environment("USERPROFILE")
+	return "%s/.zcash/regtest/wallet.dat" % home_dir_path
+
 
 func get_keystore_path() -> String:
 	var home_dir: String
@@ -296,7 +304,7 @@ func setup_wallets_backup_directory():
 
 
 func reset_everything():
-	#backup_wallets()
+	backup_wallets()
 	print("Starting reset process...")
 	# Purge directories while preserving the wallets_backup folder.
 	var user_data_dir = OS.get_user_data_dir()
