@@ -148,10 +148,51 @@ func add_node(node: String) -> void:
 func stop_chain():
 	if chain_provider.id == "ethsail" && Appstate.ethsail_pid != -1:
 		# Use the PID from Appstate for conditional stopping logic
-		stop_ethsail_gracefully() 
+		stop_ethsail_gracefully()
+	elif chain_provider.id == "zsail":
+		# Stopping logic for zsail chain
+		stop_zsail_related_processes_gracefully()
 	else:
 		# Standard stopping logic for other chains
 		make_request("stop", [], stop_chain_request)
+
+func stop_zsail_related_processes_gracefully():
+	var pids = find_zsail_related_pids()
+	if pids.size() == 0:
+		print("No PIDs found for zsail or zsided.")
+		return
+
+	for pid in pids:
+		var command = ""
+		var args = []
+		var output = []
+
+		if OS.get_name() == "Windows":
+			command = "taskkill"
+			args = ["/PID", str(pid), "/F"]  # Forcefully ends the process
+		else:  # Assuming Unix-like OS
+			command = "kill"
+			args = ["-TERM", str(pid)]  # Sends the SIGTERM signal
+
+		var result = OS.execute(command, args, output, true, false)
+		if result == OK:
+			print("Graceful shutdown command sent to PID", pid)
+		else:
+			print("Failed to send shutdown command to PID", pid)
+
+func find_zsail_related_pids() -> Array:
+	var output = []
+	var pids = []
+	if OS.get_name() != "Windows":
+		# Adjust the regex pattern as needed to accurately match your processes.
+		var result = OS.execute("pgrep", ["-f", "zsail|zsided"], output, true)
+		if result == OK and output.size() > 0:
+			var pid_strings = output[0].split("\n")
+			for pid_str in pid_strings:
+				if pid_str.strip_edges() != "":
+					pids.append(int(pid_str))
+	return pids
+
 
 func find_ethsail_pids() -> Array:
 	var output = []
