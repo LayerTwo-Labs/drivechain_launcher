@@ -134,8 +134,13 @@ func array_to_string(array: Array) -> String:
 	return result.strip_edges(true, false)
 
 func get_ethsail_wallet_path() -> String:
-	var home_dir_path: String = OS.get_environment("HOME") if OS.get_name() in ["Linux", "macOS"] else OS.get_environment("USERPROFILE")
-	return "%s/.ethereum/keystore" % home_dir_path
+	var home_dir_path: String
+	if OS.get_name() in ["Linux", "macOS"]:
+		home_dir_path = OS.get_environment("HOME")
+		return "%s/.ethereum/keystore" % home_dir_path
+	else: # Assuming Windows
+		home_dir_path = OS.get_environment("USERPROFILE")
+		return "%s\\AppData\\Roaming\\Ethereum\\keystore" % home_dir_path
 	
 func get_zsail_wallet_path() -> String:
 	var home_dir_path: String = OS.get_environment("HOME") if OS.get_name() in ["Linux", "macOS"] else OS.get_environment("USERPROFILE")
