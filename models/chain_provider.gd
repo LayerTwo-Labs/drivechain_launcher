@@ -44,7 +44,7 @@ func _init(dict: Dictionary):
 		Appstate.platform.WIN:
 			var file_path = dict.get('download_file_win', '')
 			if file_path != '':
-				self.download_url = dict.get('base_download_url') + "\\" + file_path
+				self.download_url = dict.get('base_download_url') + "/" + file_path 
 				self.binary_zip_path += ".exe"
 				self.binary_zip_hash = dict.get('download_hash_win', '')
 				self.binary_zip_size = dict.get('download_size_win', 0)
