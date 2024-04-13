@@ -157,40 +157,178 @@ func show_unsupported_state():
 	secondary_desc.text = "[i]This sidechain is currently not available for this platform -- try Linux instead.[/i]"
 	modulate = disabled_modulate
 	
-	
+const WALLET_INFO_PATH = "user://wallets_backup/wallet_info.json"
+
+#func clear_backup_directory(target_backup_path: String) -> void:
+	#print("\nAttempting to clear backup directory at: ", target_backup_path, "\n")
+#
+	#var command: String
+	#var arguments: Array = []
+	#var output: Array = []
+	#var exit_code: int
+#
+	## Determine the command based on the operating system
+	#if OS.get_name() == "Windows":
+		#command = "cmd"
+		#arguments = ["/c", "rd", "/s", "/q", target_backup_path]  # Use rd to remove directory
+	#else:  # Assuming Unix-like system
+		#command = "rm"
+		#arguments = ["-rf", target_backup_path]  # Use rm to remove, -rf for recursive force
+#
+	## Execute the command and capture output
+	#exit_code = OS.execute(command, arguments, output, true)
+#
+	## Check the result
+	#if exit_code == OK:
+		#print("Successfully cleared the backup directory: ", target_backup_path, "\n")
+	#else:
+		## Assuming 'output' is an array of strings:
+		#var output_str := ""
+		#for line in output:
+			#output_str += line + "\n"
+		#output_str = output_str.strip_edges(true, false) # Remove trailing newline
+#
+
+
 func download():
-	if not chain_provider.available_for_platform():
-		return
-		
+	print("\nStarting download process...\n")
+	print("Chain provider ID: ", chain_provider.id, "\n")
+
+# Check for existing wallet backup before download
+	var backup_info = check_for_wallet_backup(chain_provider.id)
+	if backup_info["exists"]:
+		print("Backup exists. Preparing for restoration...\n")
+
+		# The backup path where the wallet backup is currently located
+		var backup_path = backup_info["backup_path"]
+
+		# The original intended location where the wallet should be restored
+		var target_path = backup_info["original_path"]
+		print("Backup path: ", backup_path, "\n")
+		print("Restoration target path: ", target_path, "\n")
+
+		# Ensure directory structure for the target path
+		ensure_directory_structure(target_path)
+
+		# Move file from backup location to the original intended location
+		move_file(backup_path, target_path)
+		print("Restoration completed.\n")
+	else:
+		print("No backup found for restoration.\n")
+
+	#Continue with the original download logic regardless of backup restoration
+	print("Setting up download requirements...\n")
+	setup_download_requirements()
+	print("Initiating download process...\n")
+	initiate_download_process()
+
+const BACKUP_DIR_NAME := "wallets_backup"
+
+func check_for_wallet_backup(id):
+	print("Checking for wallet backup. ID: ", id)
+	var user_data_dir := OS.get_user_data_dir()
+	var backup_dir_path := "%s/%s" % [user_data_dir, BACKUP_DIR_NAME]
+	var backup_file_path := "%s/%s" % [backup_dir_path, id]  # Use the ID to form the backup file path without assuming an extension.
+	
+	# Correct usage of DirAccess to check for directories
+	var dir_access = DirAccess.open(backup_dir_path)
+	if dir_access:
+		if dir_access.file_exists(backup_file_path) or dir_access.dir_exists(backup_file_path):
+			print("Backup exists at location: ", backup_file_path)
+			return {
+				"exists": true,
+				"backup_path": backup_file_path,
+				"original_path": load_wallet_paths_info()[id]  # Load the original path to where the wallet should be restored.
+			}
+		else:
+			print("No backup file or directory found at the specified backup location: ", backup_file_path)
+	else:
+		print("Failed to access backup directory.")
+
+	return {"exists": false, "backup_path": "", "original_path": ""}
+
+func load_wallet_paths_info():
+	print("Loading wallet paths info from: ", WALLET_INFO_PATH)
+	var file = FileAccess.open(WALLET_INFO_PATH, FileAccess.ModeFlags.READ)
+	if file != null:
+		var json_text = file.get_as_text()
+		file.close()
+		var json = JSON.new()
+		var error = json.parse(json_text)
+		if error == OK:
+			print("Successfully parsed JSON. Data: ", json.data)
+			return json.data
+		else:
+			print("Failed to parse JSON. Error: ", error)
+	else:
+		print("Failed to open file at path: ", WALLET_INFO_PATH)
+	return {}
+	
+func ensure_directory_structure(target_path: String):
+	# Ensure target_path is absolute; adjust logic if necessary.
+	if not DirAccess.dir_exists_absolute(target_path.get_base_dir()):
+		var error = DirAccess.make_dir_recursive_absolute(target_path.get_base_dir())
+		if error != OK:
+			print("Failed to create directory structure for: ", target_path)
+		else:
+			print("Directory structure created for: ", target_path)
+	else:
+		print("Directory already exists: ", target_path)
+
+func move_file(source_path: String, target_path: String):
+	var command: String
+	var arguments: PackedStringArray
+	var output = [] # Correctly initialize an array for the output
+	# Determine the operating system to use the appropriate command
+	if OS.get_name() == "Windows":
+		# On Windows, use "cmd /c move"
+		command = "cmd"
+		arguments = ["/c", "move", source_path, target_path]
+	else:
+		# On Unix-like systems, use "mv"
+		command = "mv"
+		arguments = [source_path, target_path]
+	
+	# Execute the command
+	var result = OS.execute(command, arguments, output, true, false)
+	if result == OK:
+		print("File moved successfully.")
+		for line in output:
+			print(line) # Print each line of output (if any)
+	else:
+		print("Failed to move file. Exit code: ", result)
+		for line in output:
+			print(line) # Print each line of output to diagnose the error
+
+func setup_download_requirements():
 	if download_req != null:
 		remove_child(download_req)
-		
+	
 	if progress_timer != null:
 		progress_timer.stop()
 		remove_child(progress_timer)
-		
-	print("Downloading ", chain_provider.display_name, " from " ,  chain_provider.download_url)
+
+func initiate_download_process():
+	print("Downloading ", chain_provider.display_name, " from ", chain_provider.download_url)
 	download_req = HTTPRequest.new()
 	add_child(download_req)
-	
 	download_req.request_completed.connect(self._on_download_complete)
+	
 	var err = download_req.request(chain_provider.download_url)
 	if err != OK:
-		push_error("An error occurred")
+		push_error("An error occurred during download request.")
 		return
-		
+	
 	action_button.disabled = true
 	
 	progress_timer = Timer.new()
 	add_child(progress_timer)
-	
 	progress_timer.wait_time = 0.1
 	progress_timer.timeout.connect(self._on_download_progress)
 	progress_timer.start()
-	
 	progress_bar.visible = true
 	
-	
+
 func _on_download_progress():
 	if download_req != null:
 		var bodySize: float = download_req.get_body_size()
@@ -242,9 +380,9 @@ func unzip_file_and_setup_binary(base_dir: String, zip_path: String):
 		OS.execute("chmod", ["+x", start_path])
 		OS.execute("chmod", ["+x", bin_path])
 
-		# This will error on non-zcash chains, but that's OK. Just swallow it.
-		var zside_params_name = "zside-fetch-params.sh"
-		OS.execute("chmod", ["+x", ProjectSettings.globalize_path(chain_provider.base_dir + "/" + zside_params_name)])
+		## This will error on non-zcash chains, but that's OK. Just swallow it.
+		#var zside_params_name = "zside-fetch-params.sh"
+		#OS.execute("chmod", ["+x", ProjectSettings.globalize_path(chain_provider.base_dir + "/" + zside_params_name)])
 
 	update_view()
 	
