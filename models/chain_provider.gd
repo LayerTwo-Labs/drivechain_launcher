@@ -15,6 +15,11 @@ var slot: int
 var version: String
 var chain_type: c_type
 
+var wallet_dir_linux: String = ""
+var wallet_dir_mac: String = ""
+var wallet_dir_win: String = ""
+
+
 var rpc_user: String
 var rpc_password: String
 
@@ -25,6 +30,10 @@ func _init(dict: Dictionary):
 	self.display_name = dict.get('display_name', '')
 	self.description = dict.get('description', '')
 	self.repo_url = dict.get('repo_url', '')
+	
+	self.wallet_dir_linux = dict.get('wallet_dir_linux', '')
+	self.wallet_dir_mac = dict.get('wallet_dir_mac', '')
+	self.wallet_dir_win = dict.get('wallet_dir_win', '')
 
 	var binary_zip_path_fallback = dict.get('binary_zip_path', '')
 	self.binary_zip_path = dict.get('binary_zip_path' + Appstate.get_platform_config_suffix(), binary_zip_path_fallback)
@@ -49,6 +58,7 @@ func _init(dict: Dictionary):
 				self.binary_zip_hash = dict.get('download_hash_win', '')
 				self.binary_zip_size = dict.get('download_size_win', 0)
 			self.base_dir = Appstate.get_home() + "\\AppData\\Roaming\\" + dict.get('base_dir_win', '')
+
 		Appstate.platform.MAC:
 			var file_path = dict.get('download_file_mac', '')
 			if file_path != '':
@@ -56,7 +66,7 @@ func _init(dict: Dictionary):
 				self.binary_zip_hash = dict.get('download_hash_mac', '')
 				self.binary_zip_size = dict.get('download_size_mac', 0)
 			self.base_dir = Appstate.get_home() + "/Library/Application Support/" + dict.get('base_dir_mac', '')
-	print("Determined base directory for ", self.id, ": ", self.base_dir)		
+	#print("Determined base directory for ", self.id, ": ", self.base_dir)		
 
 	# Look for both a version suffixed binary path, as well as one without
 	# a suffix.
@@ -89,7 +99,7 @@ func write_conf(force_write := true):
 			conf.store_line("rpcuser=user")
 			conf.store_line("rpcpassword=password")
 			conf.store_line("server=1")
-		"testchain","bitassets","zside":
+		"testchain","bitassets","zsail":
 			conf.store_line("rpcuser=user")
 			conf.store_line("rpcpassword=password")
 			conf.store_line("server=1")
@@ -178,11 +188,11 @@ func write_dir():
 	var dir = ProjectSettings.globalize_path(base_dir)
 	if not DirAccess.dir_exists_absolute(dir):
 		var err = DirAccess.make_dir_recursive_absolute(dir)
-		if err != OK:
-			print("Unable to create directory: " + dir)
-		else:
-			print("Sidechain directory found: " + dir)
-			
+		#if err != OK:
+			#print("Unable to create directory: " + dir)
+		#else:
+			#print("Sidechain directory found: " + dir)
+			#
 			
 			
 func start_chain():
@@ -191,9 +201,10 @@ func start_chain():
 		#if dir == null:
 			#print("zcash params not present, showing download modal")
 			#Appstate.show_zparams_modal(self)
-#
+
 			## important: return here! once the params are finished downloading,
 			## the binary will be launched by the params fetched modal.
+
 			#return 
 	
 
@@ -204,6 +215,9 @@ func start_chain():
 	assert(pid != -1, "could not start process: " + binary)
 	print("Process started with pid: " + str(pid))
 	
+	# Store PID for ethsail
+	if id == "ethsail":
+		Appstate.ethsail_pid = pid
 	
 	# Add test network sync node right after starting
 	if id == "drivechain":
