@@ -143,8 +143,19 @@ func get_ethsail_wallet_path() -> String:
 		return "%s\\AppData\\Roaming\\Ethereum\\keystore" % home_dir_path
 	
 func get_zsail_wallet_path() -> String:
-	var home_dir_path: String = OS.get_environment("HOME") if OS.get_name() in ["Linux", "macOS"] else OS.get_environment("USERPROFILE")
-	return "%s/.zcash/regtest/wallet.dat" % home_dir_path
+	var os_name := OS.get_name()
+	var zsail_provider = chain_providers["zsail"]
+	var home_dir_path : String 
+	match os_name:
+		"Linux":
+			home_dir_path = OS.get_environment("HOME") + "/" + zsail_provider.wallet_dir_linux
+		"macOS":
+			home_dir_path = OS.get_environment("HOME") + "/" + zsail_provider.wallet_dir_mac
+		_:
+			return "Error: Unsupported OS"
+	return home_dir_path
+
+
 
 
 func get_keystore_path() -> String:
@@ -256,8 +267,8 @@ func delete_zcash_directory():
 	var arguments = PackedStringArray()
 	var output = Array()
 	var error_output = Array()
-	var home_path = OS.get_environment("HOME") if OS.get_name() == "Linux" else OS.get_environment("USERPROFILE") # X11 is Linux
-	var zcash_path = home_path + "/.zcash" if OS.get_name() == "Linux" else home_path + "\\.zcash"
+	var home_path = OS.get_environment("HOME") if OS.get_name() == "Linux" else OS.get_environment("USERPROFILE")
+	var zcash_path = home_path + "/.zcash-drivechain" if OS.get_name() == "Linux" else home_path + "\\.zcash"
 	
 	if os_name == "Windows":
 		command = "cmd.exe"
