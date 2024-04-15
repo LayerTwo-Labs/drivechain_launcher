@@ -76,6 +76,16 @@ func _init(dict: Dictionary):
 	)
 	
 	
+# Add this function to the ChainProvider class
+
+func get_wallet_path_windows() -> String:
+	match id:
+		"drivechain", "testchain", "bitnames", "bitassets", "zsail", "ethsail", "thunder":
+			return ProjectSettings.globalize_path(wallet_dir_win)
+		_:
+			return "No wallet path defined for this chain on Windows."
+
+	
 func available_for_platform() -> bool:
 	return self.download_url != ""
 	

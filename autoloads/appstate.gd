@@ -43,6 +43,9 @@ func _ready():
 	start_chain_states()
 	create_cleanup_batch_script()
 	#find_and_print_wallet_paths()
+	var backup_dir_path = setup_wallets_backup_directory()
+	print("Backup directory path: ", backup_dir_path, "\n")
+
 
 const WALLET_INFO_PATH := "user://wallets_backup/wallet_info.json"
 
@@ -390,7 +393,7 @@ func reset_everything():
 	print("Reset process completed successfully.")
 
 func clear_backup_directory(target_backup_path: String) -> void:
-	print("\nAttempting to clear backup directory \n")
+	print("\nAttempting to clear backup directory\n")
 
 	var command: String
 	var arguments: Array = []
@@ -400,24 +403,21 @@ func clear_backup_directory(target_backup_path: String) -> void:
 	# Determine the command based on the operating system
 	if OS.get_name() == "Windows":
 		command = "cmd"
-		arguments = ["/c", "rd", "/s", "/q", target_backup_path]  # Use rd to remove directory
+		arguments = ["/c", "rd", "/s", "/q", target_backup_path.replace("/", "\\")]  # Adjusted for backslashes
 	else:  # Assuming Unix-like system
 		command = "rm"
-		arguments = ["-rf", target_backup_path]  # Use rm to remove, -rf for recursive force
+		arguments = ["-rf", target_backup_path]
 
 	# Execute the command and capture output
 	exit_code = OS.execute(command, arguments, output, true)
 
 	# Check the result
 	if exit_code == OK:
-		print("Successfully cleared the backup directory \n")
+		print("Successfully cleared the backup directory\n")
 	else:
-		# Assuming 'output' is an array of strings:
-		var output_str := ""
+		print("Failed to clear the backup directory. Output:\n")
 		for line in output:
-			output_str += line + "\n"
-		output_str = output_str.strip_edges(true, false) # Remove trailing newline
-
+			print(line)
 
 
 func create_cleanup_batch_script():
