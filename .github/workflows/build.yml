@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "main"
+  workflow_dispatch:
 
 jobs:
   build:
@@ -73,3 +74,34 @@ jobs:
             --issuer ${{ secrets.GODOT_MACOS_NOTARIZATION_API_UUID }} \
             --key-id ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY_ID }} \
             --key ./notarization_api_key.p8
+
+  upload-artifacts-to-releases-drivechain-info:
+    name: Upload artifacts to releases.drivechain.info
+    runs-on: ubuntu-latest
+    needs: [build]
+    # avoid uploading on PRs!
+    if: github.event_name == 'push' && github.repository_owner == 'LayerTwo-Labs'
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Create zip files for releases.drivechain.info
+        run: |
+          mv drivechain_launcher_linux 0-drivechain-launcher-latest-x86_64-unknown-linux-gnu
+          zip -r 0-drivechain-launcher-latest-x86_64-unknown-linux-gnu.zip 0-drivechain-launcher-latest-x86_64-unknown-linux-gnu/*
+
+          mv drivechain_launcher_macos 0-drivechain-launcher-latest-x86_64-apple-darwin
+          zip -r 0-drivechain-launcher-latest-x86_64-apple-darwin.zip 0-drivechain-launcher-latest-x86_64-apple-darwin/*
+
+          mv drivechain_launcher_windows 0-drivechain-launcher-latest-x86_64-w64
+          zip -r 0-drivechain-launcher-latest-x86_64-w64.zip 0-drivechain-launcher-latest-x86_64-w64/*
+
+      - name: Upload release assets to releases.drivechain.info
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+        with:
+          host: 45.33.96.47
+          user: root
+          pass: ${{ secrets.RELEASES_SERVER_PW }}
+          port: 22
+          scp: |
+            '0-drivechain-launcher-latest-*.zip' => '/var/www/html/'
