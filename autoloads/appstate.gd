@@ -43,7 +43,87 @@ func _ready():
 	start_chain_states()
 	create_cleanup_batch_script()
 
+#
+	#print("Starting backup process...\n")
+	#var backup_dir_path = setup_wallets_backup_directory()
+	#print("Backup directory path: ", backup_dir_path, "\n")
+#
+	#var wallet_paths_info = {}
+	#print("Enumerating chain providers...\n")
+#
+	#for id in chain_providers.keys():
+		#print("--------------------------------Processing provider with ID: ", id, "----------------------------------------------\n")
+		#var provider = chain_providers[id]
+#
+		#var wallet_path: String
+		#if id == "ethsail":
+			## Dynamically construct the wallet path for "ethsail" to ensure it works for any user.
+			#wallet_path = get_ethsail_wallet_path()
+		#elif id == "zsail":
+			## Dynamically construct the wallet path for "zsail" to ensure it works for any user.
+			#wallet_path = get_zsail_wallet_path()
+		#else:
+			## Constructing the wallet path for other providers directly from configuration
+			#var dir_separator = "/" if OS.get_name() != "Windows" else "\\"
+			#var base_dir = provider.base_dir.replace("/", dir_separator).replace("\\", dir_separator)
+			#var wallet_dir = (provider.wallet_dir_win if OS.get_name() == "Windows" else provider.wallet_dir_linux)
+#
+			## Check if wallet_dir starts with a slash, and add one if missing
+			#if not wallet_dir.begins_with("/") and not wallet_dir.begins_with("\\"):
+				#wallet_dir = dir_separator + wallet_dir
+#
+			## Replace slashes in wallet_dir with the appropriate separator
+			#wallet_dir = wallet_dir.replace("/", dir_separator).replace("\\", dir_separator)
+#
+			#wallet_path = base_dir + wallet_dir
+#
+		#print("Constructed wallet path: ", wallet_path, "\n")
+				## Save original path info
+		#wallet_paths_info[id] = wallet_path
+#
+		## Determine the system command based on the OS
+		#var command: String
+		#var arguments: PackedStringArray
+		#var target_backup_path = "%s/%s" % [backup_dir_path, id.replace("/", "_")]
+		#if OS.get_name() == "Windows":
+			#target_backup_path = target_backup_path.replace("/", "\\")
+		#print("Target backup path: ", target_backup_path, "\n")
+		#
+				### Check if the backup directory already exists
+		##var dir_access = DirAccess.open(backup_dir_path)
+		##if dir_access.dir_exists(target_backup_path):
+			##print("Existing backup found. Clearing the backup directory...\n")
+			##var remove_result = dir_access.remove(target_backup_path)
+			##if remove_result != OK:
+				##print("Failed to remove existing backup directory: ", target_backup_path, "\n")
+				##continue
+				##
+		#var output: Array = []
+		#print("Determining command based on OS: ", OS.get_name(), "\n")
+		#match OS.get_name():
+			#"Windows":
+				#command = "xcopy"
+				#arguments = PackedStringArray([wallet_path, target_backup_path + "\\", "/E", "/I", "/Q"])
+			#"Linux", "macOS", "FreeBSD":
+				#command = "cp"
+				#arguments = PackedStringArray(["-r", wallet_path, target_backup_path])
+			#_:
+				#print("OS not supported for direct folder copy.\n")
+				#return
+#
+		#print("Executing command: ", command, " with arguments: ", arguments, "\n")
+		## Execute the command
+		#var result = OS.execute(command, arguments, output, false, false)
+		#if result == OK:
+			#print("Successfully backed up wallet for '", id, "' to: ", target_backup_path, "\n")
+		#else:
+			#var output_str = array_to_string(output)
+			#print("Failed to back up wallet for ", id, "\n")
 
+const WALLET_INFO_PATH := "user://wallets_backup/wallet_info.json"
+
+func backup_wallets():
+	
 	print("Starting backup process...\n")
 	var backup_dir_path = setup_wallets_backup_directory()
 	print("Backup directory path: ", backup_dir_path, "\n")
@@ -119,86 +199,6 @@ func _ready():
 		else:
 			var output_str = array_to_string(output)
 			print("Failed to back up wallet for ", id, "\n")
-
-const WALLET_INFO_PATH := "user://wallets_backup/wallet_info.json"
-
-func backup_wallets():
-	print("Starting backup process...\n")
-	var backup_dir_path = setup_wallets_backup_directory()
-	print("Backup directory path: ", backup_dir_path, "\n")
-
-	var wallet_paths_info = {}
-	print("Enumerating chain providers...\n")
-
-	for id in chain_providers.keys():
-		print("--------------------------------Processing provider with ID: ", id, "----------------------------------------------\n")
-		var provider = chain_providers[id]
-
-		var wallet_path: String
-		if id == "ethsail":
-			# Dynamically construct the wallet path for "ethsail" to ensure it works for any user.
-			wallet_path = get_ethsail_wallet_path()
-		elif id == "zsail":
-			# Dynamically construct the wallet path for "zsail" to ensure it works for any user.
-			wallet_path = get_zsail_wallet_path()
-		else:
-			# Constructing the wallet path for other providers directly from configuration
-			var dir_separator = "/" if OS.get_name() != "Windows" else "\\"
-			var base_dir = provider.base_dir.replace("/", dir_separator).replace("\\", dir_separator)
-			var wallet_dir = (provider.wallet_dir_win if OS.get_name() == "Windows" else provider.wallet_dir_linux)
-
-			# Check if wallet_dir starts with a slash, and add one if missing
-			if not wallet_dir.begins_with("/") and not wallet_dir.begins_with("\\"):
-				wallet_dir = dir_separator + wallet_dir
-
-			# Replace slashes in wallet_dir with the appropriate separator
-			wallet_dir = wallet_dir.replace("/", dir_separator).replace("\\", dir_separator)
-
-			wallet_path = base_dir + wallet_dir
-
-		print("Constructed wallet path: ", wallet_path, "\n")
-				# Save original path info
-		wallet_paths_info[id] = wallet_path
-
-		# Determine the system command based on the OS
-		var command: String
-		var arguments: PackedStringArray
-		var target_backup_path = "%s/%s" % [backup_dir_path, id.replace("/", "_")]
-		if OS.get_name() == "Windows":
-			target_backup_path = target_backup_path.replace("/", "\\")
-		print("Target backup path: ", target_backup_path, "\n")
-#
-		## Check if the backup directory already exists
-		#var dir_access = DirAccess.open(backup_dir_path)
-		#if dir_access.dir_exists(target_backup_path):
-			#print("Existing backup found. Clearing the backup directory...\n")
-			#var remove_result = dir_access.remove(target_backup_path)
-			#if remove_result != OK:
-				#print("Failed to remove existing backup directory: ", target_backup_path, "\n")
-				#continue
-
-		var output: Array = []
-		print("Determining command based on OS: ", OS.get_name(), "\n")
-		match OS.get_name():
-			"Windows":
-				command = "xcopy"
-				arguments = PackedStringArray([wallet_path + "\\", target_backup_path + "\\", "/E", "/I", "/Q"])
-			"Linux", "macOS", "FreeBSD":
-				command = "cp"
-				arguments = PackedStringArray(["-r", wallet_path, target_backup_path])
-			_:
-				print("OS not supported for direct folder copy.\n")
-				return
-
-		print("Executing command: ", command, " with arguments: ", arguments, "\n")
-		# Execute the command
-		var result = OS.execute(command, arguments, output, false, false)
-		if result == OK:
-			print("Successfully backed up wallet for '", id, "' to: ", target_backup_path, "\n")
-		else:
-			var output_str = array_to_string(output)
-			print("Failed to back up wallet for ", id, "\n")
-
 	# After backing up all wallets, save the wallet_paths_info dictionary for later restoration
 	print("Saving wallet paths info to JSON file.\n")
 	var json_text := JSON.stringify(wallet_paths_info)
