@@ -42,22 +42,14 @@ func _ready():
 
 	start_chain_states()
 	create_cleanup_batch_script()
-	#find_and_print_wallet_paths()
-	var backup_dir_path = setup_wallets_backup_directory()
-	print("Backup directory path: ", backup_dir_path, "\n")
-	var backuptest = OS.get_user_data_dir()
-	print("get user data dir func returning this outside of setup wallets backup " + backuptest)
-
-
-const WALLET_INFO_PATH := "user://wallets_backup/wallet_info.json"
-
-func backup_wallets():
+	##find_and_print_wallet_paths()
 	print("Starting backup process...\n")
 	var backup_dir_path = setup_wallets_backup_directory()
 	print("Backup directory path: ", backup_dir_path, "\n")
-	var wallet_paths_info = {}
 
+	var wallet_paths_info = {}
 	print("Enumerating chain providers...\n")
+
 	for id in chain_providers.keys():
 		print("--------------------------------Processing provider with ID: ", id, "----------------------------------------------\n")
 		var provider = chain_providers[id]
@@ -70,15 +62,52 @@ func backup_wallets():
 			# Dynamically construct the wallet path for "zsail" to ensure it works for any user.
 			wallet_path = get_zsail_wallet_path()
 		else:
-			# Constructing the wallet path for other providers
-			wallet_path = provider.base_dir
-			if provider.wallet_dir_linux.begins_with("/"):
-				wallet_path += provider.wallet_dir_linux
-			else:
-				wallet_path = "%s/%s" % [wallet_path, provider.wallet_dir_linux]
-			wallet_path = wallet_path.replace("//", "/").replace("/./", "/")
+			# Constructing the wallet path for other providers directly from configuration
+			var dir_separator = "/" if OS.get_name() != "Windows" else "\\"
+			var base_dir = provider.base_dir.replace("/", dir_separator).replace("\\", dir_separator)
+			var wallet_dir = (provider.wallet_dir_win if OS.get_name() == "Windows" else provider.wallet_dir_linux)
+			
+			# Check if wallet_dir starts with a slash, and add one if missing
+			if not wallet_dir.begins_with("/") and not wallet_dir.begins_with("\\"):
+				wallet_dir = dir_separator + wallet_dir
+			
+			# Replace slashes in wallet_dir with the appropriate separator
+			wallet_dir = wallet_dir.replace("/", dir_separator).replace("\\", dir_separator)
+			
+			wallet_path = base_dir + wallet_dir
 
 		print("Constructed wallet path: ", wallet_path, "\n")
+
+const WALLET_INFO_PATH := "user://wallets_backup/wallet_info.json"
+
+func backup_wallets():
+	print("Starting backup process...\n")
+	var backup_dir_path = setup_wallets_backup_directory()
+	print("Backup directory path: ", backup_dir_path, "\n")
+
+	var wallet_paths_info = {}
+	print("Enumerating chain providers...\n")
+
+	for id in chain_providers.keys():
+		print("--------------------------------Processing provider with ID: ", id, "----------------------------------------------\n")
+		var provider = chain_providers[id]
+
+		var wallet_path: String
+		if id == "ethsail":
+			# Dynamically construct the wallet path for "ethsail" to ensure it works for any user.
+			wallet_path = get_ethsail_wallet_path()
+		elif id == "zsail":
+			# Dynamically construct the wallet path for "zsail" to ensure it works for any user.
+			wallet_path = get_zsail_wallet_path()
+		else:
+			# Constructing the wallet path for other providers directly from configuration
+			var dir_separator = "\\" if OS.get_name() == "Windows" else "/"
+			var base_dir = provider.base_dir.replace("\\", "/")
+			var wallet_dir = (provider.wallet_dir_win if OS.get_name() == "Windows" else provider.wallet_dir_linux).replace("\\", "/")
+			wallet_path = base_dir + dir_separator + wallet_dir
+
+		print("Constructed wallet path: ", wallet_path, "\n")
+
 		# Save original path info
 		wallet_paths_info[id] = wallet_path
 
@@ -125,12 +154,11 @@ func backup_wallets():
 	var file := FileAccess.open(WALLET_INFO_PATH, FileAccess.ModeFlags.WRITE)
 	if file != null:
 		file.store_string(json_text)
-		file.flush()  # Make sure data is written to disk
+		file.flush() # Make sure data is written to disk
 		file.close()
 		print("Wallet paths info successfully saved in JSON format.\n")
 	else:
 		print("Failed to open JSON file for writing: ", WALLET_INFO_PATH, "\n")
-
 
 func array_to_string(array: Array) -> String:
 	var result: String = ""

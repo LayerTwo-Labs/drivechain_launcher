@@ -50,6 +50,7 @@ func _init(dict: Dictionary):
 				self.binary_zip_hash = dict.get('download_hash_linux', '')
 				self.binary_zip_size = dict.get('download_size_linux', 0)
 			self.base_dir = Appstate.get_home() + "/" + dict.get('base_dir_linux', '')
+			
 		Appstate.platform.WIN:
 			var file_path = dict.get('download_file_win', '')
 			if file_path != '':
@@ -57,8 +58,9 @@ func _init(dict: Dictionary):
 				self.binary_zip_path += ".exe"
 				self.binary_zip_hash = dict.get('download_hash_win', '')
 				self.binary_zip_size = dict.get('download_size_win', 0)
-			self.base_dir = Appstate.get_home() + "\\AppData\\Roaming\\" + dict.get('base_dir_win', '')
-
+			self.base_dir = Appstate.get_home() + "\\AppData\\Roaming\\" + dict.get('base_dir_win', '').replace('/', '\\')
+			print("Windows base_dir:", self.base_dir)
+			print("Windows wallet_dir_win:", self.wallet_dir_win)
 		Appstate.platform.MAC:
 			var file_path = dict.get('download_file_mac', '')
 			if file_path != '':
@@ -75,15 +77,6 @@ func _init(dict: Dictionary):
 		dict.get("binary_zip_path", "")
 	)
 	
-	
-# Add this function to the ChainProvider class
-
-func get_wallet_path_windows() -> String:
-	match id:
-		"drivechain", "testchain", "bitnames", "bitassets", "zsail", "ethsail", "thunder":
-			return ProjectSettings.globalize_path(wallet_dir_win)
-		_:
-			return "No wallet path defined for this chain on Windows."
 
 	
 func available_for_platform() -> bool:
