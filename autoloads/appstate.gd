@@ -77,7 +77,16 @@ func _ready():
 			wallet_path = base_dir + wallet_dir
 
 		print("Constructed wallet path: ", wallet_path, "\n")
+				# Save original path info
+		wallet_paths_info[id] = wallet_path
 
+		# Determine the system command based on the OS
+		var command: String
+		var arguments: PackedStringArray
+		var target_backup_path = "%s/%s" % [backup_dir_path, id.replace("/", "_")]
+		if OS.get_name() == "Windows":
+			target_backup_path = target_backup_path.replace("/", "\\")
+		print("Target backup path: ", target_backup_path, "\n")
 const WALLET_INFO_PATH := "user://wallets_backup/wallet_info.json"
 
 func backup_wallets():
