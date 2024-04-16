@@ -169,15 +169,6 @@ func backup_wallets():
 			target_backup_path = target_backup_path.replace("/", "\\")
 		print("Target backup path: ", target_backup_path, "\n")
 		
-				# Check if the backup directory already exists
-		var dir_access = DirAccess.open(backup_dir_path)
-		if dir_access.dir_exists(target_backup_path):
-			print("Existing backup found. Clearing the backup directory...\n")
-			var remove_result = dir_access.remove(target_backup_path)
-			if remove_result != OK:
-				print("Failed to remove existing backup directory: ", target_backup_path, "\n")
-				continue
-				
 		var output: Array = []
 		print("Determining command based on OS: ", OS.get_name(), "\n")
 		match OS.get_name():
