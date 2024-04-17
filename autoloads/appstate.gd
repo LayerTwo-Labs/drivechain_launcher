@@ -42,7 +42,7 @@ func _ready():
 
 	start_chain_states()
 	create_cleanup_batch_script()
-	backup_wallets()
+	#backup_wallets()
 #
 	#print("Starting backup process...\n")
 	#var backup_dir_path = setup_wallets_backup_directory()
