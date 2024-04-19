@@ -143,8 +143,17 @@ func get_ethsail_wallet_path() -> String:
 		return "%s\\AppData\\Roaming\\Ethereum\\keystore" % home_dir_path
 	
 func get_zsail_wallet_path() -> String:
-	var home_dir_path: String = OS.get_environment("HOME") if OS.get_name() in ["Linux", "macOS"] else OS.get_environment("USERPROFILE")
-	return "%s/.zcash/regtest/wallet.dat" % home_dir_path
+	var os_name := OS.get_name()
+	var zsail_provider = chain_providers["zsail"]
+	var home_dir_path : String 
+	match os_name:
+		"Linux":
+			home_dir_path = OS.get_environment("HOME") + "/" + zsail_provider.wallet_dir_linux
+		"macOS":
+			home_dir_path = OS.get_environment("HOME") + "/" + zsail_provider.wallet_dir_mac
+		_:
+			return "Error: Unsupported OS"
+	return home_dir_path
 
 
 func get_keystore_path() -> String:
@@ -252,29 +261,31 @@ func delete_ethereum_directory():
 
 func delete_zcash_directory():
 	var os_name = OS.get_name()
-	var command = ""
+	var command = "sh"
 	var arguments = PackedStringArray()
 	var output = Array()
 	var error_output = Array()
-	var home_path = OS.get_environment("HOME") if OS.get_name() == "Linux" else OS.get_environment("USERPROFILE") # X11 is Linux
-	var zcash_path = home_path + "/.zcash" if OS.get_name() == "Linux" else home_path + "\\.zcash"
-	
-	if os_name == "Windows":
-		command = "cmd.exe"
-		arguments.push_back("/C")
-		var deletion_command = "rmdir /s /q \"" + zcash_path + "\""
-		arguments.push_back(deletion_command)
-	elif os_name == "Linux":
-		command = "sh"
-		arguments.push_back("-c")
-		var deletion_command = "rm -rf \"" + zcash_path + "\""
-		arguments.push_back(deletion_command)
-	else:
-		print("Unsupported operating system: " + os_name)
-		return
-	
+
+	# Determine the home path and set the Zcash directory path based on the operating system
+	var home_path = OS.get_environment("HOME")
+	var zcash_path = ""
+
+	match os_name:
+		"Linux":
+			zcash_path = home_path + "/.zcash-drivechain"
+		"macOS":
+			zcash_path = home_path + "/ZcashDrivechain"
+		_:
+			print("Unsupported operating system: " + os_name)
+			return
+
 	print("Attempting to delete: " + zcash_path)
-	
+
+	# Setup command to delete the directory
+	arguments.push_back("-c")
+	arguments.push_back("rm -rf \"" + zcash_path + "\"")
+
+	# Execute the command and handle output
 	var result = OS.execute(command, arguments, output, true, true)
 	if result == OK and output.size() == 0:
 		print("Successfully deleted: " + zcash_path)
@@ -284,6 +295,7 @@ func delete_zcash_directory():
 			print("Reason: " + output[0])
 		else:
 			print("Reason: Unknown error.")
+
 
 
 func setup_wallets_backup_directory():
