@@ -18,7 +18,8 @@ func _ready() -> void:
 	
 
 func _on_connected_to_withdrawal_server() -> void:
-	print("CONNECTED")
+	if $"/root/Net".print_debug_net:
+		print("Connected to fast withdraw server")
 	
 	$LabelConnectionStatus.text = "Connected"
 	
@@ -26,7 +27,8 @@ func _on_connected_to_withdrawal_server() -> void:
 	
 	
 func _on_disconnected_from_withdrawal_server() -> void:
-	print("DISCONNECTED")
+	if $"/root/Net".print_debug_net:
+		print("Disonnected to fast withdraw server")
 	
 	$LabelConnectionStatus.text = "Not Connected"
 	
@@ -34,8 +36,9 @@ func _on_disconnected_from_withdrawal_server() -> void:
 	
 	
 func _on_failed_connect_to_withdrawal_server() -> void:
-	print("FAILED TO CONNECT")
-	
+	if $"/root/Net".print_debug_net:
+		print("Failed to connect to fast withdraw server")
+		
 	$LabelConnectionStatus.text = "Not Connected"
 	
 	$ButtonConnect.disabled = false
@@ -45,16 +48,18 @@ func connect_to_withdrawal_server() -> void:
 	# Create fast withdraw client
 	var peer = ENetMultiplayerPeer.new()
 	if $CheckButtonLocalhost.is_pressed():
-		print("will connect to localhost")
+		if $"/root/Net".print_debug_net:
+			print("Using fast withdraw server: localhost")
 		
 		var error = peer.create_client(SERVER_LOCALHOST, PORT)
-		if error:
-			print("Error: ", error)
+		if error and $"/root/Net".print_debug_net:
+			print_debug("Error: ", error)
 	else:
-		print("will connect to ga")
+		if $"/root/Net".print_debug_net:
+			print("Using fast withdraw server: L2L-GA")
 		var error = peer.create_client(SERVER_L2L_GA, PORT)
-		if error:
-			print("Error: ", error)
+		if error and $"/root/Net".print_debug_net:
+			print_debug("Error: ", error)
 	
 	$LabelConnectionStatus.text = "Connecting..."
 	
@@ -64,9 +69,10 @@ func connect_to_withdrawal_server() -> void:
 
 
 func _on_fast_withdraw_invoice(amount : float, destination: String) -> void:
-	print("Received fast withdraw invoice!")
-	print("Amount: ", amount)
-	print("Destination: ", destination)
+	if $"/root/Net".print_debug_net:
+		print("Received fast withdraw invoice!")
+		print("Amount: ", amount)
+		print("Destination: ", destination)
 	
 	var invoice_text = "Fast withdraw request received! Invoice created:\n"
 	invoice_text += str("Send ", amount, " L2 coins to ", destination, "\n") 
@@ -78,10 +84,11 @@ func _on_fast_withdraw_invoice(amount : float, destination: String) -> void:
 
 
 func _on_fast_withdraw_complete(txid: String, amount : float, destination: String) -> void:
-	print("Fast withdraw complete!")
-	print("TxID: ", txid)
-	print("Amount: ", amount)
-	print("Destination: ", destination)
+	if $"/root/Net".print_debug_net:
+		print("Fast withdraw complete!")
+		print("TxID: ", txid)
+		print("Amount: ", amount)
+		print("Destination: ", destination)
 	
 	var output : String = "Withdraw complete!\n"
 	output += "Mainchain payout txid:\n" + txid + "\n"
