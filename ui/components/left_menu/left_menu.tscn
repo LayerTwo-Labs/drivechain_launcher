@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dwhtby81ylt3s"]
+[gd_scene load_steps=12 format=3 uid="uid://dwhtby81ylt3s"]
 
 [ext_resource type="Theme" uid="uid://deiietf7bytje" path="res://ui/components/left_menu/left_menu_button.tres" id="1_vs06l"]
 [ext_resource type="Script" path="res://ui/components/left_menu/left_menu.gd" id="1_yja75"]
@@ -6,8 +6,10 @@
 [ext_resource type="Texture2D" uid="uid://blq6pvspmkcbj" path="res://assets/images/prev.svg" id="3_3lhq3"]
 [ext_resource type="Texture2D" uid="uid://djtv7qiy8hkat" path="res://assets/images/dashboard-3-line.svg" id="3_rgc2b"]
 [ext_resource type="Texture2D" uid="uid://srldhyvbmy57" path="res://assets/images/settings-4-line.svg" id="4_cr7m3"]
+[ext_resource type="Texture2D" uid="uid://drsftlr0wcb3m" path="res://assets/images/chain.svg" id="4_v0or6"]
 [ext_resource type="Texture2D" uid="uid://c5ddyq86urmmy" path="res://assets/images/next.svg" id="7_k0tsh"]
 [ext_resource type="Script" path="res://ui/components/left_menu/Quotes.gd" id="7_kx1k8"]
+[ext_resource type="PackedScene" uid="uid://b5wmjp1psgsvr" path="res://ui/components/fast_withdraw/fast_withdraw.tscn" id="10_kuvno"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c8gs8"]
 bg_color = Color(0.141176, 0.141176, 0.141176, 1)
@@ -47,6 +49,11 @@ theme = ExtResource("1_vs06l")
 toggle_mode = true
 icon = ExtResource("4_cr7m3")
 alignment = 0
+
+[node name="FastWithdrawButton" type="Button" parent="MarginContainer/HBox"]
+layout_mode = 2
+text = "Fast Withdraw"
+icon = ExtResource("4_v0or6")
 
 [node name="DashboardButton" type="Button" parent="MarginContainer/HBox"]
 visible = false
@@ -113,9 +120,18 @@ size_flags_vertical = 4
 icon = ExtResource("2_ahqh1")
 flat = true
 
+[node name="FastWithdrawWindow" type="Window" parent="."]
+title = "Drivechain Launcher Fast Withdrawal"
+initial_position = 2
+size = Vector2i(800, 500)
+
+[node name="FastWithdraw" parent="FastWithdrawWindow" instance=ExtResource("10_kuvno")]
+
 [connection signal="toggled" from="MarginContainer/HBox/SettingsButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
+[connection signal="pressed" from="MarginContainer/HBox/FastWithdrawButton" to="." method="_on_fast_withdraw_button_pressed"]
 [connection signal="toggled" from="MarginContainer/HBox/DashboardButton" to="." method="_on_left_menu_button_toggled" binds= [0]]
 [connection signal="pressed" from="MarginContainer/HBox/PrevButton" to="MarginContainer/HBox/Quotes" method="_on_prev_button_pressed"]
 [connection signal="toggled" from="MarginContainer/HBox/PlaygroundButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
 [connection signal="pressed" from="MarginContainer/HBox/NextButton" to="MarginContainer/HBox/Quotes" method="_on_next_button_pressed"]
 [connection signal="pressed" from="MarginContainer/HBox/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="close_requested" from="FastWithdrawWindow" to="." method="_on_fast_withdraw_window_close_requested"]

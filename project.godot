@@ -21,11 +21,13 @@ config/windows_native_icon="res://icon.ico"
 [autoload]
 
 Appstate="*res://autoloads/appstate.tscn"
+Net="*res://net.gd"
 
 [display]
 
 window/size/viewport_width=1024
 window/size/viewport_height=640
+window/subwindows/embed_subwindows=false
 
 [dotnet]
 
