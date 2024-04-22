@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://dscucqwnoepb1"]
+
+[ext_resource type="Script" path="res://ui/main.gd" id="1_ur5w6"]
+[ext_resource type="PackedScene" uid="uid://dwhtby81ylt3s" path="res://ui/components/left_menu/left_menu.tscn" id="2_0lj2k"]
+[ext_resource type="PackedScene" uid="uid://bwg823t4rnqpy" path="res://ui/components/dashboard/dashboard.tscn" id="3_3v44j"]
+[ext_resource type="PackedScene" uid="uid://bommmvy1qyobc" path="res://ui/components/settings/settings.tscn" id="4_3j67w"]
+
+[node name="Main" type="CanvasLayer"]
+script = ExtResource("1_ur5w6")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="Content" type="MarginContainer" parent="VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TabContainer" type="TabContainer" parent="VBox/Content"]
+layout_mode = 2
+tabs_visible = false
+
+[node name="Dashboard" parent="VBox/Content/TabContainer" instance=ExtResource("3_3v44j")]
+layout_mode = 2
+
+[node name="Settings" parent="VBox/Content/TabContainer" instance=ExtResource("4_3j67w")]
+visible = false
+layout_mode = 2
+
+[node name="LeftMenu" parent="VBox" instance=ExtResource("2_0lj2k")]
+layout_mode = 2
