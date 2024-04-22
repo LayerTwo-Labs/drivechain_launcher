@@ -146,7 +146,7 @@ func add_node(node: String) -> void:
 	make_request("addnode", [node, "onetry"], add_node_request)
 	
 func stop_chain():
-	if chain_provider.id == "ethsail" && Appstate.ethsail_pid != -1:
+	if chain_provider.id == "ethsail":
 		# Use the PID from Appstate for conditional stopping logic
 		stop_ethsail_gracefully()
 	elif chain_provider.id == "zsail":
@@ -197,7 +197,10 @@ func find_zsail_related_pids() -> Array:
 func find_ethsail_pids() -> Array:
 	var output = []
 	var pids = []
-	if OS.get_name() != "Windows":
+	var os_name = OS.get_name()
+
+	if os_name != "Windows":
+		# Command for Unix-like systems to find processes by command-line pattern
 		var result = OS.execute("pgrep", ["-f", "ethsail --conf=/home/joshua/drivechain_launcher_sidechains/ethsail/ethsail.conf"], output, true)
 		if result == OK and output.size() > 0:
 			# Handle multiple PIDs
@@ -209,38 +212,39 @@ func find_ethsail_pids() -> Array:
 	return pids
 
 func stop_ethsail_gracefully():
-	var pids = find_ethsail_pids()
-	if pids.size() == 0:
-		print("No PIDs found for ethsail.")
-		return
+	var os_name = OS.get_name()
 
-	for pid in pids:
-		var os_name = OS.get_name()
-		var command = ""
-		var args = []
-		var output = []
+	if os_name == "Windows":
+		# Directly kill processes by name on Windows
+		var commands = [
+			["taskkill", "/IM", "ethsail.exe", "/T", "/F"],
+			["taskkill", "/IM", "sidegeth.exe", "/T", "/F"]
+		]
+		for args in commands:
+			var output = []
+			var result = OS.execute(args[0], args.slice(1, args.size()), output, true, false)
+			print("Command sent to kill", args[2], ", result: ", result)
+	else:
+		# Use the existing logic for Unix-like systems
+		var pids = find_ethsail_pids()
+		if pids.size() == 0:
+			print("No PIDs found for ethsail.")
+			return
 
-		# Define the command and arguments for a gentle shutdown
-		if os_name == "Windows":
-			command = "taskkill"
-			args = ["/PID", str(pid), "/T"]  # Request gentle shutdown
-		else:  # macOS and Linux
-			command = "kill"
-			args = ["-TERM", str(pid)]
-
-		# Execute the gentle shutdown command
-		var result = OS.execute(command, args, output, true, false)
-		print("Gentle shutdown command sent to PID ", pid, ", result: ", result)
+		for pid in pids:
+			var command = "kill"
+			var args = ["-TERM", str(pid)]
+			var output = []
+			# Execute the gentle shutdown command
+			var result = OS.execute(command, args, output, true, false)
+			print("Gentle shutdown command sent to PID ", pid, ", result: ", result)
 
 		# Optional: wait and check for process termination
-		# This part can be adjusted based on your requirements
+		OS.delay_msec(500)  # Delay 500 milliseconds between commands
 
 	# Reset stored PID if needed
 	Appstate.ethsail_pid = -1
 
-
-
-	
 	
 func cleanup():
 	self.queue_free()
