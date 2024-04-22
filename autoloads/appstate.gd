@@ -215,7 +215,7 @@ func get_ethsail_wallet_path() -> String:
 		return "%s/.ethereum/keystore" % home_dir_path
 	else: # Assuming Windows
 		home_dir_path = OS.get_environment("USERPROFILE")
-		return "%s\\AppData\\Roaming\\Ethereum\\keystore" % home_dir_path
+		return "%s\\AppData\\Local\\Ethereum\\keystore\\" % home_dir_path
 
 func get_zsail_wallet_path() -> String:
 	var os_name := OS.get_name()
