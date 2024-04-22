@@ -495,10 +495,9 @@ func clear_backup_directory(target_backup_path: String) -> void:
 		for line in output:
 			print(line)
 
-
 func create_cleanup_batch_script():
 	var script_path := "user://cleanup_drivechain_data.bat"
-	var launcher_path := OS.get_executable_path() # Dynamically obtain the launcher's executab	create_cleanup_batch_script()le path
+	var launcher_path := OS.get_executable_path() # Dynamically obtain the launcher's executable path
 
 	# Start the script content with an explicit type declaration
 	var script_content: String = """
@@ -510,6 +509,7 @@ func create_cleanup_batch_script():
 	SET LAUNCHER_SIDECHAINS_DIR=drivechain_launcher_sidechains
 	SET TESTCHAIN_DIR=Testchain
 	SET CFG_FILE=chain_providers.cfg
+	SET GETH_DIR=Ethereum
 	REM Define the name of the config file to delete
 
 	REM Introduce a short delay
@@ -542,6 +542,16 @@ func create_cleanup_batch_script():
 		ECHO %CFG_FILE% file not found in the Drivechain Launcher directory.
 	)
 
+	REM Delete the Ethereum directory used by Geth
+	IF EXIST "%LOCALAPPDATA%\\Ethereum" (
+		ECHO Deleting the Ethereum directory...
+		RMDIR /S /Q "%LOCALAPPDATA%\\Ethereum"
+		ECHO Ethereum directory deletion complete.
+	) ELSE (
+		ECHO Ethereum directory not found.
+	)
+
+
 	REM Start the Drivechain Launcher
 	SET LAUNCHER_PATH="{launcher_path}"
 	IF "%LAUNCHER_PATH%"=="" (
@@ -567,6 +577,7 @@ func create_cleanup_batch_script():
 		#print("Cleanup batch script created successfully at: ", script_path)
 	else:
 		print("Failed to create batch script.")
+
 
 func execute_cleanup_script_windows():
 	create_cleanup_batch_script()
