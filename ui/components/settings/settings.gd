@@ -17,19 +17,24 @@ func _ready():
 		drivechain_dir.placeholder_text = user_drivechain_dir
 	var scale_factor = get_tree().root.get_content_scale_factor()
 	scale_spin.value = scale_factor
+	$ResetEverythingWindow.hide()
 
+func _on_reset_button_pressed() -> void:
+	#var confirmation_dialog = ConfirmationDialog.new()
+	#confirmation_dialog.dialog_text = "Are you sure you want to reset everything?"
+	#add_child(confirmation_dialog)
+	#confirmation_dialog.popup_centered()
+	#confirmation_dialog.connect("confirmed", Callable(self, "_on_confirmation_confirmed"))
+	print("reset button pressed")
+	$ResetEverythingWindow.show()
 
-func _on_reset_button_pressed():
-	var confirmation_dialog = ConfirmationDialog.new()
-	confirmation_dialog.dialog_text = "Are you sure you want to reset everything?"
-	add_child(confirmation_dialog)
-	confirmation_dialog.popup_centered()
-	confirmation_dialog.connect("confirmed", Callable(self, "_on_confirmation_confirmed"))
+func _on_reset_everything_window_close_requested() -> void:
+	$ResetEverythingWindow.hide()
+	
 
-
-# This method is called when the confirmation dialog is confirmed
-func _on_confirmation_confirmed():
-	Appstate.reset_everything()
+## This method is called when the confirmation dialog is confirmed
+#func _on_confirmation_confirmed():
+	#Appstate.reset_everything()
 
 func _on_app_data_open_pressed():
 	open_file(OS.get_user_data_dir())
