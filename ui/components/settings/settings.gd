@@ -3,7 +3,7 @@ extends ScrollContainer
 @onready var app_dir = $VBox/DirectoriesSettings/AppDataDir/Value
 @onready var drivechain_dir = $VBox/DirectoriesSettings/DrivechainDataDir/Value
 @onready var scale_spin = $VBox/AppSettings/HBox/ScaleSpin
-
+@onready var reset_everything_scene = preload("res://ui/components/settings/reset_everything_window.tscn")
 signal hide_settings
 
 func _ready():
@@ -17,20 +17,18 @@ func _ready():
 		drivechain_dir.placeholder_text = user_drivechain_dir
 	var scale_factor = get_tree().root.get_content_scale_factor()
 	scale_spin.value = scale_factor
-	$ResetEverythingWindow.hide()
+
 
 func _on_reset_button_pressed() -> void:
-	#var confirmation_dialog = ConfirmationDialog.new()
-	#confirmation_dialog.dialog_text = "Are you sure you want to reset everything?"
-	#add_child(confirmation_dialog)
-	#confirmation_dialog.popup_centered()
-	#confirmation_dialog.connect("confirmed", Callable(self, "_on_confirmation_confirmed"))
-	print("reset button pressed")
-	$ResetEverythingWindow.show()
+	print("button pressed")
+	var reset_window = reset_everything_scene.instantiate()
+	get_tree().root.get_node("Main").add_child(reset_window)
+	reset_window.show()  # Call this method if the window is not set to automatically show upon being added to the scene tree.
+	print("Reset window opened")
 
 func _on_reset_everything_window_close_requested() -> void:
-	$ResetEverythingWindow.hide()
-	
+	reset_everything_scene.queue_free()  # This removes the window from the scene tree and frees it
+	print("Reset window closed")
 
 ## This method is called when the confirmation dialog is confirmed
 #func _on_confirmation_confirmed():

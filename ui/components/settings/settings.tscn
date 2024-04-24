@@ -147,13 +147,8 @@ size_flags_horizontal = 8
 size_flags_vertical = 2
 text = "Reset Everything"
 
-[node name="ResetEverythingWindow" type="Window" parent="."]
-initial_position = 2
-size = Vector2i(500, 500)
-
 [connection signal="pressed" from="VBox/DirectoriesSettings/AppDataDir/Open" to="." method="_on_app_data_open_pressed"]
 [connection signal="pressed" from="VBox/DirectoriesSettings/DrivechainDataDir/Open" to="." method="_on_drivechain_data_open_pressed"]
 [connection signal="value_changed" from="VBox/AppSettings/HBox/ScaleSpin" to="." method="_on_scale_spin_value_changed"]
 [connection signal="pressed" from="VBox/Footer/HBoxContainer/GoBackButton" to="." method="_on_hide_button_pressed"]
 [connection signal="pressed" from="VBox/Footer/HBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]
-[connection signal="close_requested" from="ResetEverythingWindow" to="." method="_on_reset_everything_window_close_requested"]

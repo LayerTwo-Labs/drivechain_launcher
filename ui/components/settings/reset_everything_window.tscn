@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=3 uid="uid://dljlcvujwo6wv"]
+
+[ext_resource type="Script" path="res://ui/components/settings/reset_everything_window.gd" id="1_y5pav"]
+
+[node name="ResetEverythingWindow" type="ColorRect"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(1, 1, 1, 0)
+script = ExtResource("1_y5pav")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/Panel"]
+layout_mode = 2
+offset_left = -105.0
+offset_top = -11.0
+offset_right = 105.0
+offset_bottom = 10.0
+text = "afdasfafffafdfasfdsafasfdsafasd"
