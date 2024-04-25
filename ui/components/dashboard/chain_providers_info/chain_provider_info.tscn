@@ -131,7 +131,6 @@ layout_mode = 2
 size_flags_vertical = 10
 
 [node name="ResetButton" type="Button" parent="Center/Panel/Margin/VBox/Footer"]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 2

@@ -148,12 +148,24 @@ func backup_wallets():
 			var base_dir = provider.base_dir.replace("/", dir_separator).replace("\\", dir_separator)
 			var wallet_dir = (provider.wallet_dir_win if OS.get_name() == "Windows" else provider.wallet_dir_linux)
 
-			# Check if wallet_dir starts with a slash, and add one if missing
-			if not wallet_dir.begins_with("/") and not wallet_dir.begins_with("\\"):
-				wallet_dir = dir_separator + wallet_dir
-
+			## Check if wallet_dir starts with a slash, and add one if missing
+			#if not wallet_dir.begins_with("/") and not wallet_dir.begins_with("\\"):
+				#wallet_dir = dir_separator + wallet_dir
+#
+			## Replace slashes in wallet_dir with the appropriate separator
+			#wallet_dir = wallet_dir.replace("/", dir_separator).replace("\\", dir_separator)
+#
+			#wallet_path = base_dir + wallet_dir
 			# Replace slashes in wallet_dir with the appropriate separator
 			wallet_dir = wallet_dir.replace("/", dir_separator).replace("\\", dir_separator)
+
+			# Ensure there is exactly one separator between base_dir and wallet_dir
+			if base_dir.ends_with(dir_separator):
+				if wallet_dir.begins_with(dir_separator):
+					wallet_dir = wallet_dir.substr(1)  # Remove the leading separator from wallet_dir
+			else:
+				if not wallet_dir.begins_with(dir_separator):
+					wallet_dir = dir_separator + wallet_dir  # Add missing separator if necessary
 
 			wallet_path = base_dir + wallet_dir
 
@@ -165,8 +177,13 @@ func backup_wallets():
 		var command: String
 		var arguments: PackedStringArray
 		var target_backup_path = "%s/%s" % [backup_dir_path, id.replace("/", "_")]
-		if OS.get_name() == "Windows":
-			target_backup_path = target_backup_path.replace("/", "\\")
+		# Normalize path separators based on the OS throughout the entire path
+		var dir_separator = "\\" if OS.get_name() == "Windows" else "/"
+		target_backup_path = target_backup_path.replace("/", dir_separator).replace("\\", dir_separator)
+
+		#var target_backup_path = "%s/%s" % [backup_dir_path, id.replace("/", "_")]
+		#if OS.get_name() == "Windows":
+			#target_backup_path = target_backup_path.replace("/", "\\")
 		print("Target backup path: ", target_backup_path, "\n")
 		
 		var output: Array = []
@@ -276,6 +293,25 @@ func update_display_scale(scale_factor: float):
 	app_config.load(APP_CONFIG_PATH)
 	app_config.set_value("", "scale_factor", scale_factor)
 	app_config.save(APP_CONFIG_PATH)
+
+func purge_all(base_dir: String):
+	delete_zcash_directory()
+	delete_ethereum_directory()
+	var dir = DirAccess.open(base_dir)
+	if dir:
+		dir.list_dir_begin()
+		var filename = dir.get_next()
+		while filename != "":
+			var full_path = base_dir + "/" + filename  # Corrected path concatenation
+			if dir.current_is_dir():
+				purge_all(full_path)  # Recursively delete contents of directories
+				dir.remove(full_path)  # Remove the directory after clearing it
+			else:
+				dir.remove(full_path)  # Directly remove file
+			filename = dir.get_next()
+		dir.list_dir_end()
+	else:
+		print("Failed to open directory: %s" % base_dir)
 
 
 func purge_except_backup(base_dir: String, keep_dir_name: String):
@@ -399,45 +435,47 @@ func setup_wallets_backup_directory():
 
 
 
-func reset_everything():
-	backup_wallets()
-	print("Starting reset process...")
-	# Purge directories while preserving the wallets_backup folder.
+func reset_everything(preserve_wallets: bool = true):
 	var user_data_dir = OS.get_user_data_dir()
 
-	purge_except_backup(user_data_dir, "wallets_backup")
+	if preserve_wallets:
+		backup_wallets()
+		print("Backing up wallets and starting reset process...")
+		purge_except_backup(user_data_dir, "wallets_backup")
+	else:
+		print("Purging everything, including wallets...")
+		purge_all(user_data_dir)  # This will delete everything, including the wallets backup
+		# After a full purge, there is nothing left to do, so return from the function.
+		print("Full purge completed successfully.")
 
+	# If preserve_wallets is true, the function continues with the remaining reset process.
 
 	# Remaining operations on chains and configurations.
 	for i in chain_states:
-		#print("Stopping chain: %s" % i)
 		chain_states[i].stop_chain()
 		await get_tree().create_timer(0.1).timeout
-		#print("Removing chain state child: %s" % i)
 		remove_child(chain_states[i])
-		#print("Cleaning up chain state: %s, with data: %s" % [i, str(chain_states[i])])
 		chain_states[i].cleanup()
 
 	if OS.get_name() == "Windows":
 		print("Executing Windows-specific cleanup...")
-		execute_cleanup_script_windows()  # Windows-specific cleanup
+		execute_cleanup_script_windows()
 		return
 
 	print("Removing chain providers...")
 	for i in chain_providers:
-		#print("Moving chain provider to trash:", i)
 		var err = OS.move_to_trash(ProjectSettings.globalize_path(chain_providers[i].base_dir))
 		if err != OK:
 			print("Error moving to trash:", err)
 
+	# Clearing the state data.
 	print("Clearing chain states...")
 	chain_states.clear()
-	#print("Chain states after clearing: %s" % str(chain_states))
 
 	print("Clearing chain providers...")
 	chain_providers.clear()
-	#print("Chain providers after clearing: %s" % str(chain_providers))
 
+	# Re-loading and re-setting up configurations and state.
 	print("Loading version configuration...")
 	load_version_config()
 
@@ -467,6 +505,7 @@ func reset_everything():
 	create_cleanup_batch_script()
 
 	print("Reset process completed successfully.")
+
 
 func clear_backup_directory(target_backup_path: String) -> void:
 	print("\nAttempting to clear backup directory\n")
