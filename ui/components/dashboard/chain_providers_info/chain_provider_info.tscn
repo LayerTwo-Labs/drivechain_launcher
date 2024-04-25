@@ -24,11 +24,9 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="Center"]
-visible = false
 layout_mode = 2
 
 [node name="Margin" type="MarginContainer" parent="Center/Panel"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 8
@@ -36,7 +34,6 @@ theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
 [node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin"]
-visible = false
 layout_mode = 2
 theme_override_constants/separation = 16
 
