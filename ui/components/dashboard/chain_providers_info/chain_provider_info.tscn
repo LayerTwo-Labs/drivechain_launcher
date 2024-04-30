@@ -134,7 +134,9 @@ size_flags_vertical = 10
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 2
-text = "Reset Everything"
+text = "Reset
+"
 
 [connection signal="gui_input" from="Center" to="." method="_on_center_gui_input"]
 [connection signal="pressed" from="Center/Panel/Margin/VBox/SidechainDirectory/Button" to="." method="_on_directory_button_pressed"]
+[connection signal="pressed" from="Center/Panel/Margin/VBox/Footer/ResetButton" to="." method="_on_reset_button_pressed"]

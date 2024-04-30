@@ -275,85 +275,142 @@ func ensure_directory_structure(target_path: String):
 	else:
 		print("Directory already exists: ", target_path)
 
+#func move_file(source_path: String, target_path: String):
+	#var command: String
+	#var arguments: PackedStringArray
+	#var output = []  # Initialize an array for the output
+#
+	## Determine the operating system to use the appropriate command
+	#print("Source path: ", source_path)
+	#print("Target path: ", target_path)
+#
+	#if OS.get_name() == "Windows":
+		#if source_path.ends_with(".mdb"):
+			#print(".mdb found")
+			## Handle .mdb files as single files
+			#command = "cmd"
+			#arguments = ["/c", "move", '"' + source_path + '"', '"' + target_path + '"']
+			#var result = OS.execute(command, arguments, output, true, false)
+			#if result == OK:
+				#print("File moved successfully from ", source_path, " to ", target_path)
+			#else:
+				#print("Failed to move file. Exit code: ", result)
+				#for line in output:
+					#print(line)  # Print each line of output to diagnose the error
+		#else:
+			## Windows-specific logic to handle a directory containing multiple files
+#
+			#print(chain_provider.id)
+#
+			#var dir = DirAccess.open(source_path)
+#
+			#if dir:
+				#dir.list_dir_begin()
+				#var file_name = dir.get_next()
+				#while file_name != "":
+					#if not dir.current_is_dir(): # Ensure it's a file
+						#var full_source_path = source_path + "\\" + file_name
+						#var full_target_path = target_path.get_base_dir() + "\\" + file_name
+						#
+						## Use "cmd /c move" to move the file
+						#command = "cmd"
+						#arguments = ["/c", "move", '"' + full_source_path + '"', '"' + full_target_path + '"']
+						#var result = OS.execute(command, arguments, output, true, false)
+						#
+						#if result == OK:
+							#print("File moved successfully from", full_source_path, " to ", full_target_path)
+						#else:
+							#print("Failed to move file. Exit code: ", result)
+							#for line in output:
+								#print(line) # Print each line of output to diagnose the error
+					#
+					#file_name = dir.get_next()
+				#
+				#dir.list_dir_end()
+			#else:
+				#print("Failed to open source directory: ", source_path)
+	#else:
+		## Use "mv" for Unix-like systems
+		#var dir = DirAccess.open(source_path)
+		#if dir:
+			#dir.list_dir_begin()
+			#var file_name = dir.get_next()
+			#while file_name != "":
+				#if not dir.current_is_dir():  # Ensure it's a file
+					#var full_source_path = source_path + "/" + file_name
+					#var full_target_path = target_path.get_base_dir() + "/" + file_name
+					#command = "mv"
+					#arguments = [full_source_path, full_target_path]
+					## Execute the command
+					#var result = OS.execute(command, arguments, output, true, false)
+					#if result == OK:
+						#print("File moved successfully from ", full_source_path, " to ", full_target_path)
+					#else:
+						#print("Failed to move file. Exit code: ", result)
+						#for line in output:
+							#print(line)  # Print each line of output to diagnose the error
+					#break
+				#file_name = dir.get_next()
+			#dir.list_dir_end()
+		#else:
+			#print("Failed to open source directory: ", source_path)
+
+
+
+#func move_file(source_path: String, target_path: String):
+	#var command: String
+	#var arguments: PackedStringArray
+	#var output = [] # Correctly initialize an array for the output
+	## Determine the operating system to use the appropriate command
+	#if OS.get_name() == "Windows":
+		## On Windows, use "cmd /c move"
+		#command = "cmd"
+		#arguments = ["/c", "move", source_path, target_path]
+	#else:
+		## On Unix-like systems, use "mv"
+		#command = "mv"
+		#arguments = [source_path, target_path]
+	#
+	## Execute the command
+	#var result = OS.execute(command, arguments, output, true, false)
+	#if result == OK:
+		#print("File moved successfully.")
+		#for line in output:
+			#print(line) # Print each line of output (if any)
+	#else:
+		#print("Failed to move file. Exit code: ", result)
+		#for line in output:
+			#print(line) # Print each line of output to diagnose the error
+
 func move_file(source_path: String, target_path: String):
 	var command: String
 	var arguments: PackedStringArray
-	var output = []  # Initialize an array for the output
+	var output = [] # Initialize an array for the output
 
 	# Determine the operating system to use the appropriate command
-	print("Source path: ", source_path)
-	print("Target path: ", target_path)
-
 	if OS.get_name() == "Windows":
 		if source_path.ends_with(".mdb"):
-			print(".mdb found")
-			# Handle .mdb files as single files
+			# Specific handling for .mdb files on Windows
 			command = "cmd"
 			arguments = ["/c", "move", '"' + source_path + '"', '"' + target_path + '"']
-			var result = OS.execute(command, arguments, output, true, false)
-			if result == OK:
-				print("File moved successfully from ", source_path, " to ", target_path)
-			else:
-				print("Failed to move file. Exit code: ", result)
-				for line in output:
-					print(line)  # Print each line of output to diagnose the error
 		else:
-			# Windows-specific logic to handle a directory containing multiple files
-
-			print(chain_provider.id)
-
-			var dir = DirAccess.open(source_path)
-
-			if dir:
-				dir.list_dir_begin()
-				var file_name = dir.get_next()
-				while file_name != "":
-					if not dir.current_is_dir(): # Ensure it's a file
-						var full_source_path = source_path + "\\" + file_name
-						var full_target_path = target_path.get_base_dir() + "\\" + file_name
-						
-						# Use "cmd /c move" to move the file
-						command = "cmd"
-						arguments = ["/c", "move", '"' + full_source_path + '"', '"' + full_target_path + '"']
-						var result = OS.execute(command, arguments, output, true, false)
-						
-						if result == OK:
-							print("File moved successfully from", full_source_path, " to ", full_target_path)
-						else:
-							print("Failed to move file. Exit code: ", result)
-							for line in output:
-								print(line) # Print each line of output to diagnose the error
-					
-					file_name = dir.get_next()
-				
-				dir.list_dir_end()
-			else:
-				print("Failed to open source directory: ", source_path)
+			# General file or directory move command for Windows
+			command = "cmd"
+			arguments = ["/c", "move", source_path, target_path]
 	else:
-		# Use "mv" for Unix-like systems
-		var dir = DirAccess.open(source_path)
-		if dir:
-			dir.list_dir_begin()
-			var file_name = dir.get_next()
-			while file_name != "":
-				if not dir.current_is_dir():  # Ensure it's a file
-					var full_source_path = source_path + "/" + file_name
-					var full_target_path = target_path.get_base_dir() + "/" + file_name
-					command = "mv"
-					arguments = [full_source_path, full_target_path]
-					# Execute the command
-					var result = OS.execute(command, arguments, output, true, false)
-					if result == OK:
-						print("File moved successfully from ", full_source_path, " to ", full_target_path)
-					else:
-						print("Failed to move file. Exit code: ", result)
-						for line in output:
-							print(line)  # Print each line of output to diagnose the error
-					break
-				file_name = dir.get_next()
-			dir.list_dir_end()
-		else:
-			print("Failed to open source directory: ", source_path)
+		# General file or directory move command for Unix-like systems
+		command = "mv"
+		arguments = [source_path, target_path]
+
+	# Execute the command
+	var result = OS.execute(command, arguments, output, true, false)
+	if result == OK:
+		print("File moved successfully.")
+	else:
+		print("Failed to move file. Exit code: ", result)
+		for line in output:
+			print(line) # Print each line of output to diagnose the error
+
 
 func setup_download_requirements():
 	if download_req != null:
