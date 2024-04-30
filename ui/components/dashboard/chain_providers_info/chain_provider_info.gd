@@ -5,7 +5,7 @@ extends ColorRect
 @onready var remote_hash = $Center/Panel/Margin/VBox/RemoteHash/Hash
 @onready var directory = $Center/Panel/Margin/VBox/SidechainDirectory/Value
 @onready var local_hash = $Center/Panel/Margin/VBox/LocalHash/Hash
-
+@onready var reset_sidechain_window_scene = preload("res://ui/components/dashboard/chain_providers_info/reset_sidechain_window.tscn")
 var chain_provider: ChainProvider
 
 func setup(_chain_provider: ChainProvider):
@@ -39,3 +39,11 @@ func _on_center_gui_input(event):
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
 				queue_free()
+
+
+func _on_reset_button_pressed() -> void:
+	print(chain_provider.display_name + " button pressed")
+	var reset_sidechain_window = reset_sidechain_window_scene.instantiate()
+	get_tree().root.get_node("Main").add_child(reset_sidechain_window)
+
+	
