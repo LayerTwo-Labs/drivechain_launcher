@@ -294,6 +294,24 @@ func update_display_scale(scale_factor: float):
 	app_config.set_value("", "scale_factor", scale_factor)
 	app_config.save(APP_CONFIG_PATH)
 
+func purge(base_dir: String):
+	var dir = DirAccess.open(base_dir)  # Create a DirAccess instance and open the directory
+	if dir:
+		dir.list_dir_begin()
+		var filename = dir.get_next()
+		while filename != "":
+			if filename != "." and filename != "..":
+				var full_path = base_dir + "/" + filename  # Build the full path
+				if dir.current_is_dir():
+					purge(full_path)  # Recursively delete contents of directories
+					dir.remove(full_path)  # Remove the directory after clearing it
+				else:
+					dir.remove(full_path)  # Directly remove file
+			filename = dir.get_next()
+		dir.list_dir_end()
+	else:
+		print("Failed to open directory: %s" % base_dir)
+
 func purge_all(base_dir: String):
 	delete_zcash_directory()
 	delete_ethereum_directory()
