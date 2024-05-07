@@ -410,8 +410,8 @@ func move_file(source_path: String, target_path: String):
 
 	else:
 		# Assuming Unix-like commands for non-Windows operating systems
-		command = "cp"
-		arguments = ["-r", source_path + "*", target_path]
+		command = "mv"
+		arguments = [source_path, target_path]
 
 		# Print the constructed command for debugging
 		print("Command to execute:")
