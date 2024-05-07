@@ -191,7 +191,7 @@ func backup_wallets():
 		match OS.get_name():
 			"Windows":
 				command = "xcopy"
-				arguments = PackedStringArray([wallet_path, target_backup_path + "\\", "/E", "/I", "/Q"])
+				arguments = PackedStringArray([wallet_path, target_backup_path + "\\", "/I", "/Q"])
 			"Linux", "macOS", "FreeBSD":
 				command = "cp"
 				arguments = PackedStringArray(["-r", wallet_path, target_backup_path])
