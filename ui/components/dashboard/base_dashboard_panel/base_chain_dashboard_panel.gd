@@ -390,12 +390,18 @@ func move_file(source_path: String, target_path: String):
 	var output = []
 	
 	if OS.get_name() == "Windows":
-		# Directly using xcopy to copy the contents from source to target
-		command = "xcopy"
-		# Ensure paths are enclosed in quotes and handle the wildcard for copying all contents
-		source_path = '"' + source_path + '\\*"'
-		target_path = '"' + target_path + '"'
-		arguments = [source_path, target_path, "/E", "/I", "/Y"]
+		# Check for specific chain_provider IDs to decide between using 'copy' or 'xcopy'
+		if chain_provider.id in ["drivechain", "testchain"]:
+			print(chain_provider.id + " wallet detected")
+			# Use the 'copy' command for handling individual files like 'wallet.dat'
+			command = "cmd"
+			arguments = ["/c", "copy", '"' + source_path + '"', '"' + target_path + '"']
+		else:
+			# Use 'xcopy' for general directory copying
+			command = "xcopy"
+			source_path = '"' + source_path + '\\*"'
+			target_path = '"' + target_path + '"'
+			arguments = [source_path, target_path, "/E", "/I", "/Y"]
 
 		# Print the constructed command for debugging
 		print("Command to execute:")
