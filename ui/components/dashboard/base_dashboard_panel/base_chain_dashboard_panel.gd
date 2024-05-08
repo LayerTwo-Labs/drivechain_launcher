@@ -387,41 +387,39 @@ func ensure_directory_structure(target_path: String):
 func move_file(source_path: String, target_path: String):
 	var command: String
 	var arguments: PackedStringArray
-	var output = []  # Initialize an array for the output
-
-	# Determine the operating system to use the appropriate command
+	var output = []
+	
 	if OS.get_name() == "Windows":
-		if source_path.ends_with(".mdb"):
-			# Specific handling for .mdb files on Windows
-			command = "cmd"
-			arguments = ["/c", "move", '"' + source_path + '"', '"' + target_path + '"']
-		else:
-			# General file or directory move command for Windows
-			command = "cmd"
-			arguments = ["/c", "move", source_path, target_path]
+		# Directly using xcopy to copy the contents from source to target
+		command = "xcopy"
+		# Ensure paths are enclosed in quotes and handle the wildcard for copying all contents
+		source_path = '"' + source_path + '\\*"'
+		target_path = '"' + target_path + '"'
+		arguments = [source_path, target_path, "/E", "/I", "/Y"]
 
-		# Printing exact command and arguments for debugging
+		# Print the constructed command for debugging
 		print("Command to execute:")
-		print("Base Command: ", command)
+		print("Command: ", command)
 		print("Arguments: ", ' '.join(arguments))
 
 	else:
-		# General file or directory move command for Unix-like systems
-		command = "mv"
-		arguments = [source_path, target_path]
+		# Assuming Unix-like commands for non-Windows operating systems
+		command = "cp"
+		arguments = ["-r", source_path + "*", target_path]
 
-		# Printing exact command and arguments for debugging
+		# Print the constructed command for debugging
 		print("Command to execute:")
 		print("Command: ", command, ' '.join(arguments))
 
 	# Execute the command
-	var result = OS.execute(command, arguments, output, true, false)
+	var result = OS.execute(command, arguments, output, true)
 	if result == OK:
-		print("File moved successfully.")
+		print("Files moved successfully.")
 	else:
-		print("Failed to move file. Exit code: ", result)
+		print("Failed to move files. Exit code: ", result)
 		for line in output:
-			print(line)  # Print each line of output to diagnose the error
+			print(line)  # Print each line of output to diagnose the issue
+
 
 func setup_download_requirements():
 	if download_req != null:
