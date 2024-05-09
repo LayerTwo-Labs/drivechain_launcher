@@ -4,6 +4,7 @@ extends ColorRect
 @onready var button = $CenterContainer/Panel/MarginContainer/VBoxContainer/Button
 @onready var label2 = $CenterContainer/Panel/MarginContainer/VBoxContainer/Label2
 @onready var button2 = $CenterContainer/Panel/MarginContainer/VBoxContainer/Button2
+
 var chain_provider: ChainProvider
 
 func setup(_chain_provider: ChainProvider):
@@ -36,7 +37,34 @@ func _on_button_2_pressed():
 		
 		# After ensuring the chain has stopped and cleaned up, purge the directory
 		await get_tree().create_timer(1.0).timeout  # Wait for the chain to fully stop and clean up
+		queue_free()
 		purge_directory()
+			# Re-loading and re-setting up configurations and state.
+		print("Loading version configuration...")
+		Appstate.load_version_config()
+
+		print("Loading configuration...")
+		Appstate.load_config()
+
+		print("Saving configuration...")
+		Appstate.save_config()
+
+		Appstate.load_app_config()
+
+		print("Setting up directories...")
+		Appstate.setup_directories()
+
+		print("Setting up configurations...")
+		Appstate.setup_confs()
+
+		print("Setting up chain states...")
+		Appstate.setup_chain_states()
+		
+		Appstate.chain_providers_changed.emit()
+		
+		Appstate.start_chain_states()
+		
+		
 	else:
 		print("Button 2 pressed, but no chain provider is initialized!")
 

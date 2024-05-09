@@ -17,8 +17,14 @@ func _on_center_container_gui_input(event):
 
 
 func _on_button_pressed():
+	var error = get_tree().change_scene_to_file("res://ui/components/dashboard/dashboard.tscn")
+	if error != OK:
+		print("Failed to change scene: ", error)
 	Appstate.reset_everything(true)
 
 
 func _on_button_2_pressed():
+	var error = get_tree().change_scene_to_file("res://ui/components/dashboard/dashboard.tscn")
+	if error != OK:
+		print("Failed to change scene: ", error)
 	Appstate.reset_everything(false) # Replace with function body.
