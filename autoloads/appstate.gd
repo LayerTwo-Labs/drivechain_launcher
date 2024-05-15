@@ -294,23 +294,35 @@ func update_display_scale(scale_factor: float):
 	app_config.set_value("", "scale_factor", scale_factor)
 	app_config.save(APP_CONFIG_PATH)
 
-func purge(base_dir: String):
-	var dir = DirAccess.open(base_dir)  # Create a DirAccess instance and open the directory
+func purge(base_dir: String) -> void:
+	var dir = DirAccess.open(base_dir)
 	if dir:
+		dir.set_include_navigational(true)
+		dir.set_include_hidden(true)
 		dir.list_dir_begin()
 		var filename = dir.get_next()
 		while filename != "":
 			if filename != "." and filename != "..":
-				var full_path = base_dir + "/" + filename  # Build the full path
+				var full_path = base_dir.path_join(filename)
+				var status = OK  # Initialize status here
 				if dir.current_is_dir():
 					purge(full_path)  # Recursively delete contents of directories
-					dir.remove(full_path)  # Remove the directory after clearing it
+					status = dir.remove(full_path)
+					if status != OK:  # Use the status variable for error checking
+						push_error("Failed to remove directory: %s" % full_path)
 				else:
-					dir.remove(full_path)  # Directly remove file
+					status = dir.remove(full_path)
+					if status != OK:
+						push_error("Failed to remove file: %s" % full_path)
+				print("Attempting to delete: " + full_path + ", Status: " + str(status))
 			filename = dir.get_next()
 		dir.list_dir_end()
 	else:
-		print("Failed to open directory: %s" % base_dir)
+		push_error("Failed to open directory: %s" % base_dir)
+
+
+
+
 
 func purge_all(base_dir: String):
 	delete_zcash_directory()

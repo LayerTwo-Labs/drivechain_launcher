@@ -167,13 +167,23 @@ func stop_and_cleanup_chain():
 		print("stop_and_cleanup_chain called but no chain provider available.")
 		
 func purge_directory():
+	# Check if chain_provider.id is "ethsail" or "zsail"
+	if chain_provider.id == "ethsail":
+		Appstate.delete_ethereum_directory()
+	elif chain_provider.id == "zsail":
+		# Perform a different action for "zsail"
+		Appstate.delete_zcash_directory()  # Assuming there's a corresponding function
 
 	print("Preparing to purge directory for provider: ", chain_provider.display_name)
 	var directory_text = ProjectSettings.globalize_path(chain_provider.base_dir)
+	print(directory_text + " is the directory txt")
+	
 	if OS.get_name() == "Windows":
 		directory_text = directory_text.replace("/", "\\")  # Windows-style separators
+	
 	Appstate.purge(directory_text)
 	print("Directory purged: " + directory_text)
+
 
 
 func _on_center_container_gui_input(event):
