@@ -210,7 +210,7 @@ func download():
 		# Ensure directory structure for the target path
 		ensure_directory_structure(target_path)
 		
-		print("Final target path being passed: ", target_path)  # Should output: C:\Users\Joshua\AppData\Local\Ethereum\keystore\
+		print("Final target path being passed: ", target_path)  
 		
 		# Move file from backup location to the original intended location
 		move_file(backup_path, target_path)
