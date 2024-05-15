@@ -80,17 +80,20 @@ func stop_and_cleanup_chain():
 				if is_instance_valid(chain_state):
 					remove_child(chain_state)  # This will remove the chain state from the scene tree
 					chain_state.cleanup()  # Perform any necessary cleanup operations
+
+
 					print("Chain stopped and node removed for provider:", chain_provider.display_name)
 				else:
 					print("Chain state is no longer valid after stopping.")
 			else:
 				print("Chain state not found in AppState.chain_states for id: ", chain_provider.id)
-		else:
+		else: 
 			print("Chain provider id not found in AppState.chain_states: ", chain_provider.id)
 	else:
 		print("stop_and_cleanup_chain called but no chain provider available.")
-
+		
 func purge_directory():
+
 	print("Preparing to purge directory for provider: ", chain_provider.display_name)
 	var directory_text = ProjectSettings.globalize_path(chain_provider.base_dir)
 	if OS.get_name() == "Windows":
