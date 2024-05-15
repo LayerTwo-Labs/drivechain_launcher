@@ -479,21 +479,19 @@ func _on_download_complete(result, response_code, _headers, body):
 	unzip_file_and_setup_binary(chain_provider.base_dir, path)
 	
 	
-# A prior implementation of this unzipped through using ZIPReader. 
-# However, this swallowed file types and permissions. Instead, we 
-# execute a program that handles this for us. 
 func unzip_file_and_setup_binary(base_dir: String, zip_path: String):
 	var prog = "unzip"
-	var args = [zip_path, "-d", base_dir]  # Added "-o" flag to force overwrite
+	var args = [zip_path, "-d", base_dir]
 	if Appstate.get_platform() == Appstate.platform.WIN:
 		prog = "powershell.exe"
 		args = ["-Command", 'Expand-Archive -Force ' + zip_path + ' ' + base_dir]
 
-	print("Unzipping ", zip_path, ": ", prog, " ", args)
+
+	print("Unzipping ", zip_path, ": ", prog, " ", args, )
 
 	# We used to check for the exit code here. However, unzipping sometimes
 	# throw bad errors on symbolic links, but output the files just fine...
-	OS.execute(prog, args)
+	OS.execute(prog, args) 
 
 	chain_provider.write_start_script()
 	if Appstate.get_platform() != Appstate.platform.WIN:
