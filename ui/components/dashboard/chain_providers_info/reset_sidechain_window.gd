@@ -26,9 +26,83 @@ func _ready():
 	# Ensure chain_provider is initialized before calling setup
 	setup(chain_provider)
 
-func _on_button_pressed():
-	print("button 1 pressed")
+const WALLET_INFO_PATH := "user://wallets_backup/wallet_info.json"
+func backup_wallet():
+	print("Starting backup process for provider: ", chain_provider.id, "\n")
+	var backup_dir_path = Appstate.setup_wallets_backup_directory()
+	print("Backup directory path: ", backup_dir_path, "\n")
 
+	var provider = chain_provider  # Correctly assign the whole chain_provider object
+
+	var wallet_path: String
+	if chain_provider.id == "ethsail":
+		wallet_path = Appstate.get_ethsail_wallet_path()
+	elif chain_provider.id == "zsail":
+		wallet_path = Appstate.get_zsail_wallet_path()
+	else:
+		var dir_separator = "/" if OS.get_name() != "Windows" else "\\"
+		var base_dir = provider.base_dir.replace("/", dir_separator).replace("\\", dir_separator)
+		var wallet_dir = (provider.wallet_dir_win if OS.get_name() == "Windows" else provider.wallet_dir_linux)
+
+		wallet_dir = wallet_dir.replace("/", dir_separator).replace("\\", dir_separator)
+		if base_dir.ends_with(dir_separator):
+			if wallet_dir.begins_with(dir_separator):
+				wallet_dir = wallet_dir.substr(1)
+		else:
+			if not wallet_dir.begins_with(dir_separator):
+				wallet_dir = dir_separator + wallet_dir
+
+		wallet_path = base_dir + wallet_dir
+
+	print("Constructed wallet path: ", wallet_path, "\n")
+	var wallet_paths_info = {chain_provider.id: wallet_path}
+
+	var command: String
+	var arguments: PackedStringArray
+	var target_backup_path = "%s/%s" % [backup_dir_path, chain_provider.id.replace("/", "_")]
+	var dir_separator = "\\" if OS.get_name() == "Windows" else "/"
+	target_backup_path = target_backup_path.replace("/", dir_separator).replace("\\", dir_separator)
+
+	print("Target backup path: ", target_backup_path, "\n")
+
+	var output: Array = []
+	print("Determining command based on OS: ", OS.get_name(), "\n")
+	match OS.get_name():
+		"Windows":
+			command = "xcopy"
+			arguments = PackedStringArray([wallet_path, target_backup_path + "\\", "/I", "/Q"])
+		"Linux", "macOS", "FreeBSD":
+			command = "cp"
+			arguments = PackedStringArray(["-r", wallet_path, target_backup_path])
+		_:
+			print("OS not supported for direct folder copy.\n")
+			return
+
+	print("Executing command: ", command, " with arguments: ", arguments, "\n")
+	var result = OS.execute(command, arguments, output, false, false)
+	if result == OK:
+		print("Successfully backed up wallet for '", chain_provider.id, "' to: ", target_backup_path, "\n")
+	else:
+		var output_str = Appstate.array_to_string(output)
+		print("Failed to back up wallet for ", chain_provider.id, "\n")
+
+	print("Saving wallet paths info to JSON file.\n")
+	var json_text := JSON.stringify(wallet_paths_info)
+	var file := FileAccess.open(WALLET_INFO_PATH, FileAccess.ModeFlags.WRITE)
+	if file != null:
+		file.store_string(json_text)
+		file.flush()
+		file.close()
+		print("Wallet paths info successfully saved in JSON format.\n")
+	else:
+		print("Failed to open JSON file for writing: ", WALLET_INFO_PATH, "\n")
+
+
+func _on_button_pressed():	
+	print("button 1 pressd")
+	backup_wallet()
+	_on_button_2_pressed()
+	
 func _on_button_2_pressed():
 	if chain_provider:
 		print("Button 2 pressed. Chain provider is initialized.")
