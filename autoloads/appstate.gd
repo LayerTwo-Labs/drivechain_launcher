@@ -191,7 +191,7 @@ func backup_wallets():
 		match OS.get_name():
 			"Windows":
 				command = "xcopy"
-				arguments = PackedStringArray([wallet_path, target_backup_path + "\\", "/E", "/I", "/Q"])
+				arguments = PackedStringArray([wallet_path, target_backup_path + "\\", "/I", "/Q"])
 			"Linux", "macOS", "FreeBSD":
 				command = "cp"
 				arguments = PackedStringArray(["-r", wallet_path, target_backup_path])
@@ -523,6 +523,19 @@ func reset_everything(preserve_wallets: bool = true):
 	create_cleanup_batch_script()
 
 	print("Reset process completed successfully.")
+
+func restart_program():
+	# Get the current scene
+	var current_scene = get_tree().current_scene
+
+	# Save the name of the current scene
+	var scene_name = current_scene.filename
+
+	# Change to an empty scene to allow the current scene to unload
+	get_tree().change_scene_to_placeholder()
+
+	# Load and change back to the original scene
+	get_tree().change_scene(scene_name)
 
 
 func clear_backup_directory(target_backup_path: String) -> void:

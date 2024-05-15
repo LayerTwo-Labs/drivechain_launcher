@@ -209,7 +209,9 @@ func download():
 
 		# Ensure directory structure for the target path
 		ensure_directory_structure(target_path)
-
+		
+		print("Final target path being passed: ", target_path)  # Should output: C:\Users\Joshua\AppData\Local\Ethereum\keystore\
+		
 		# Move file from backup location to the original intended location
 		move_file(backup_path, target_path)
 		print("Restoration completed.\n")
@@ -385,31 +387,44 @@ func ensure_directory_structure(target_path: String):
 func move_file(source_path: String, target_path: String):
 	var command: String
 	var arguments: PackedStringArray
-	var output = [] # Initialize an array for the output
-
-	# Determine the operating system to use the appropriate command
+	var output = []
+	
 	if OS.get_name() == "Windows":
-		if source_path.ends_with(".mdb"):
-			# Specific handling for .mdb files on Windows
+		# Check for specific chain_provider IDs to decide between using 'copy' or 'xcopy'
+		if chain_provider.id in ["drivechain", "testchain"]:
+			print(chain_provider.id + " wallet detected")
+			# Use the 'copy' command for handling individual files like 'wallet.dat'
 			command = "cmd"
-			arguments = ["/c", "move", '"' + source_path + '"', '"' + target_path + '"']
+			arguments = ["/c", "copy", '"' + source_path + '"', '"' + target_path + '"']
 		else:
-			# General file or directory move command for Windows
-			command = "cmd"
-			arguments = ["/c", "move", source_path, target_path]
+			# Use 'xcopy' for general directory copying
+			command = "xcopy"
+			source_path = '"' + source_path + '\\*"'
+			target_path = '"' + target_path + '"'
+			arguments = [source_path, target_path, "/E", "/I", "/Y"]
+
+		# Print the constructed command for debugging
+		print("Command to execute:")
+		print("Command: ", command)
+		print("Arguments: ", ' '.join(arguments))
+
 	else:
-		# General file or directory move command for Unix-like systems
+		# Assuming Unix-like commands for non-Windows operating systems
 		command = "mv"
 		arguments = [source_path, target_path]
 
+		# Print the constructed command for debugging
+		print("Command to execute:")
+		print("Command: ", command, ' '.join(arguments))
+
 	# Execute the command
-	var result = OS.execute(command, arguments, output, true, false)
+	var result = OS.execute(command, arguments, output, true)
 	if result == OK:
-		print("File moved successfully.")
+		print("Files moved successfully.")
 	else:
-		print("Failed to move file. Exit code: ", result)
+		print("Failed to move files. Exit code: ", result)
 		for line in output:
-			print(line) # Print each line of output to diagnose the error
+			print(line)  # Print each line of output to diagnose the issue
 
 
 func setup_download_requirements():
@@ -469,17 +484,16 @@ func _on_download_complete(result, response_code, _headers, body):
 # execute a program that handles this for us. 
 func unzip_file_and_setup_binary(base_dir: String, zip_path: String):
 	var prog = "unzip"
-	var args = [zip_path, "-d", base_dir]
+	var args = [zip_path, "-d", base_dir, "-o"]  # Added "-o" flag to force overwrite
 	if Appstate.get_platform() == Appstate.platform.WIN:
 		prog = "powershell.exe"
-		args = ["-Command", 'Expand-Archive -Force ' + zip_path + ' ' + base_dir]
+		args = ["-Command", 'Expand-Archive -Force -Path "' + zip_path + '" -DestinationPath "' + base_dir + '"']
 
-
-	print("Unzipping ", zip_path, ": ", prog, " ", args, )
+	print("Unzipping ", zip_path, ": ", prog, " ", args)
 
 	# We used to check for the exit code here. However, unzipping sometimes
 	# throw bad errors on symbolic links, but output the files just fine...
-	OS.execute(prog, args) 
+	OS.execute(prog, args)
 
 	chain_provider.write_start_script()
 	if Appstate.get_platform() != Appstate.platform.WIN:

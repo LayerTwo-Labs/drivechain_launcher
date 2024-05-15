@@ -17,8 +17,10 @@ func _on_center_container_gui_input(event):
 
 
 func _on_button_pressed():
+
 	Appstate.reset_everything(true)
 
 
 func _on_button_2_pressed():
+
 	Appstate.reset_everything(false) # Replace with function body.
