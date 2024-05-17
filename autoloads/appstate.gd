@@ -123,12 +123,12 @@ func _ready():
 const WALLET_INFO_PATH := "user://wallets_backup/wallet_info.json"
 
 func backup_wallets():
-	
 	print("Starting backup process...\n")
 	var backup_dir_path = setup_wallets_backup_directory()
 	print("Backup directory path: ", backup_dir_path, "\n")
 
-	var wallet_paths_info = {}
+	# Load existing wallet paths info
+	var wallet_paths_info = load_existing_wallet_paths_info()
 	print("Enumerating chain providers...\n")
 
 	for id in chain_providers.keys():
@@ -137,53 +137,30 @@ func backup_wallets():
 
 		var wallet_path: String
 		if id == "ethsail":
-			# Dynamically construct the wallet path for "ethsail" to ensure it works for any user.
 			wallet_path = get_ethsail_wallet_path()
 		elif id == "zsail":
-			# Dynamically construct the wallet path for "zsail" to ensure it works for any user.
 			wallet_path = get_zsail_wallet_path()
 		else:
-			# Constructing the wallet path for other providers directly from configuration
 			var dir_separator = "/" if OS.get_name() != "Windows" else "\\"
 			var base_dir = provider.base_dir.replace("/", dir_separator).replace("\\", dir_separator)
-			var wallet_dir = (provider.wallet_dir_win if OS.get_name() == "Windows" else provider.wallet_dir_linux)
-
-			## Check if wallet_dir starts with a slash, and add one if missing
-			#if not wallet_dir.begins_with("/") and not wallet_dir.begins_with("\\"):
-				#wallet_dir = dir_separator + wallet_dir
-#
-			## Replace slashes in wallet_dir with the appropriate separator
-			#wallet_dir = wallet_dir.replace("/", dir_separator).replace("\\", dir_separator)
-#
-			#wallet_path = base_dir + wallet_dir
-			# Replace slashes in wallet_dir with the appropriate separator
+			var wallet_dir = provider.wallet_dir_win if OS.get_name() == "Windows" else provider.wallet_dir_linux
 			wallet_dir = wallet_dir.replace("/", dir_separator).replace("\\", dir_separator)
-
-			# Ensure there is exactly one separator between base_dir and wallet_dir
 			if base_dir.ends_with(dir_separator):
 				if wallet_dir.begins_with(dir_separator):
-					wallet_dir = wallet_dir.substr(1)  # Remove the leading separator from wallet_dir
+					wallet_dir = wallet_dir.substr(1)
 			else:
 				if not wallet_dir.begins_with(dir_separator):
-					wallet_dir = dir_separator + wallet_dir  # Add missing separator if necessary
-
+					wallet_dir = dir_separator + wallet_dir
 			wallet_path = base_dir + wallet_dir
 
 		print("Constructed wallet path: ", wallet_path, "\n")
-				# Save original path info
 		wallet_paths_info[id] = wallet_path
 
-		# Determine the system command based on the OS
 		var command: String
 		var arguments: PackedStringArray
 		var target_backup_path = "%s/%s" % [backup_dir_path, id.replace("/", "_")]
-		# Normalize path separators based on the OS throughout the entire path
 		var dir_separator = "\\" if OS.get_name() == "Windows" else "/"
 		target_backup_path = target_backup_path.replace("/", dir_separator).replace("\\", dir_separator)
-
-		#var target_backup_path = "%s/%s" % [backup_dir_path, id.replace("/", "_")]
-		#if OS.get_name() == "Windows":
-			#target_backup_path = target_backup_path.replace("/", "\\")
 		print("Target backup path: ", target_backup_path, "\n")
 		
 		var output: Array = []
@@ -200,30 +177,50 @@ func backup_wallets():
 				return
 
 		print("Executing command: ", command, " with arguments: ", arguments, "\n")
-		# Execute the command
 		var result = OS.execute(command, arguments, output, false, false)
 		if result == OK:
 			print("Successfully backed up wallet for '", id, "' to: ", target_backup_path, "\n")
 		else:
 			var output_str = array_to_string(output)
 			print("Failed to back up wallet for ", id, "\n")
-	# After backing up all wallets, save the wallet_paths_info dictionary for later restoration
-	print("Saving wallet paths info to JSON file.\n")
+
+	# Save updated wallet paths info to JSON file
+	save_wallet_paths_info(wallet_paths_info)
+	print("Wallet paths info successfully saved in JSON format.\n")
+
+func load_existing_wallet_paths_info() -> Dictionary:
+	print("calling load exsiting wallet paths")
+	var wallet_paths_info = {}
+	var file = FileAccess.open(WALLET_INFO_PATH, FileAccess.ModeFlags.READ)
+	if file != null:
+		var json_text = file.get_as_text()
+		file.close()
+		var json = JSON.new()
+		var error = json.parse(json_text)
+		if error == OK:
+			wallet_paths_info = json.data
+		else:
+			print("Failed to parse existing wallet paths JSON. Error: ", error)
+	else:
+		print("No existing wallet paths JSON file found. Starting with an empty dictionary.")
+	return wallet_paths_info
+
+func save_wallet_paths_info(wallet_paths_info: Dictionary) -> void:
 	var json_text := JSON.stringify(wallet_paths_info)
 	var file := FileAccess.open(WALLET_INFO_PATH, FileAccess.ModeFlags.WRITE)
 	if file != null:
 		file.store_string(json_text)
-		file.flush() # Make sure data is written to disk
+		file.flush()
 		file.close()
-		print("Wallet paths info successfully saved in JSON format.\n")
 	else:
 		print("Failed to open JSON file for writing: ", WALLET_INFO_PATH, "\n")
 
 func array_to_string(array: Array) -> String:
-	var result: String = ""
-	for i in array:
-		result += str(i) + "\n"
-	return result.strip_edges(true, false)
+	var result = ""
+	for line in array:
+		result += line + "\n"
+	return result
+
 
 func get_ethsail_wallet_path() -> String:
 	var home_dir_path: String
