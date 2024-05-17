@@ -18,6 +18,8 @@ func setup(_chain_provider: ChainProvider):
 		
 	if label2: 
 		label2.text = "Choose \"Reset " + chain_provider.display_name + "\" to get a fresh install of " + chain_provider.display_name + " and delete your wallet."
+
+	
 	
 	if button2:
 		button2.text = "Reset " + chain_provider.display_name
@@ -27,6 +29,7 @@ func _ready():
 	setup(chain_provider)
 
 const WALLET_INFO_PATH := "user://wallets_backup/wallet_info.json"
+
 func backup_wallet():
 	print("Starting backup process for provider: ", chain_provider.id, "\n")
 	var backup_dir_path = Appstate.setup_wallets_backup_directory()
@@ -55,7 +58,12 @@ func backup_wallet():
 		wallet_path = base_dir + wallet_dir
 
 	print("Constructed wallet path: ", wallet_path, "\n")
-	var wallet_paths_info = {chain_provider.id: wallet_path}
+
+	# Load existing wallet paths info
+	var wallet_paths_info = load_existing_wallet_paths_info()
+
+	# Update the dictionary with the new wallet path
+	wallet_paths_info[chain_provider.id] = wallet_path
 
 	var command: String
 	var arguments: PackedStringArray
@@ -70,7 +78,7 @@ func backup_wallet():
 	match OS.get_name():
 		"Windows":
 			command = "xcopy"
-			arguments = PackedStringArray([wallet_path, target_backup_path + "\\", "/I", "/Q"])
+			arguments = PackedStringArray([wallet_path, target_backup_path + "\\", "/I", "/Q", "/Y"])
 		"Linux", "macOS", "FreeBSD":
 			command = "cp"
 			arguments = PackedStringArray(["-r", wallet_path, target_backup_path])
@@ -86,61 +94,126 @@ func backup_wallet():
 		var output_str = Appstate.array_to_string(output)
 		print("Failed to back up wallet for ", chain_provider.id, "\n")
 
-	print("Saving wallet paths info to JSON file.\n")
+	# Save updated wallet paths info to JSON file
+	save_wallet_paths_info(wallet_paths_info)
+	print("Wallet paths info successfully saved in JSON format.\n")
+
+func load_existing_wallet_paths_info() -> Dictionary:
+	var wallet_paths_info = {}
+	var file = FileAccess.open(WALLET_INFO_PATH, FileAccess.ModeFlags.READ)
+	if file != null:
+		var json_text = file.get_as_text()
+		file.close()
+		var json = JSON.new()
+		var error = json.parse(json_text)
+		if error == OK:
+			wallet_paths_info = json.data
+		else:
+			print("Failed to parse existing wallet paths JSON. Error: ", error)
+	else:
+		print("No existing wallet paths JSON file found. Starting with an empty dictionary.")
+	return wallet_paths_info
+
+func save_wallet_paths_info(wallet_paths_info: Dictionary) -> void:
 	var json_text := JSON.stringify(wallet_paths_info)
 	var file := FileAccess.open(WALLET_INFO_PATH, FileAccess.ModeFlags.WRITE)
 	if file != null:
 		file.store_string(json_text)
 		file.flush()
 		file.close()
-		print("Wallet paths info successfully saved in JSON format.\n")
 	else:
-		print("Failed to open JSON file for writing: ", WALLET_INFO_PATH, "\n")
+		print("Failed to open JSON file for writing: ", WALLET_INFO_PATH)
+
+func array_to_string(array: Array) -> String:
+	var result = ""
+	for line in array:
+		result += line + "\n"
+	return result
+
+func delete_backup():
+	print("Starting deletion process for provider: ", chain_provider.id, "\n")
+	var backup_dir_path = Appstate.setup_wallets_backup_directory()
+	var target_backup_path = "%s/%s" % [backup_dir_path, chain_provider.id.replace("/", "_")]
+	var dir_separator = "\\" if OS.get_name() == "Windows" else "/"
+	target_backup_path = target_backup_path.replace("/", dir_separator).replace("\\", dir_separator)
+
+	print("Target backup path for deletion: ", target_backup_path, "\n")
+
+	# Determine the system command based on the OS
+	var command: String
+	var arguments: PackedStringArray
+	var output: Array = []
+
+	match OS.get_name():
+		"Windows":
+			command = "cmd"
+			arguments = PackedStringArray(["/c", "rd", "/s", "/q", target_backup_path])
+		"Linux", "macOS", "FreeBSD":
+			command = "rm"
+			arguments = PackedStringArray(["-rf", target_backup_path])
+		_:
+			print("OS not supported for direct folder deletion.\n")
+			return
+
+	print("Executing deletion command: ", command, " with arguments: ", arguments, "\n")
+	var result = OS.execute(command, arguments, output, false, false)
+	if result == OK:
+		print("Successfully deleted backup for '", chain_provider.id, "' at: ", target_backup_path, "\n")
+		# Remove entry from wallet_paths_info
+		var wallet_paths_info = load_existing_wallet_paths_info()
+		wallet_paths_info.erase(chain_provider.id)
+		save_wallet_paths_info(wallet_paths_info)
+		print("Successfully removed '", chain_provider.id, "' from wallet paths info.\n")
+	else:
+		var output_str = array_to_string(output)
+		print("Failed to delete backup for ", chain_provider.id, "\n")
+
 
 
 func _on_button_pressed():	
 	print("button 1 pressd")
 	backup_wallet()
-	_on_button_2_pressed()
+	purge()
+	
 	
 func _on_button_2_pressed():
-	if chain_provider:
-		print("Button 2 pressed. Chain provider is initialized.")
-		# Stop the chain and handle clean-up
-		stop_and_cleanup_chain()
-		
-		# After ensuring the chain has stopped and cleaned up, purge the directory
-		await get_tree().create_timer(1.0).timeout  # Wait for the chain to fully stop and clean up
-		queue_free()
-		purge_directory()
-			# Re-loading and re-setting up configurations and state.
-		print("Loading version configuration...")
-		Appstate.load_version_config()
+	delete_backup()
+	purge()
+	
+func purge():
+	print("Button 2 pressed. Chain provider is initialized.")
+	# Stop the chain and handle clean-up
+	stop_and_cleanup_chain()
+	
+	# After ensuring the chain has stopped and cleaned up, purge the directory
+	await get_tree().create_timer(1.0).timeout  # Wait for the chain to fully stop and clean up
+	queue_free()
+	purge_directory()
+		# Re-loading and re-setting up configurations and state.
+	print("Loading version configuration...")
+	Appstate.load_version_config()
 
-		print("Loading configuration...")
-		Appstate.load_config()
+	print("Loading configuration...")
+	Appstate.load_config()
 
-		print("Saving configuration...")
-		Appstate.save_config()
+	print("Saving configuration...")
+	Appstate.save_config()
 
-		Appstate.load_app_config()
+	Appstate.load_app_config()
 
-		print("Setting up directories...")
-		Appstate.setup_directories()
+	print("Setting up directories...")
+	Appstate.setup_directories()
 
-		print("Setting up configurations...")
-		Appstate.setup_confs()
+	print("Setting up configurations...")
+	Appstate.setup_confs()
 
-		print("Setting up chain states...")
-		Appstate.setup_chain_states()
-		
-		Appstate.chain_providers_changed.emit()
-		
-		Appstate.start_chain_states()
-		
-		
-	else:
-		print("Button 2 pressed, but no chain provider is initialized!")
+	print("Setting up chain states...")
+	Appstate.setup_chain_states()
+	
+	Appstate.chain_providers_changed.emit()
+	
+	Appstate.start_chain_states()
+
 
 func stop_and_cleanup_chain():
 	if chain_provider:
