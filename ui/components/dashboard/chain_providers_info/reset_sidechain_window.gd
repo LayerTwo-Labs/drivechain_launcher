@@ -18,6 +18,8 @@ func setup(_chain_provider: ChainProvider):
 		
 	if label2: 
 		label2.text = "Choose \"Reset " + chain_provider.display_name + "\" to get a fresh install of " + chain_provider.display_name + " and delete your wallet."
+
+	
 	
 	if button2:
 		button2.text = "Reset " + chain_provider.display_name
@@ -76,7 +78,7 @@ func backup_wallet():
 	match OS.get_name():
 		"Windows":
 			command = "xcopy"
-			arguments = PackedStringArray([wallet_path, target_backup_path + "\\", "/I", "/Q"])
+			arguments = PackedStringArray([wallet_path, target_backup_path + "\\", "/I", "/Q", "/Y"])
 		"Linux", "macOS", "FreeBSD":
 			command = "cp"
 			arguments = PackedStringArray(["-r", wallet_path, target_backup_path])

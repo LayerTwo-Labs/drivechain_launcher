@@ -168,7 +168,7 @@ func backup_wallets():
 		match OS.get_name():
 			"Windows":
 				command = "xcopy"
-				arguments = PackedStringArray([wallet_path, target_backup_path + "\\", "/I", "/Q"])
+				arguments = PackedStringArray([wallet_path, target_backup_path + "\\", "/I", "/Q", "/Y"])
 			"Linux", "macOS", "FreeBSD":
 				command = "cp"
 				arguments = PackedStringArray(["-r", wallet_path, target_backup_path])
@@ -448,7 +448,7 @@ func setup_wallets_backup_directory():
 	if dir_access:
 		if dir_access.dir_exists(backup_dir_name):
 			print("Wallets backup directory already exists at: %s" % backup_dir_path)
-			clear_backup_directory(backup_dir_path)
+			#clear_backup_directory(backup_dir_path)
 		# Create the directory after clearing it.
 		var error = dir_access.make_dir_recursive(backup_dir_name)
 		if error != OK:
