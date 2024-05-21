@@ -122,7 +122,6 @@ size_flags_horizontal = 10
 vertical_alignment = 1
 
 [node name="Footer" type="VBoxContainer" parent="Center/Panel/Margin/VBox"]
-visible = false
 layout_mode = 2
 size_flags_vertical = 10
 
