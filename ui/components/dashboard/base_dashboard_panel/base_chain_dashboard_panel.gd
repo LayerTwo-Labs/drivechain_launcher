@@ -12,8 +12,8 @@ var cooldown_timer : Timer
 
 @export var drivechain_title_font_size : int = 32
 @export var drivechain_descr_font_size : int = 16
-@export var drivechain_minimum_height  : int = 100
-@export var subchain_title_font_size   : int = 20
+@export var drivechain_minimum_height  : int = 64
+@export var subchain_title_font_size   : int = 24
 @export var subchain_descr_font_size   : int = 12
 @export var subchain_minimum_height    : int = 10
 
@@ -46,7 +46,10 @@ func _ready():
 	Appstate.connect("chain_states_changed", self.update_view)
 	enabled_modulate  = modulate
 	disabled_modulate = modulate.darkened(0.3)
-	
+
+func connect_signals():
+	description_button.pressed.connect(description_dialog.popup)
+
 func _on_cooldown_timer_timeout():
 	action_button.disabled = false # Re-enable the button
 	action_button.modulate = enabled_modulate # Reset button color to normal
@@ -74,13 +77,15 @@ func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 	action_button.check_state()
 	title.text = chain_provider.display_name
 	desc.text = chain_provider.description
+	description_dialog.get_node("Box/Title").text = title.text
+	description_dialog.get_node("Box/Description").text = desc.text
 	block_height.visible = chain_state.state == ChainState.c_state.RUNNING
 	action_button.text = str(int(_chain_provider.binary_zip_size * 0.000001)) + " mb"
 	#download_button.tooltip_text = _chain_provider.download_url
 	
 	update_view()
-	
-	
+	connect_signals()
+
 func update_view():
 
 	if chain_state == null:

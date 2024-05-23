@@ -1,17 +1,12 @@
-[gd_scene load_steps=18 format=3 uid="uid://cq65ocurdi7c1"]
+[gd_scene load_steps=7 format=3 uid="uid://cq65ocurdi7c1"]
 
 [ext_resource type="Script" path="res://source/nodes/node_panel/node_panel.gd" id="1_ijj0w"]
-[ext_resource type="Texture2D" uid="uid://bd7416ly17qhn" path="res://assets/images/play-symbolic.svg" id="1_xhpop"]
-[ext_resource type="Texture2D" uid="uid://kwp1ulhwpqce" path="res://assets/icons/CircularProgressIcon/CircularProgressIcon_TopLeft.png" id="2_pfjbp"]
-[ext_resource type="Texture2D" uid="uid://coh311bvogvie" path="res://assets/icons/CircularProgressIcon/CircularProgressIcon_TopRight.png" id="3_kktlo"]
-[ext_resource type="Texture2D" uid="uid://dwjvyq7u1tv84" path="res://assets/icons/CircularProgressIcon/CircularProgressIcon_BottomRight.png" id="4_lmal3"]
-[ext_resource type="Texture2D" uid="uid://c61x1yrtx047r" path="res://assets/icons/CircularProgressIcon/CircularProgressIcon_BottomLeft.png" id="5_s2n1q"]
-[ext_resource type="Texture2D" uid="uid://u6al2fx1l7ia" path="res://assets/images/download-cloud-line.svg" id="6_bpmae"]
+[ext_resource type="Texture2D" uid="uid://2xouba13q8q7" path="res://assets/images/pattern_33.png" id="2_lb2fn"]
+[ext_resource type="PackedScene" uid="uid://cjfcxi77d8pjt" path="res://source/nodes/node_panel/download.tscn" id="2_ubul7"]
 [ext_resource type="Texture2D" uid="uid://btvncw88xfvn" path="res://assets/images/info-settings.svg" id="7_2nmum"]
 [ext_resource type="Texture2D" uid="uid://jpde6uqywmlg" path="res://assets/images/trash-svgrepo-com(1).svg" id="8_8l4af"]
-[ext_resource type="Texture2D" uid="uid://u2c8qj3wcgro" path="res://assets/images/stop-symbolic.svg" id="8_gme82"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c0cgl"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dqqs8"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 border_width_left = 2
 border_width_top = 2
@@ -27,217 +22,80 @@ expand_margin_top = 8.0
 expand_margin_right = 8.0
 expand_margin_bottom = 8.0
 
-[sub_resource type="Animation" id="Animation_46h0p"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:icon")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("6_bpmae")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:text")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": ["DOWNLOAD"]
-}
-
-[sub_resource type="Animation" id="Animation_mxloq"]
-resource_name = "download"
-length = 0.1
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:icon")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("6_bpmae")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:text")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": ["DOWNLOAD"]
-}
-
-[sub_resource type="Animation" id="Animation_2faak"]
-resource_name = "downloading"
-length = 0.4
-loop_mode = 1
-step = 0.01
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:icon")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 1,
-"values": [ExtResource("2_pfjbp"), ExtResource("3_kktlo"), ExtResource("4_lmal3"), ExtResource("5_s2n1q")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:text")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": ["DOWNLOADING"]
-}
-
-[sub_resource type="Animation" id="Animation_41w4b"]
-resource_name = "run"
-length = 0.1
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:icon")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("1_xhpop")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:text")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": ["RUN"]
-}
-
-[sub_resource type="Animation" id="Animation_058ak"]
-resource_name = "running"
-length = 0.1
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:icon")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("8_gme82")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:text")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": ["STOP"]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_xqug1"]
-_data = {
-"RESET": SubResource("Animation_46h0p"),
-"download": SubResource("Animation_mxloq"),
-"downloading": SubResource("Animation_2faak"),
-"run": SubResource("Animation_41w4b"),
-"running": SubResource("Animation_058ak")
-}
-
-[node name="NodePanel" type="MarginContainer"]
+[node name="NodePanel" type="Control"]
+custom_minimum_size = Vector2(403, 90)
+layout_mode = 3
+anchors_preset = 0
 size_flags_horizontal = 3
+script = ExtResource("1_ijj0w")
+
+[node name="ShimmerEffect" type="TextureRect" parent="."]
+visible = false
+self_modulate = Color(1, 1, 1, 0.0156863)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_lb2fn")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(403, 84)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 6.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 8
-script = ExtResource("1_ijj0w")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="MarginContainer"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_c0cgl")
+theme_override_styles/panel = SubResource("StyleBoxFlat_dqqs8")
 
-[node name="Container" type="VBoxContainer" parent="."]
+[node name="Container" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Header" type="HBoxContainer" parent="Container"]
+[node name="Header" type="HBoxContainer" parent="MarginContainer/Container"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 
-[node name="Download" type="Button" parent="Container/Header"]
-custom_minimum_size = Vector2(160, 32)
+[node name="Download" parent="MarginContainer/Container/Header" instance=ExtResource("2_ubul7")]
 layout_mode = 2
-size_flags_vertical = 4
-focus_mode = 0
-theme_override_font_sizes/font_size = 14
-text = "DOWNLOAD"
-icon = ExtResource("6_bpmae")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Container/Header/Download"]
-libraries = {
-"": SubResource("AnimationLibrary_xqug1")
-}
-autoplay = "download"
-
-[node name="Heading" type="Label" parent="Container/Header"]
+[node name="Heading" type="Label" parent="MarginContainer/Container/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 28
 text = "NodePanel"
 
-[node name="Settings" type="Button" parent="Container/Header"]
+[node name="Settings" type="Button" parent="MarginContainer/Container/Header"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
 icon = ExtResource("7_2nmum")
 
-[node name="Delete" type="Button" parent="Container/Header"]
+[node name="Delete" type="Button" parent="MarginContainer/Container/Header"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
 icon = ExtResource("8_8l4af")
 
-[node name="Description" type="Label" parent="Container"]
+[node name="Description" type="Label" parent="MarginContainer/Container"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 18
