@@ -24,6 +24,7 @@ Appstate="*res://autoloads/appstate.tscn"
 Net="*res://net.gd"
 DashboardPanel="*res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.gd"
 chain_state="*res://models/chain_state.gd"
+ResetSidechainWindow="*res://ui/components/dashboard/chain_providers_info/reset_sidechain_window.gd"
 
 [display]
 
