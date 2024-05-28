@@ -603,11 +603,29 @@ func _on_settings_button_2_pressed():
 	purge()
 
 func _on_settings_button_3_pressed():
-	print("Settings button 3 pressed") # Replace with function body.
-	var reset_window = reset_confirm_scene.instantiate()
-	get_tree().root.get_node("Main").add_child(reset_window)
-	reset_window.show()  # Call this method if the window is not set to automatically show upon being added to the scene tree.
-	print("Reset window opened")
+	# Create the confirmation dialog on the fly
+	var confirmation_dialog = ConfirmationDialog.new()
+	confirmation_dialog.dialog_text = "Are you sure you want to delete your node AND wallet?"
+	confirmation_dialog.min_size = Vector2(400, 100)  # Adjust size to your preference
+	add_child(confirmation_dialog)
+	confirmation_dialog.popup_centered()  # Center and show the dialog
+
+	# Connect the 'confirmed' signal to a custom method to handle the confirmation
+	confirmation_dialog.connect("confirmed", Callable(self, "_on_confirm_delete_and_purge"))
+
+	# Connect the 'popup_hide' signal to automatically queue_free the dialog after closing
+	confirmation_dialog.connect("popup_hide", Callable(confirmation_dialog, "queue_free"))
+
+func _on_confirm_delete_and_purge():
+	print("User has confirmed the action.")
+	delete_backup()
+	purge()
+
+	##print(chain_provider.id) # Replace with function body.
+	##var reset_window = reset_confirm_scene.instantiate()
+	##get_tree().root.get_node("Main").add_child(reset_window)
+	##reset_window.show()  # Call this method if the window is not set to automatically show upon being added to the scene tree.
+	##print("Reset window opened")
 	#delete_backup()
 	#purge()
 
