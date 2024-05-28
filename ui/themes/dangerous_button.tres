@@ -1,10 +1,4 @@
-[gd_resource type="Theme" load_steps=17 format=3 uid="uid://b730juygqetth"]
-
-[ext_resource type="FontFile" uid="uid://dgxbgdcr3s84u" path="res://assets/fonts/Saira_Expanded-Regular.ttf" id="1_51355"]
-[ext_resource type="FontFile" uid="uid://ccfr6y00w3tjf" path="res://assets/fonts/Cantarell-Regular.ttf" id="2_4g8l5"]
-[ext_resource type="FontFile" uid="uid://b1w37357tl3er" path="res://assets/fonts/Cantarell-Bold.ttf" id="3_s4sm6"]
-[ext_resource type="FontFile" uid="uid://cb1hb3b6h6b40" path="res://assets/fonts/Cantarell-BoldItalic.ttf" id="4_31kid"]
-[ext_resource type="FontFile" uid="uid://jcbeo7vsa1q3" path="res://assets/fonts/Cantarell-Italic.ttf" id="5_vg641"]
+[gd_resource type="Theme" load_steps=12 format=3 uid="uid://b730juygqetth"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o5s05"]
 content_margin_left = 4.0
@@ -169,7 +163,7 @@ corner_detail = 6
 Button/constants/h_separation = 4
 Button/constants/icon_max_width = 24
 Button/font_sizes/font_size = 16
-Button/fonts/font = ExtResource("1_51355")
+Button/fonts/font = null
 Button/styles/disabled = SubResource("StyleBoxFlat_o5s05")
 Button/styles/hover = SubResource("StyleBoxFlat_ra3kd")
 Button/styles/normal = SubResource("StyleBoxFlat_xiqlv")
@@ -185,8 +179,8 @@ Label/font_sizes/font_size = 14
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_qs1hx")
 PopupMenu/font_sizes/font_separator_size = 14
 PopupMenu/font_sizes/font_size = 14
-PopupMenu/fonts/font = ExtResource("2_4g8l5")
-PopupMenu/fonts/font_separator = ExtResource("2_4g8l5")
+PopupMenu/fonts/font = null
+PopupMenu/fonts/font_separator = null
 ProgressBar/styles/fill = SubResource("StyleBoxFlat_5uuwl")
 RichTextLabel/colors/default_color = Color(0.886275, 0.886275, 0.886275, 1)
 RichTextLabel/font_sizes/bold_font_size = 14
@@ -194,7 +188,7 @@ RichTextLabel/font_sizes/bold_italics_font_size = 14
 RichTextLabel/font_sizes/italics_font_size = 14
 RichTextLabel/font_sizes/mono_font_size = 14
 RichTextLabel/font_sizes/normal_font_size = 14
-RichTextLabel/fonts/bold_font = ExtResource("3_s4sm6")
-RichTextLabel/fonts/bold_italics_font = ExtResource("4_31kid")
-RichTextLabel/fonts/italics_font = ExtResource("5_vg641")
-RichTextLabel/fonts/normal_font = ExtResource("2_4g8l5")
+RichTextLabel/fonts/bold_font = null
+RichTextLabel/fonts/bold_italics_font = null
+RichTextLabel/fonts/italics_font = null
+RichTextLabel/fonts/normal_font = null

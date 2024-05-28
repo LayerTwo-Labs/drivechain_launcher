@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://yhgodesyh1pt"]
+[gd_scene load_steps=18 format=3 uid="uid://yhgodesyh1pt"]
 
 [ext_resource type="Texture2D" uid="uid://2xouba13q8q7" path="res://assets/images/pattern_33.png" id="1_13ux5"]
 [ext_resource type="Script" path="res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.gd" id="1_6647v"]
@@ -13,6 +13,8 @@
 [ext_resource type="Script" path="res://ui/components/dashboard/base_dashboard_panel/ActionButton.gd" id="9_53my3"]
 [ext_resource type="Theme" uid="uid://bcvi5ljrnn8t4" path="res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_running.tres" id="11_c7v3q"]
 [ext_resource type="Texture2D" uid="uid://btvncw88xfvn" path="res://assets/images/info-settings.svg" id="13_cajt3"]
+[ext_resource type="Texture2D" uid="uid://jpde6uqywmlg" path="res://assets/images/trash-svgrepo-com(1).svg" id="14_xvgjr"]
+[ext_resource type="Texture2D" uid="uid://cdnb6d7o25ctt" path="res://assets/images/trashwalleticon.svg" id="15_1jbx2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0u1v5"]
 bg_color = Color(0.188235, 0.188235, 0.188235, 1)
@@ -150,6 +152,28 @@ size_flags_vertical = 4
 icon = ExtResource("13_cajt3")
 icon_alignment = 1
 
+[node name="SettingsButton2" type="Button" parent="Margin/Footer"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Delete node, keep wallet
+"
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+icon = ExtResource("14_xvgjr")
+text_overrun_behavior = 1
+clip_text = true
+icon_alignment = 1
+
+[node name="SettingsButton3" type="Button" parent="Margin/Footer"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Delete node, delete wallet"
+icon = ExtResource("15_1jbx2")
+icon_alignment = 1
+
 [node name="LeftColor" type="ColorRect" parent="."]
 custom_minimum_size = Vector2(4, 0)
 layout_mode = 2
@@ -160,3 +184,5 @@ color = Color(0.207843, 0.517647, 0.894118, 1)
 
 [connection signal="pressed" from="Margin/Footer/ActionButton" to="." method="_on_action_button_pressed"]
 [connection signal="pressed" from="Margin/Footer/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="Margin/Footer/SettingsButton2" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="Margin/Footer/SettingsButton3" to="." method="_on_settings_button_pressed"]
