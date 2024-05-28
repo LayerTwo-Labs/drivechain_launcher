@@ -184,5 +184,5 @@ color = Color(0.207843, 0.517647, 0.894118, 1)
 
 [connection signal="pressed" from="Margin/Footer/ActionButton" to="." method="_on_action_button_pressed"]
 [connection signal="pressed" from="Margin/Footer/SettingsButton" to="." method="_on_settings_button_pressed"]
-[connection signal="pressed" from="Margin/Footer/SettingsButton2" to="." method="_on_settings_button_pressed"]
-[connection signal="pressed" from="Margin/Footer/SettingsButton3" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="Margin/Footer/SettingsButton2" to="." method="_on_settings_button_2_pressed"]
+[connection signal="pressed" from="Margin/Footer/SettingsButton3" to="." method="_on_settings_button_3_pressed"]
