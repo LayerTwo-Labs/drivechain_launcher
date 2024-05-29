@@ -19,7 +19,6 @@ function drivechain_rpc {
         return 1
     else
         local result=$(echo $response | sed -n 's/.*"result":\([^,}]*\).*/\1/p')
-        echo "RPC call successful: $result"
         echo $result
         return 0
     fi
@@ -53,9 +52,15 @@ function startdrivechain {
 }
 
 function test_mining {
-    # mining a single block and generate new address
+    # Mining a single block and generate new address
     echo "Testing mining a single block..."
-    drivechain_rpc "generatetoaddress" "1,\"$(drivechain_rpc "getnewaddress")\""
+    local new_address=$(drivechain_rpc "getnewaddress")
+    if [ $? -ne 0 ]; then
+        echo "ERROR: Failed to get new address"
+        exit 1
+    fi
+
+    drivechain_rpc "generatetoaddress" "1,\"${new_address}\""
     if [ $? -ne 0 ]; then
         echo "ERROR: Failed to mine a single block"
         exit 1
@@ -64,23 +69,35 @@ function test_mining {
 
     # Test mining multiple blocks
     echo "Testing mining 100 blocks..."
-    drivechain_rpc "generatetoaddress" "100,\"$(drivechain_rpc "getnewaddress")\""
+    new_address=$(drivechain_rpc "getnewaddress")
+    if [ $? -ne 0 ]; then
+        echo "ERROR: Failed to get new address"
+        exit 1
+    fi
+
+    drivechain_rpc "generatetoaddress" "100,\"${new_address}\""
     if [ $? -ne 0 ]; then
         echo "ERROR: Failed to mine 100 blocks"
         exit 1
     fi
     echo "Successfully mined 100 blocks"
 
-    # mining with insufficient balance
+    # Mining with insufficient balance
     echo "Testing mining with insufficient balance..."
-    drivechain_rpc "sendtoaddress" "\"$(drivechain_rpc "getnewaddress")\", 1000000"
+    new_address=$(drivechain_rpc "getnewaddress")
+    if [ $? -ne 0 ]; then
+        echo "ERROR: Failed to get new address"
+        exit 1
+    fi
+
+    drivechain_rpc "sendtoaddress" "\"${new_address}\", 1000000"
     if [ $? -eq 0 ]; then
         echo "ERROR: Mining transaction succeeded with insufficient balance, which is unexpected"
         exit 1
     fi
     echo "Correctly handled insufficient balance case"
 
-    # mining to an invalid address
+    # Mining to an invalid address
     echo "Testing mining to an invalid address..."
     drivechain_rpc "generatetoaddress" "1,\"invalidaddress\""
     if [ $? -eq 0 ]; then
@@ -89,9 +106,15 @@ function test_mining {
     fi
     echo "Correctly handled invalid address case"
 
-    # mining with a low fee
+    # Mining with a low fee
     echo "Testing mining with a low fee..."
-    drivechain_rpc "sendtoaddress" "\"$(drivechain_rpc "getnewaddress")\", 0.00001"
+    new_address=$(drivechain_rpc "getnewaddress")
+    if [ $? -ne 0 ]; then
+        echo "ERROR: Failed to get new address"
+        exit 1
+    fi
+
+    drivechain_rpc "sendtoaddress" "\"${new_address}\", 0.00001"
     if [ $? -ne 0 ]; then
         echo "ERROR: Mining transaction failed with a low fee"
         exit 1
@@ -100,4 +123,3 @@ function test_mining {
 
     echo "All mining tests passed"
 }
-
