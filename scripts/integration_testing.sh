@@ -107,6 +107,8 @@ echo "server=1" >> ~/.drivechain/drivechain.conf
 
 startdrivechain
 
+test_mining
+
 
 echo -e "\e[32mdrivechain integration testing completed!\e[0m"
 
