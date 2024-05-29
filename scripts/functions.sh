@@ -34,9 +34,8 @@ function startdrivechain {
     fi
     sleep 15s
     
-    # Check if drivechain has started using curl
     for i in {1..5}; do
-        drivechain_rpc "getblockcount" > /dev/null
+        drivechain_rpc "getblockcount"
         if [ $? -eq 0 ]; then
             echo "drivechain curl successfully started"
             break 
