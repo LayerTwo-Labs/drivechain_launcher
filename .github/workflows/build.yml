@@ -117,12 +117,12 @@ jobs:
 
       - name: Make script executable
         run: 
-             chmod +x ./scripts/drivechainintegration.sh || echo "Drivechain script not found, skipping chmod"
-             chmod +x ./scripts/functions.sh || echo "Function scrript not found, skipping chmod"        
+             chmod +x ./scripts/integration_testing.sh || echo "Drivechain script not found, skipping chmod"
+             chmod +x ./scripts/drivechain_testing.sh || echo "Function scrript not found, skipping chmod"        
              chmod +x ./scripts/config.sh || echo "Config script not found, skipping chmod"
 
       - name: Run Tests
-        run: ./scripts/drivechainintegration.sh || echo "Script not found, skipping tests"
+        run: ./scripts/integration_testing.sh || echo "Script not found, skipping tests"
 
   upload-artifacts-macos:
     name: Upload macOS artifacts to releases.drivechain.info

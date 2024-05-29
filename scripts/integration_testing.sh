@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source ./scripts/config.sh
-source ./scripts/functions.sh
+source ./scripts/drivechain_testing.sh
 
 SKIP_CLONE=0
 SKIP_BUILD=0
@@ -110,7 +110,7 @@ startdrivechain
 
 echo -e "\e[32mdrivechain integration testing completed!\e[0m"
 
-# Kill and clean up 
-./mainchain/src/qt/drivechaind stop
+pkill /mainchain/src/drivechaind
+
 rm -rf ~/.drivechain
 rm -rf mainchain
