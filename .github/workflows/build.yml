@@ -113,19 +113,17 @@ jobs:
           name: drivechain_launcher_linux
 
       - name: Check out the repository
-        uses: actions/checkout@v3
-
-      - name: Make script executable
-        run: 
-             chmod +x ./scripts/integration_testing.sh || echo "Drivechain script not found, skipping chmod"
-             chmod +x ./scripts/drivechain_testing.sh || echo "Function scrript not found, skipping chmod"        
-             chmod +x ./scripts/config.sh || echo "Config script not found, skipping chmod"
+        uses: actions/checkout@v3  
 
       - name: Run Integration Tests
-        run: ./scripts/integration_testing.sh || echo "Script not found, skipping tests"
+        run: |
+          chmod +x ./scripts/integration_testing.sh || echo "Drivechain script not found, skipping chmod"
+          ./scripts/integration_testing.sh || echo "Script not found, skipping tests"
 
       - name: Drivechain Testing Output
-        run: ./scripts/drivechain_testing.sh || echo "Script not found, skipping tests"
+        run: |
+          chmod +x ./scripts/drivechain_testing.sh || echo "Function scrript not found, skipping chmod"   
+          ./scripts/drivechain_testing.sh || echo "Script not found, skipping tests"
 
   upload-artifacts-macos:
     name: Upload macOS artifacts to releases.drivechain.info
