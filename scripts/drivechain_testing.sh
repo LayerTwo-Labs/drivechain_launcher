@@ -6,7 +6,16 @@ export RPC_HOST="127.0.0.1"
 export RPC_PORT="18443"
 export CONFIG_FILE="$HOME/.drivechain/drivechain.conf"
 
+startdrivechain
 
+test_mining
+
+echo -e "\e[32mdrivechain integration testing completed!\e[0m"
+
+pkill /mainchain/src/drivechaind
+
+rm -rf ~/.drivechain
+rm -rf mainchain
 
 function drivechain_rpc {
     local method=$1
@@ -25,6 +34,7 @@ function drivechain_rpc {
 }
 
 function startdrivechain {
+
     if [ $REINDEX -eq 1 ]; then
         echo "drivechain will be reindexed"
         ./mainchain/src/drivechaind --reindex --regtest -conf=$CONFIG_FILE &

@@ -104,15 +104,3 @@ touch ~/.drivechain/drivechain.conf
 echo "rpcuser=drivechain" >> ~/.drivechain/drivechain.conf
 echo "rpcpassword=L2L" >> ~/.drivechain/drivechain.conf
 echo "server=1" >> ~/.drivechain/drivechain.conf
-
-startdrivechain
-
-test_mining
-
-
-echo -e "\e[32mdrivechain integration testing completed!\e[0m"
-
-pkill /mainchain/src/drivechaind
-
-rm -rf ~/.drivechain
-rm -rf mainchain
