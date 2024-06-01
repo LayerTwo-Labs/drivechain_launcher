@@ -10,6 +10,7 @@ func _ready():
 	left_menu.left_menu_button_pressed.connect(self._on_left_menu_button_pressed)
 	settings_tab.hide_settings.connect(self._on_left_menu_button_pressed)
 	
+	get_tree().root.title += " | " + Appstate.app_config.get_value("", "version")
 
 func _on_left_menu_button_pressed(v: int):
 	tab_container.current_tab = v

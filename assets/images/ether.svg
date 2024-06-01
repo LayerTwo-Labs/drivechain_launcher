@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   version="1.1"
+   id="svg85634"
+   sodipodi:docname="ether.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs85638" />
+  <sodipodi:namedview
+     id="namedview85636"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     showgrid="true"
+     inkscape:zoom="22.332789"
+     inkscape:cx="21.851279"
+     inkscape:cy="11.194303"
+     inkscape:window-width="1346"
+     inkscape:window-height="945"
+     inkscape:window-x="2181"
+     inkscape:window-y="578"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg85634">
+    <inkscape:grid
+       type="xygrid"
+       id="grid85777"
+       empspacing="4" />
+  </sodipodi:namedview>
+  <path
+     id="rect85779"
+     style="fill:#ffffff;stroke-width:1.99937;stroke-linecap:round;stroke-linejoin:round"
+     d="m 12,0 -8,12 8,12 8,-12 z m 0,2 7,10 -7,4 z m -6,11 6,4 v 5 z"
+     sodipodi:nodetypes="ccccccccccccc" />
+</svg>
