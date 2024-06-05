@@ -141,31 +141,29 @@ func write_start_script():
 
 	var env = ""
 	if id == "testsail" || id == "ethsail" || id == "zsail":
-		env = "SIDESAIL_DATADIR="+base_dir
-		
+		env = "SIDESAIL_DATADIR=" + base_dir
+
 	var cmd = get_executable_path()
 	match id:
-		"thunder","bitnames","bitassets":
+		"thunder", "bitnames", "bitassets":
 			var drivechain = Appstate.get_drivechain_provider()
 			if drivechain == null:
 				return
-				
+
+			# Remove explicit network, mainchain RPC, and RPC port configurations
 			var data_dir = " -d " + ProjectSettings.globalize_path(base_dir + "/data")
-			var net_addr = " -n " + "127.0.0.1:" + str(port * 2)
-			var dc_addr = " -m " + "127.0.0.1:" + str(drivechain.port)
-			var rpc_addr = " -r " + "127.0.0.1:" + str(port)
 			var dc_user = " -u " + drivechain.rpc_user
 			var dc_pass = " -p " + drivechain.rpc_password
-			cmd = cmd + data_dir + net_addr + dc_addr + dc_user + dc_pass + rpc_addr
+			cmd = cmd + data_dir + dc_user + dc_pass
 		_:
 			cmd = cmd + " --conf=" + get_conf_path()
-		
+
 	var file = FileAccess.open(get_start_path(), FileAccess.WRITE)
 	match Appstate.get_platform():
 		Appstate.platform.LINUX:
 			file.store_line("#!/bin/bash")
 			if env != "":
-				file.store_line("export "+env)
+				file.store_link("export "+env)
 
 			file.store_line(cmd)
 
@@ -183,9 +181,8 @@ func write_start_script():
 			
 			file.store_line("start " + cmd)
 
-			
 	file.close()
-	
+
 	
 func write_dir():
 	var dir = ProjectSettings.globalize_path(base_dir)
