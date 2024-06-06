@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   version="1.1"
+   id="svg85634"
+   sodipodi:docname="bitcoin.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs85638">
+    <rect
+       x="8"
+       y="6"
+       width="12"
+       height="16"
+       id="rect85900" />
+  </defs>
+  <sodipodi:namedview
+     id="namedview85636"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     showgrid="false"
+     inkscape:zoom="8"
+     inkscape:cx="-11.125"
+     inkscape:cy="12.1875"
+     inkscape:window-width="2560"
+     inkscape:window-height="1366"
+     inkscape:window-x="0"
+     inkscape:window-y="240"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg85634">
+    <inkscape:grid
+       type="xygrid"
+       id="grid85777"
+       empspacing="4" />
+  </sodipodi:namedview>
+  <path
+     id="path85875"
+     style="fill:#ffffff;stroke-width:1.99937;stroke-linecap:round;stroke-linejoin:round"
+     d="M 12 1 A 11 11 0 0 0 1 12 A 11 11 0 0 0 12 23 A 11 11 0 0 0 23 12 A 11 11 0 0 0 12 1 z M 12 3 A 9 9 0 0 1 21 12 A 9 9 0 0 1 12 21 A 9 9 0 0 1 3 12 A 9 9 0 0 1 12 3 z " />
+  <path
+     id="rect85964"
+     style="fill:#ffffff;stroke-width:1.99937;stroke-linecap:round;stroke-linejoin:round"
+     d="m 6,7 v 10 h 9 c 1.656854,0 3,-1.343146 3,-3 1.5e-5,-0.738829 -0.272607,-1.45168 -0.765625,-2.001953 C 17.726496,11.448777 17.999054,10.737482 18,10 18,8.3431458 16.656854,7 15,7 Z m 2,2 h 7 c 0.552285,0 1,0.4477153 1,1 0,0.552285 -0.447715,1 -1,1 H 8 Z m 0,4 h 7 c 0.552285,0 1,0.447715 1,1 0,0.552285 -0.447715,1 -1,1 H 8 Z"
+     sodipodi:nodetypes="ccscccsccssscccssscc" />
+  <rect
+     style="fill:#ffffff;stroke-width:2.15957;stroke-linecap:round;stroke-linejoin:round"
+     id="rect85980"
+     width="1"
+     height="14"
+     x="10"
+     y="5" />
+  <rect
+     style="fill:#ffffff;stroke-width:2.15957;stroke-linecap:round;stroke-linejoin:round"
+     id="rect85982"
+     width="1"
+     height="14"
+     x="13"
+     y="5" />
+</svg>
