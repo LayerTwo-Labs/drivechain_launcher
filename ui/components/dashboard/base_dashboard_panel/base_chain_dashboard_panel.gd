@@ -483,16 +483,22 @@ func _on_download_complete(result, response_code, _headers, body):
 func unzip_file_and_setup_binary(base_dir: String, zip_path: String):
 	var prog = "unzip"
 	var args = [zip_path, "-d", base_dir]
+	print(zip_path)
+	print(base_dir)
+	
 	if Appstate.get_platform() == Appstate.platform.WIN:
 		prog = "powershell.exe"
-		args = ["-Command", 'Expand-Archive -Force ' + zip_path + ' ' + base_dir]
+		var escaped_zip_path = "'" + zip_path.replace("/", "\\") + "'"
+		var escaped_base_dir = "'" + base_dir.replace("/", "\\") + "'"
+		args = ["-Command", "Expand-Archive -Force " + escaped_zip_path + " " + escaped_base_dir]
+		print(args)
 
-
-	print("Unzipping ", zip_path, ": ", prog, " ", args, )
+	print("Unzipping ", zip_path, ": ", prog, " ", args)
 
 	# We used to check for the exit code here. However, unzipping sometimes
 	# throw bad errors on symbolic links, but output the files just fine...
-	OS.execute(prog, args) 
+	var result = OS.execute(prog, args)
+	print("Unzip result: ", result)
 
 	chain_provider.write_start_script()
 	if Appstate.get_platform() != Appstate.platform.WIN:
@@ -510,7 +516,7 @@ func unzip_file_and_setup_binary(base_dir: String, zip_path: String):
 		#OS.execute("chmod", ["+x", ProjectSettings.globalize_path(chain_provider.base_dir + "/" + zside_params_name)])
 
 	update_view()
-	
+
 	
 func reset_download():
 	remove_child(download_req)
