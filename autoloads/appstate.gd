@@ -322,10 +322,10 @@ func purge(base_dir: String) -> void:
 
 
 func purge_all(base_dir: String):
-	
-	delete_zcash_directory()
-	delete_ethereum_directory()
-	
+	#
+	#delete_zcash_directory()
+	#delete_ethereum_directory()
+	#
 	var dir = DirAccess.open(base_dir)
 	if dir:
 		dir.list_dir_begin()
@@ -475,9 +475,14 @@ func reset_everything(preserve_wallets: bool = true):
 	if preserve_wallets:
 		backup_wallets()
 		print("Backing up wallets and starting reset process...")
+		delete_zcash_directory()
+		delete_ethereum_directory()
 		purge_except_backup(user_data_dir, "wallets_backup")
 	else:
 		print("Purging everything, including wallets...")
+			
+		delete_zcash_directory()
+		delete_ethereum_directory()
 		purge_all(user_data_dir)  # This will delete everything, including the wallets backup
 		# After a full purge, there is nothing left to do, so return from the function.
 		print("Full purge completed successfully.")
