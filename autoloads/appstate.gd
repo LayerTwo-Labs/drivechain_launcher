@@ -322,8 +322,10 @@ func purge(base_dir: String) -> void:
 
 
 func purge_all(base_dir: String):
+	
 	delete_zcash_directory()
 	delete_ethereum_directory()
+	
 	var dir = DirAccess.open(base_dir)
 	if dir:
 		dir.list_dir_begin()
@@ -458,12 +460,17 @@ func setup_wallets_backup_directory():
 		dir_access.list_dir_end()
 	else:
 		print("Failed to access user data directory.")
-	return backup_dir_path
+	return backup_dir_path 
 
 
 
 func reset_everything(preserve_wallets: bool = true):
 	var user_data_dir = OS.get_user_data_dir()
+	for i in chain_states:
+		chain_states[i].stop_chain()
+		await get_tree().create_timer(0.1).timeout
+		remove_child(chain_states[i])
+		chain_states[i].cleanup()
 
 	if preserve_wallets:
 		backup_wallets()
@@ -477,12 +484,6 @@ func reset_everything(preserve_wallets: bool = true):
 
 	# If preserve_wallets is true, the function continues with the remaining reset process.
 
-	# Remaining operations on chains and configurations.
-	for i in chain_states:
-		chain_states[i].stop_chain()
-		await get_tree().create_timer(0.1).timeout
-		remove_child(chain_states[i])
-		chain_states[i].cleanup()
 
 	if OS.get_name() == "Windows":
 		print("Executing Windows-specific cleanup...")
