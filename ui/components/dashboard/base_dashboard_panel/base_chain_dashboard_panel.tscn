@@ -212,7 +212,6 @@ offset_right = -8.0
 offset_bottom = -53.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 4
 
 [node name="Title" type="Label" parent="DescriptionDialog/Box"]
 layout_mode = 2
@@ -226,6 +225,10 @@ theme_override_font_sizes/font_size = 28
 text = "Testchain"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Margin" type="ColorRect" parent="DescriptionDialog/Box"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
 
 [node name="Description" type="Label" parent="DescriptionDialog/Box"]
 custom_minimum_size = Vector2(496, 0)

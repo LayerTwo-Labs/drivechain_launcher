@@ -1,5 +1,7 @@
 extends Label
 
+@export var author_label: Label
+
 var quotes              : Array[String]
 var current_quote_index : int        = 0
 
@@ -44,7 +46,9 @@ func load_quotes():
 
 func change_quote( index : int ):
 	text = quotes[index]
-	pass
+	if author_label:
+		text = quotes[index].split("\n\t- ")[0]
+		author_label.text = quotes[index].split("- ")[-1]
 
 func fade_quote( index : int ):
 	var fade_tween : Tween = create_tween()

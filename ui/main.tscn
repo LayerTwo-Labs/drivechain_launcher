@@ -29,7 +29,7 @@ layout_mode = 2
 [node name="Settings" parent="Content/TabContainer" instance=ExtResource("4_3j67w")]
 layout_mode = 2
 
-[node name="LeftMenu" parent="." instance=ExtResource("2_0lj2k")]
+[node name="Menu" parent="." instance=ExtResource("2_0lj2k")]
 layout_mode = 2
 
 [node name="VBox" type="VBoxContainer" parent="."]
