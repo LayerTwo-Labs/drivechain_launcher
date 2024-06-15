@@ -184,7 +184,7 @@ run_theme = ExtResource("7_1bvyp")
 stop_icon = ExtResource("8_sf64t")
 stop_theme = ExtResource("11_c7v3q")
 
-[node name="InfoButton" type="Button" parent="Margin/Footer"]
+[node name="DescriptionButton" type="Button" parent="Margin/Footer"]
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 size_flags_horizontal = 8
@@ -228,5 +228,52 @@ layout_mode = 2
 size_flags_horizontal = 0
 color = Color(0.207843, 0.517647, 0.894118, 1)
 
-[connection signal="pressed" from="Margin/VBox/Header/SettingsButton" to="." method="_on_info_button_pressed"]
-[connection signal="pressed" from="Margin/VBox/Footer/ActionButton" to="." method="_on_action_button_pressed"]
+[node name="Timer" type="Timer" parent="."]
+
+[node name="DescriptionDialog" type="AcceptDialog" parent="."]
+title = "DESCRIPTION"
+initial_position = 2
+size = Vector2i(512, 192)
+unresizable = true
+ok_button_text = "CLOSE"
+
+[node name="Box" type="VBoxContainer" parent="DescriptionDialog"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -53.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 4
+
+[node name="Title" type="Label" parent="DescriptionDialog/Box"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("4_njapg")
+theme_override_font_sizes/font_size = 28
+text = "Testchain"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Description" type="Label" parent="DescriptionDialog/Box"]
+custom_minimum_size = Vector2(496, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("6_kg3t2")
+theme_override_font_sizes/font_size = 16
+text = "A blank sidechain based on Bitcoin Core 16.99"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[connection signal="pressed" from="Margin/Footer/ActionButton" to="." method="_on_action_button_pressed"]
+[connection signal="pressed" from="Margin/Footer/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="Margin/Footer/SettingsButton2" to="." method="_on_settings_button_2_pressed"]
+[connection signal="pressed" from="Margin/Footer/SettingsButton3" to="." method="_on_settings_button_3_pressed"]
