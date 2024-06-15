@@ -20,7 +20,7 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -79.0
+offset_top = -43.0
 grow_horizontal = 2
 grow_vertical = 0
 size_flags_horizontal = 3
@@ -30,17 +30,17 @@ script = ExtResource("1_yja75")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 5
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="HBox" type="HBoxContainer" parent="MarginContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 8
 size_flags_stretch_ratio = 0.0
-theme_override_constants/separation = 0
+theme_override_constants/separation = 8
 
 [node name="SettingsButton" type="Button" parent="MarginContainer/HBox"]
 layout_mode = 2
@@ -69,6 +69,7 @@ icon = ExtResource("3_rgc2b")
 alignment = 0
 
 [node name="PrevButton" type="Button" parent="MarginContainer/HBox"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -76,6 +77,7 @@ icon = ExtResource("3_3lhq3")
 flat = true
 
 [node name="Spacer" type="Control" parent="MarginContainer/HBox"]
+visible = false
 custom_minimum_size = Vector2(10, 50)
 layout_mode = 2
 
@@ -91,6 +93,7 @@ text = "PLAYGROUND"
 alignment = 0
 
 [node name="Quotes" type="Label" parent="MarginContainer/HBox"]
+visible = false
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -102,10 +105,16 @@ autowrap_mode = 2
 script = ExtResource("7_kx1k8")
 
 [node name="Spacer2" type="Control" parent="MarginContainer/HBox"]
+visible = false
 custom_minimum_size = Vector2(10, 50)
 layout_mode = 2
 
+[node name="Spacer3" type="Control" parent="MarginContainer/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="NextButton" type="Button" parent="MarginContainer/HBox"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -119,6 +128,15 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 icon = ExtResource("2_ahqh1")
 flat = true
+
+[node name="QuotesButton" type="Button" parent="MarginContainer/HBox"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 16
+text = "Q"
+icon_alignment = 1
 
 [node name="FastWithdrawWindow" type="Window" parent="."]
 title = "Drivechain Launcher Fast Withdrawal"
