@@ -1,8 +1,8 @@
-extends CanvasLayer
+class_name Main extends VBoxContainer
 
-@onready var tab_container = $VBox/Content/TabContainer
-@onready var left_menu     = $VBox/LeftMenu
-@onready var settings_tab  = $VBox/Content/TabContainer/Settings
+@onready var tab_container: TabContainer = $VBox/Content/TabContainer
+@onready var left_menu: PanelContainer     = $VBox/LeftMenu
+@onready var settings_tab: ScrollContainer  = $VBox/Content/TabContainer/Settings
 
 
 # Called when the node enters the scene tree for the first time.

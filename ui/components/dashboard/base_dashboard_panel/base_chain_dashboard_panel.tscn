@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://yhgodesyh1pt"]
+[gd_scene load_steps=19 format=3 uid="uid://yhgodesyh1pt"]
 
 [ext_resource type="Texture2D" uid="uid://2xouba13q8q7" path="res://assets/images/pattern_33.png" id="1_13ux5"]
 [ext_resource type="Script" path="res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.gd" id="1_6647v"]
@@ -9,6 +9,11 @@
 [ext_resource type="Theme" uid="uid://b4iussektjaa5" path="res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_downloaded.tres" id="7_1bvyp"]
 [ext_resource type="Texture2D" uid="uid://srldhyvbmy57" path="res://assets/images/settings-4-line.svg" id="9_3krsb"]
 [ext_resource type="Script" path="res://ui/components/dashboard/base_dashboard_panel/ActionButton.gd" id="9_53my3"]
+[ext_resource type="Theme" uid="uid://bcvi5ljrnn8t4" path="res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_running.tres" id="11_c7v3q"]
+[ext_resource type="Texture2D" uid="uid://vfwftvcbvob6" path="res://assets/images/info-symbolic 1.svg" id="13_bierr"]
+[ext_resource type="Texture2D" uid="uid://btvncw88xfvn" path="res://assets/images/info-settings.svg" id="13_cajt3"]
+[ext_resource type="Texture2D" uid="uid://jpde6uqywmlg" path="res://assets/images/trash-svgrepo-com(1).svg" id="14_xvgjr"]
+[ext_resource type="Texture2D" uid="uid://cdnb6d7o25ctt" path="res://assets/images/trashwalleticon.svg" id="15_1jbx2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0u1v5"]
 bg_color = Color(0.188235, 0.188235, 0.188235, 1)
@@ -30,14 +35,13 @@ corner_radius_bottom_left = 6
 [node name="BaseChainDashboardPanel" type="PanelContainer"]
 clip_children = 2
 clip_contents = true
-custom_minimum_size = Vector2(1000, 0)
-offset_right = 1025.0
-offset_bottom = 79.0
+custom_minimum_size = Vector2(819, 0)
+offset_right = 819.0
+offset_bottom = 63.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_0u1v5")
 script = ExtResource("1_6647v")
-drivechain_title_font_size = 28
 
 [node name="BackgroundPattern" type="TextureRect" parent="."]
 modulate = Color(1, 1, 1, 0.0156863)
@@ -50,31 +54,15 @@ stretch_mode = 1
 [node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="Footer" type="HBoxContainer" parent="Margin"]
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 6
-
-[node name="ActionButton" type="Button" parent="Margin/Footer"]
-custom_minimum_size = Vector2(100, 25)
-layout_mode = 2
-size_flags_vertical = 4
-focus_mode = 0
-theme = ExtResource("7_1bvyp")
-icon = ExtResource("4_a5xlm")
-expand_icon = true
-script = ExtResource("9_53my3")
-download_icon = ExtResource("6_qglv3")
-download_theme = ExtResource("7_bihi7")
-run_icon = ExtResource("4_a5xlm")
-run_theme = ExtResource("7_1bvyp")
-stop_icon = ExtResource("8_sf64t")
-stop_theme = ExtResource("11_c7v3q")
 
 [node name="RefreshBMM" type="CheckButton" parent="Margin/Footer"]
 visible = false
@@ -107,6 +95,7 @@ stretch_mode = 5
 
 [node name="Title" type="Label" parent="Margin/Footer"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 1
@@ -117,12 +106,14 @@ text = "Testchain"
 vertical_alignment = 1
 
 [node name="VSeparator" type="VSeparator" parent="Margin/Footer"]
+visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 
 [node name="VBox" type="VBoxContainer" parent="Margin/Footer"]
+visible = false
 custom_minimum_size = Vector2(425, 0)
 layout_mode = 2
 size_flags_horizontal = 8
@@ -177,15 +168,59 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("6_kg3t2")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_2fadl")
 
-[node name="VSeparator" type="VSeparator" parent="Margin/VBox/Footer"]
+[node name="ActionButton" type="Button" parent="Margin/Footer"]
+custom_minimum_size = Vector2(100, 36)
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/separator = SubResource("StyleBoxEmpty_sxh2k")
+size_flags_vertical = 4
+focus_mode = 0
+theme = ExtResource("7_1bvyp")
+icon = ExtResource("4_a5xlm")
+expand_icon = true
+script = ExtResource("9_53my3")
+download_icon = ExtResource("6_qglv3")
+download_theme = ExtResource("7_bihi7")
+run_icon = ExtResource("4_a5xlm")
+run_theme = ExtResource("7_1bvyp")
+stop_icon = ExtResource("8_sf64t")
+stop_theme = ExtResource("11_c7v3q")
 
-[node name="Button" type="Button" parent="Margin/VBox/Footer"]
+[node name="InfoButton" type="Button" parent="Margin/Footer"]
+custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 size_flags_horizontal = 8
-icon = ExtResource("9_3krsb")
+size_flags_vertical = 4
+icon = ExtResource("13_bierr")
+icon_alignment = 1
+
+[node name="SettingsButton" type="Button" parent="Margin/Footer"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+icon = ExtResource("13_cajt3")
+icon_alignment = 1
+
+[node name="SettingsButton2" type="Button" parent="Margin/Footer"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Delete node, keep wallet
+"
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+icon = ExtResource("14_xvgjr")
+text_overrun_behavior = 1
+clip_text = true
+icon_alignment = 1
+
+[node name="SettingsButton3" type="Button" parent="Margin/Footer"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Delete node, delete wallet"
+icon = ExtResource("15_1jbx2")
+icon_alignment = 1
 
 [node name="LeftColor" type="ColorRect" parent="."]
 custom_minimum_size = Vector2(4, 0)

@@ -124,6 +124,7 @@ flat = true
 title = "Drivechain Launcher Fast Withdrawal"
 initial_position = 2
 size = Vector2i(800, 500)
+visible = false
 
 [node name="FastWithdraw" parent="FastWithdrawWindow" instance=ExtResource("10_kuvno")]
 

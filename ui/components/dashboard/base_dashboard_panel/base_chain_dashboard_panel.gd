@@ -10,10 +10,10 @@ var progress_timer : Timer
 var cooldown_timer : Timer
 
 
-@export var drivechain_title_font_size : int = 32
-@export var drivechain_descr_font_size : int = 16
-@export var drivechain_minimum_height  : int = 100
-@export var subchain_title_font_size   : int = 20
+@export var drivechain_title_font_size : int = 28
+@export var drivechain_descr_font_size : int = 14
+@export var drivechain_minimum_height  : int = 64
+@export var subchain_title_font_size   : int = 24
 @export var subchain_descr_font_size   : int = 12
 @export var subchain_minimum_height    : int = 10
 
