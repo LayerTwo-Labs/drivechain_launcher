@@ -280,6 +280,7 @@ func load_app_config():
 	update_display_scale(scale_factor)
 
 func update_display_scale(scale_factor: float):
+	return #returning as this code overrides the project settings
 	scale_factor = clampf(scale_factor, 1, 2)
 	var screen_size = DisplayServer.screen_get_size(0)
 	var new_screen_size = Vector2i(screen_size.x / 2, screen_size.y / 2)

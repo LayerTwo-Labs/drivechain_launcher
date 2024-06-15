@@ -5,15 +5,17 @@
 [ext_resource type="PackedScene" uid="uid://bwg823t4rnqpy" path="res://ui/components/dashboard/dashboard.tscn" id="3_3v44j"]
 [ext_resource type="PackedScene" uid="uid://bommmvy1qyobc" path="res://ui/components/settings/settings.tscn" id="4_3j67w"]
 
-[node name="Main" type="CanvasLayer"]
-script = ExtResource("1_ur5w6")
-
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="Main" type="VBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_ur5w6")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/separation = 0
 
 [node name="Content" type="MarginContainer" parent="VBox"]
@@ -29,7 +31,6 @@ tabs_visible = false
 layout_mode = 2
 
 [node name="Settings" parent="VBox/Content/TabContainer" instance=ExtResource("4_3j67w")]
-visible = false
 layout_mode = 2
 
 [node name="LeftMenu" parent="VBox" instance=ExtResource("2_0lj2k")]

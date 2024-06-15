@@ -28,9 +28,11 @@ ResetSidechainWindow="*res://ui/components/dashboard/chain_providers_info/reset_
 
 [display]
 
-window/size/viewport_width=1024
-window/size/viewport_height=640
+window/size/viewport_width=851
+window/size/viewport_height=600
 window/subwindows/embed_subwindows=false
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [dotnet]
 
