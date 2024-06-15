@@ -235,6 +235,8 @@ title = "DESCRIPTION"
 initial_position = 2
 size = Vector2i(512, 192)
 unresizable = true
+content_scale_mode = 1
+content_scale_aspect = 4
 ok_button_text = "CLOSE"
 
 [node name="Box" type="VBoxContainer" parent="DescriptionDialog"]
