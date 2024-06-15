@@ -2,14 +2,16 @@ extends PanelContainer
 
 var          settings_shown    : int  = 0
 
-@onready var dashboard_button  : Node = $MarginContainer/HBox/DashboardButton
-@onready var playground_button : Node = $MarginContainer/HBox/PlaygroundButton
-@onready var settings_button   : Node = $MarginContainer/HBox/SettingsButton
-
+@onready var dashboard_button  : Node   = $MarginContainer/HBox/DashboardButton
+@onready var playground_button : Node   = $MarginContainer/HBox/PlaygroundButton
+@onready var settings_button   : Node   = $MarginContainer/HBox/SettingsButton
+@onready var quotes_button    : Button = $MarginContainer/HBox/QuotesButton
+@onready var quotes_dialog    : AcceptDialog = $QuotesDialog
 signal left_menu_button_pressed(v: int)
 
 func _ready() -> void:
 	$FastWithdrawWindow.hide()
+	quotes_button.pressed.connect(quotes_dialog.popup)
 
 
 func _on_left_menu_button_toggled(button_pressed, v):
