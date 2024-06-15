@@ -11,27 +11,31 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 0
 script = ExtResource("1_ur5w6")
 
-[node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 0
-
-[node name="Content" type="MarginContainer" parent="VBox"]
+[node name="Content" type="MarginContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TabContainer" type="TabContainer" parent="VBox/Content"]
+[node name="TabContainer" type="TabContainer" parent="Content"]
 layout_mode = 2
 tabs_visible = false
 
-[node name="Dashboard" parent="VBox/Content/TabContainer" instance=ExtResource("3_3v44j")]
+[node name="Dashboard" parent="Content/TabContainer" instance=ExtResource("3_3v44j")]
 layout_mode = 2
 
-[node name="Settings" parent="VBox/Content/TabContainer" instance=ExtResource("4_3j67w")]
+[node name="Settings" parent="Content/TabContainer" instance=ExtResource("4_3j67w")]
 layout_mode = 2
 
-[node name="LeftMenu" parent="VBox" instance=ExtResource("2_0lj2k")]
+[node name="LeftMenu" parent="." instance=ExtResource("2_0lj2k")]
 layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="ChainProviderInfoLayer" type="CanvasLayer" parent="."]

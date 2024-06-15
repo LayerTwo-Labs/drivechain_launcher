@@ -844,7 +844,7 @@ func get_drivechain_provider() -> ChainProvider:
 func show_chain_provider_info(chain_provider: ChainProvider):
 	var info = chain_provider_info.instantiate()
 	info.name = "chain_provider_info"
-	get_tree().root.get_node("Main").add_child(info)
+	get_tree().root.get_node("Main").get_node("ChainProviderInfoLayer").add_child(info)
 	info.setup(chain_provider)
 
 
