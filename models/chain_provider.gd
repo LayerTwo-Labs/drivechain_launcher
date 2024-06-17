@@ -133,6 +133,7 @@ func read_conf():
 				
 	conf.close()
 	
+	
 func write_start_script():
 	print("Writing start script: ", get_start_path())
 	if FileAccess.file_exists(get_start_path()):
@@ -142,9 +143,7 @@ func write_start_script():
 	if id == "testsail" || id == "ethsail" || id == "zsail":
 		env = "SIDESAIL_DATADIR=" + base_dir
 
-
-
-	var cmd = '"' + get_executable_path() + '"'
+	var cmd = get_executable_path()
 	match id:
 		"thunder", "bitnames", "bitassets":
 			var drivechain = Appstate.get_drivechain_provider()
@@ -152,19 +151,19 @@ func write_start_script():
 				return
 
 			# Remove explicit network, mainchain RPC, and RPC port configurations
-			var data_dir = ' -d "' + ProjectSettings.globalize_path(base_dir + '/data') + '"'
-			var dc_user = ' -u "' + drivechain.rpc_user + '"'
-			var dc_pass = ' -p "' + drivechain.rpc_password + '"'
-			cmd = cmd + "" + data_dir + dc_user + dc_pass
+			var data_dir = " -d " + ProjectSettings.globalize_path(base_dir + "/data")
+			var dc_user = " -u " + drivechain.rpc_user
+			var dc_pass = " -p " + drivechain.rpc_password
+			cmd = cmd + data_dir + dc_user + dc_pass
 		_:
-			cmd = cmd + ' --conf="' + get_conf_path() + '"'
+			cmd = cmd + " --conf=" + get_conf_path()
 
 	var file = FileAccess.open(get_start_path(), FileAccess.WRITE)
 	match Appstate.get_platform():
 		Appstate.platform.LINUX:
 			file.store_line("#!/bin/bash")
 			if env != "":
-				file.store_line("export " + env)
+				file.store_link("export "+env)
 
 			file.store_line(cmd)
 
@@ -172,7 +171,7 @@ func write_start_script():
 			file.store_line("#!/bin/bash")
 			cmd = cmd.replace("Application Support", "Application\\ Support")
 			if env != "":
-				file.store_line("export " + env)
+				file.store_line("export "+env)
 
 			file.store_line(cmd)
 
@@ -180,11 +179,9 @@ func write_start_script():
 			if env != "":
 				file.store_line("set " + env)
 			
-			file.store_line('start "" ' + cmd)
-
+			file.store_line("start " + cmd)
 
 	file.close()
-
 
 	
 func write_dir():
@@ -246,5 +243,3 @@ func get_executable_path() -> String:
 func get_local_zip_hash() -> String:
 	return FileAccess.get_sha256(ProjectSettings.globalize_path(base_dir + "/" + id + ".zip"))
 	
-
-
