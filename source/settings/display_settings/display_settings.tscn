@@ -1,0 +1,51 @@
+[gd_scene load_steps=3 format=3 uid="uid://bcajgwunu16on"]
+
+[ext_resource type="FontFile" uid="uid://dxrc1jrsxo1uj" path="res://assets/fonts/Saira-Bold.ttf" id="1_3grb6"]
+[ext_resource type="Script" path="res://source/settings/display_settings/display_settings.gd" id="1_244h6"]
+
+[node name="DisplaySettings" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_244h6")
+
+[node name="Heading" type="Label" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("1_3grb6")
+theme_override_font_sizes/font_size = 28
+text = "DISPLAY  SETTINGS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Options" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Labels" type="VBoxContainer" parent="Options"]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+
+[node name="Fullscreen" type="Label" parent="Options/Labels"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("1_3grb6")
+theme_override_font_sizes/font_size = 16
+text = "FULLSCREEN"
+vertical_alignment = 1
+
+[node name="Inputs" type="VBoxContainer" parent="Options"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Fullscreen" type="CheckButton" parent="Options/Inputs"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 8
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("1_3grb6")
+theme_override_font_sizes/font_size = 16
