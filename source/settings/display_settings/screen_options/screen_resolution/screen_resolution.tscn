@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=3 uid="uid://mq0u80atvvee"]
+
+[ext_resource type="Script" path="res://source/settings/display_settings/screen_options/screen_resolution/screen_resolution.gd" id="1_5rgnv"]
+[ext_resource type="FontFile" uid="uid://dxrc1jrsxo1uj" path="res://assets/fonts/Saira-Bold.ttf" id="1_8h2ha"]
+
+[node name="ScreenResolution" type="HBoxContainer"]
+size_flags_horizontal = 3
+script = ExtResource("1_5rgnv")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("1_8h2ha")
+theme_override_font_sizes/font_size = 18
+text = "RESOLUTION"
+vertical_alignment = 1
+
+[node name="List" type="OptionButton" parent="."]
+custom_minimum_size = Vector2(192, 36)
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 0
+theme_override_fonts/font = ExtResource("1_8h2ha")
+theme_override_font_sizes/font_size = 24
+alignment = 1
+item_count = 8
+selected = 1
+popup/item_0/text = "800 x 600"
+popup/item_0/id = 4
+popup/item_1/text = "851 x 600"
+popup/item_1/id = 1
+popup/item_2/text = "1024 x 640"
+popup/item_2/id = 1
+popup/item_3/text = "1152 x 648"
+popup/item_3/id = 2
+popup/item_4/text = "1024 x 768"
+popup/item_4/id = 3
+popup/item_5/text = "1280 x 720"
+popup/item_5/id = 5
+popup/item_6/text = "1600 x 900"
+popup/item_6/id = 6
+popup/item_7/text = "1920 x 1080"
+popup/item_7/id = 7

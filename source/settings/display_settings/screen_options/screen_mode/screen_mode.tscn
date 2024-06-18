@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://o2ty0o4fho1f"]
+
+[ext_resource type="Script" path="res://source/settings/display_settings/screen_options/screen_mode/screen_mode.gd" id="1_c16cl"]
+[ext_resource type="FontFile" uid="uid://dxrc1jrsxo1uj" path="res://assets/fonts/Saira-Bold.ttf" id="1_khnro"]
+[ext_resource type="Texture2D" uid="uid://cijc486q0yrfb" path="res://assets/icons/CheckButton/CheckButton_Checked.png" id="2_dhhbc"]
+[ext_resource type="Texture2D" uid="uid://dqbgs0mj3akyd" path="res://assets/icons/CheckButton/CheckButton_UnChecked.png" id="3_bi230"]
+
+[node name="ScreenMode" type="HBoxContainer"]
+size_flags_horizontal = 3
+script = ExtResource("1_c16cl")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("1_khnro")
+theme_override_font_sizes/font_size = 18
+text = "FULLSCREEN"
+vertical_alignment = 1
+
+[node name="Toggle" type="CheckButton" parent="."]
+self_modulate = Color(0.384314, 0.482353, 0.54902, 1)
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 8
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("1_khnro")
+theme_override_font_sizes/font_size = 16
+theme_override_icons/checked = ExtResource("2_dhhbc")
+theme_override_icons/unchecked = ExtResource("3_bi230")
+flat = true
