@@ -29,6 +29,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(128, 48)
 layout_mode = 2
 size_flags_horizontal = 4
+focus_mode = 0
 theme_override_fonts/font = ExtResource("1_2rxe3")
 theme_override_font_sizes/font_size = 24
 text = "RESET"

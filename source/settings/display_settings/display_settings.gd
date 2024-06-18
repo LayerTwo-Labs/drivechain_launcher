@@ -1,6 +1,6 @@
 class_name DisplaySettings extends VBoxContainer
 
-@onready var fullscreen_toggle: CheckButton = $Options/Inputs/Fullscreen
+@onready var fullscreen_toggle: CheckButton = $ScreenOptions/ScreenMode/Toggle
 
 func _ready():
 	fullscreen_toggle.toggled.connect(_on_fullscreen_toggled)
