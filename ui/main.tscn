@@ -27,6 +27,7 @@ tabs_visible = false
 layout_mode = 2
 
 [node name="Settings" parent="Content/TabContainer" instance=ExtResource("4_3j67w")]
+visible = false
 layout_mode = 2
 
 [node name="Menu" parent="." instance=ExtResource("2_0lj2k")]

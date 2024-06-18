@@ -19,7 +19,7 @@ vertical_alignment = 1
 layout_mode = 2
 
 [node name="Labels" type="VBoxContainer" parent="Options"]
-custom_minimum_size = Vector2(256, 0)
+custom_minimum_size = Vector2(296, 0)
 layout_mode = 2
 
 [node name="ApplicationDataDirectory" type="Label" parent="Options/Labels"]
@@ -29,7 +29,7 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 2
 theme_override_fonts/font = ExtResource("1_pt33n")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 18
 text = "APPLICATION DATA DIRECTORY"
 vertical_alignment = 1
 
@@ -40,7 +40,7 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 2
 theme_override_fonts/font = ExtResource("1_pt33n")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 18
 text = "DRIVECHAIN DATA DIRECTORY"
 vertical_alignment = 1
 
