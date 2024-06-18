@@ -13,3 +13,6 @@ func _on_resolution_selected(index: int):
 	DisplayServer.window_set_size(resolution)
 	var window_position = DisplayServer.screen_get_size() / 2 - resolution / 2
 	DisplayServer.window_set_position(window_position)
+
+func _on_screen_mode_updated(fullscreen: bool):
+	resolution_list_button.disabled = fullscreen
