@@ -164,42 +164,59 @@ _data = {
 "running": SubResource("Animation_058ak")
 }
 
-[node name="NodePanel" type="HBoxContainer"]
-custom_minimum_size = Vector2(835, 0)
+[node name="NodePanel" type="MarginContainer"]
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 0
 script = ExtResource("1_ijj0w")
 
-[node name="Heading" type="Label" parent="."]
-custom_minimum_size = Vector2(160, 0)
+[node name="Container" type="VBoxContainer" parent="."]
 layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Header" type="HBoxContainer" parent="Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="Heading" type="Label" parent="Container/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 24
 text = "NodePanel"
 
-[node name="Description" type="Label" parent="."]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Description"
-text_overrun_behavior = 3
-
-[node name="Download" type="Button" parent="."]
+[node name="Download" type="Button" parent="Container/Header"]
+custom_minimum_size = Vector2(160, 32)
 layout_mode = 2
 size_flags_vertical = 4
+theme_override_font_sizes/font_size = 14
 text = "DOWNLOAD"
 icon = ExtResource("6_bpmae")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Download"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Container/Header/Download"]
 libraries = {
 "": SubResource("AnimationLibrary_xqug1")
 }
 autoplay = "download"
 
-[node name="Settings" type="Button" parent="."]
+[node name="Settings" type="Button" parent="Container/Header"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_vertical = 4
 icon = ExtResource("7_2nmum")
 
-[node name="Delete" type="Button" parent="."]
+[node name="Delete" type="Button" parent="Container/Header"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_vertical = 4
 icon = ExtResource("8_8l4af")
+
+[node name="Description" type="Label" parent="Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 15
+text = "Description"
+text_overrun_behavior = 3
