@@ -16,6 +16,7 @@ layout_mode = 2
 [node name="Labels" type="VBoxContainer" parent="Options"]
 custom_minimum_size = Vector2(296, 0)
 layout_mode = 2
+theme_override_constants/separation = 16
 
 [node name="ApplicationDataDirectory" type="Label" parent="Options/Labels"]
 custom_minimum_size = Vector2(0, 36)
@@ -32,6 +33,7 @@ vertical_alignment = 1
 [node name="Inputs" type="VBoxContainer" parent="Options"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 16
 
 [node name="ApplicationDataDirectory" type="LineEdit" parent="Options/Inputs"]
 custom_minimum_size = Vector2(0, 36)
@@ -49,6 +51,7 @@ editable = false
 
 [node name="BrowseButtons" type="VBoxContainer" parent="Options"]
 layout_mode = 2
+theme_override_constants/separation = 16
 
 [node name="ApplicationDataDirectory" type="Button" parent="Options/BrowseButtons"]
 custom_minimum_size = Vector2(40, 36)

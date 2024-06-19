@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0x1u7g3b58iw"]
+
+[ext_resource type="Script" path="res://source/settings/display_settings/theme_options/theme_options.gd" id="1_yvg0j"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_8b16r"]
+
+[node name="ThemeOptions" type="HBoxContainer"]
+theme_override_constants/separation = 16
+script = ExtResource("1_yvg0j")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "THEME"
+
+[node name="Options" type="GridContainer" parent="."]
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
+columns = 2
+
+[node name="Blue" type="Button" parent="Options"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+button_pressed = true
+action_mode = 0
+button_group = SubResource("ButtonGroup_8b16r")
+text = "BLUE"
+
+[node name="Black" type="Button" parent="Options"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+action_mode = 0
+button_group = SubResource("ButtonGroup_8b16r")
+text = "BLACK"
