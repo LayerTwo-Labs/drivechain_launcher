@@ -1,6 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://c0x1u7g3b58iw"]
+[gd_scene load_steps=5 format=3 uid="uid://c0x1u7g3b58iw"]
 
 [ext_resource type="Script" path="res://source/settings/display_settings/theme_options/theme_options.gd" id="1_yvg0j"]
+[ext_resource type="Texture2D" uid="uid://cijc486q0yrfb" path="res://assets/icons/CheckButton/CheckButton_Checked.png" id="2_ih2m3"]
+[ext_resource type="Texture2D" uid="uid://dqbgs0mj3akyd" path="res://assets/icons/CheckButton/CheckButton_UnChecked.png" id="3_dyys2"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_8b16r"]
 
@@ -15,12 +17,12 @@ text = "THEME"
 
 [node name="Options" type="GridContainer" parent="."]
 layout_mode = 2
-theme_override_constants/h_separation = 16
-theme_override_constants/v_separation = 16
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
 columns = 2
 
 [node name="Blue" type="Button" parent="Options"]
-custom_minimum_size = Vector2(128, 0)
+custom_minimum_size = Vector2(136, 0)
 layout_mode = 2
 focus_mode = 0
 toggle_mode = true
@@ -28,12 +30,14 @@ button_pressed = true
 action_mode = 0
 button_group = SubResource("ButtonGroup_8b16r")
 text = "BLUE"
+icon = ExtResource("2_ih2m3")
 
 [node name="Black" type="Button" parent="Options"]
-custom_minimum_size = Vector2(128, 0)
+custom_minimum_size = Vector2(136, 0)
 layout_mode = 2
 focus_mode = 0
 toggle_mode = true
 action_mode = 0
 button_group = SubResource("ButtonGroup_8b16r")
 text = "BLACK"
+icon = ExtResource("3_dyys2")
