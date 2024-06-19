@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://d3umh8q67cxar"]
+[gd_scene load_steps=5 format=3 uid="uid://d3umh8q67cxar"]
 
 [ext_resource type="Theme" uid="uid://dweflhn2l0cbd" path="res://resource/theme/blue.theme" id="1_27wtq"]
 [ext_resource type="PackedScene" uid="uid://bm4wk2nic02cm" path="res://source/fast_withdrawal/fast_withdrawal.tscn" id="2_mndp3"]
 [ext_resource type="PackedScene" uid="uid://bi3mevmny3dj3" path="res://source/settings/settings.tscn" id="2_qna4f"]
+[ext_resource type="PackedScene" uid="uid://3423r8wl8vxb" path="res://source/nodes/nodes.tscn" id="2_xvhh7"]
 
 [node name="Application" type="Control" groups=["application"]]
 layout_mode = 3
@@ -33,14 +34,13 @@ theme_override_constants/margin_top = 8
 [node name="TabContainer" type="TabContainer" parent="MarginContainer"]
 custom_minimum_size = Vector2(816, 544)
 layout_mode = 2
-current_tab = 4
+current_tab = 1
 
 [node name="Wallet" type="MarginContainer" parent="MarginContainer/TabContainer"]
 visible = false
 layout_mode = 2
 
-[node name="Nodes" type="MarginContainer" parent="MarginContainer/TabContainer"]
-visible = false
+[node name="Nodes" parent="MarginContainer/TabContainer" instance=ExtResource("2_xvhh7")]
 layout_mode = 2
 
 [node name="Fast Withdrawal" parent="MarginContainer/TabContainer" instance=ExtResource("2_mndp3")]
@@ -52,4 +52,7 @@ visible = false
 layout_mode = 2
 
 [node name="Settings" parent="MarginContainer/TabContainer" instance=ExtResource("2_qna4f")]
+visible = false
 layout_mode = 2
+
+[editable path="MarginContainer/TabContainer/Nodes"]

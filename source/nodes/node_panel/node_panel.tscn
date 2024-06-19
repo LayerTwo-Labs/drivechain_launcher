@@ -1,0 +1,205 @@
+[gd_scene load_steps=17 format=3 uid="uid://cq65ocurdi7c1"]
+
+[ext_resource type="Script" path="res://source/nodes/node_panel/node_panel.gd" id="1_ijj0w"]
+[ext_resource type="Texture2D" uid="uid://bd7416ly17qhn" path="res://assets/images/play-symbolic.svg" id="1_xhpop"]
+[ext_resource type="Texture2D" uid="uid://kwp1ulhwpqce" path="res://assets/icons/CircularProgressIcon/CircularProgressIcon_TopLeft.png" id="2_pfjbp"]
+[ext_resource type="Texture2D" uid="uid://coh311bvogvie" path="res://assets/icons/CircularProgressIcon/CircularProgressIcon_TopRight.png" id="3_kktlo"]
+[ext_resource type="Texture2D" uid="uid://dwjvyq7u1tv84" path="res://assets/icons/CircularProgressIcon/CircularProgressIcon_BottomRight.png" id="4_lmal3"]
+[ext_resource type="Texture2D" uid="uid://c61x1yrtx047r" path="res://assets/icons/CircularProgressIcon/CircularProgressIcon_BottomLeft.png" id="5_s2n1q"]
+[ext_resource type="Texture2D" uid="uid://u6al2fx1l7ia" path="res://assets/images/download-cloud-line.svg" id="6_bpmae"]
+[ext_resource type="Texture2D" uid="uid://btvncw88xfvn" path="res://assets/images/info-settings.svg" id="7_2nmum"]
+[ext_resource type="Texture2D" uid="uid://jpde6uqywmlg" path="res://assets/images/trash-svgrepo-com(1).svg" id="8_8l4af"]
+[ext_resource type="Texture2D" uid="uid://u2c8qj3wcgro" path="res://assets/images/stop-symbolic.svg" id="8_gme82"]
+
+[sub_resource type="Animation" id="Animation_46h0p"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:icon")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("6_bpmae")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:text")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": ["DOWNLOAD"]
+}
+
+[sub_resource type="Animation" id="Animation_mxloq"]
+resource_name = "download"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:icon")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("6_bpmae")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:text")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": ["DOWNLOAD"]
+}
+
+[sub_resource type="Animation" id="Animation_2faak"]
+resource_name = "downloading"
+length = 0.4
+loop_mode = 1
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:icon")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("2_pfjbp"), ExtResource("3_kktlo"), ExtResource("4_lmal3"), ExtResource("5_s2n1q")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:text")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": ["DOWNLOADING"]
+}
+
+[sub_resource type="Animation" id="Animation_41w4b"]
+resource_name = "run"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:icon")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("1_xhpop")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:text")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": ["RUN"]
+}
+
+[sub_resource type="Animation" id="Animation_058ak"]
+resource_name = "running"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:icon")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("8_gme82")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:text")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": ["STOP"]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xqug1"]
+_data = {
+"RESET": SubResource("Animation_46h0p"),
+"download": SubResource("Animation_mxloq"),
+"downloading": SubResource("Animation_2faak"),
+"run": SubResource("Animation_41w4b"),
+"running": SubResource("Animation_058ak")
+}
+
+[node name="NodePanel" type="HBoxContainer"]
+custom_minimum_size = Vector2(835, 0)
+script = ExtResource("1_ijj0w")
+
+[node name="Heading" type="Label" parent="."]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "NodePanel"
+
+[node name="Description" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Description"
+text_overrun_behavior = 3
+
+[node name="Download" type="Button" parent="."]
+layout_mode = 2
+size_flags_vertical = 4
+text = "DOWNLOAD"
+icon = ExtResource("6_bpmae")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Download"]
+libraries = {
+"": SubResource("AnimationLibrary_xqug1")
+}
+autoplay = "download"
+
+[node name="Settings" type="Button" parent="."]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_vertical = 4
+icon = ExtResource("7_2nmum")
+
+[node name="Delete" type="Button" parent="."]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_vertical = 4
+icon = ExtResource("8_8l4af")

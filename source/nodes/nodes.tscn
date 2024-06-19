@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://3423r8wl8vxb"]
+
+[ext_resource type="PackedScene" uid="uid://cq65ocurdi7c1" path="res://source/nodes/node_panel/node_panel.tscn" id="1_qsgf1"]
+
+[node name="Nodes" type="MarginContainer"]
+custom_minimum_size = Vector2(835, 553)
+
+[node name="Window" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="NodePanel1" parent="Window" instance=ExtResource("1_qsgf1")]
+layout_mode = 2
+heading = "Bitcoin + BIPs 300/301"
+description = "BIP 300 & 301 enabled bitcoin."
