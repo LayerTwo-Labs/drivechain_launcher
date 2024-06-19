@@ -1,6 +1,5 @@
-[gd_scene load_steps=3 format=3 uid="uid://bcajgwunu16on"]
+[gd_scene load_steps=2 format=3 uid="uid://bcajgwunu16on"]
 
-[ext_resource type="FontFile" uid="uid://dxrc1jrsxo1uj" path="res://assets/fonts/Saira-Bold.ttf" id="1_3grb6"]
 [ext_resource type="PackedScene" uid="uid://bdvk0ut5ley18" path="res://source/settings/display_settings/screen_options/screen_options.tscn" id="3_8e0yi"]
 
 [node name="DisplaySettings" type="VBoxContainer"]
@@ -9,10 +8,7 @@ offset_bottom = 40.0
 
 [node name="Heading" type="Label" parent="."]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
-theme_override_fonts/font = ExtResource("1_3grb6")
 theme_override_font_sizes/font_size = 28
 text = "DISPLAY  SETTINGS"
 horizontal_alignment = 1
