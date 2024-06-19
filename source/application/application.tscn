@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bm4wk2nic02cm" path="res://source/fast_withdrawal/fast_withdrawal.tscn" id="2_mndp3"]
 [ext_resource type="PackedScene" uid="uid://bi3mevmny3dj3" path="res://source/settings/settings.tscn" id="2_qna4f"]
 
-[node name="Application" type="Control"]
+[node name="Application" type="Control" groups=["application"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

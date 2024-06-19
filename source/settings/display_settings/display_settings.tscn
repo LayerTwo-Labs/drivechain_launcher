@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bcajgwunu16on"]
+[gd_scene load_steps=3 format=3 uid="uid://bcajgwunu16on"]
 
+[ext_resource type="PackedScene" uid="uid://c0x1u7g3b58iw" path="res://source/settings/display_settings/theme_options/theme_options.tscn" id="2_syh1q"]
 [ext_resource type="PackedScene" uid="uid://bdvk0ut5ley18" path="res://source/settings/display_settings/screen_options/screen_options.tscn" id="3_8e0yi"]
 
 [node name="DisplaySettings" type="VBoxContainer"]
@@ -14,5 +15,12 @@ text = "DISPLAY  SETTINGS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ScreenOptions" parent="." instance=ExtResource("3_8e0yi")]
+[node name="Options" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="ScreenOptions" parent="Options" instance=ExtResource("3_8e0yi")]
+layout_mode = 2
+
+[node name="ThemeOptions" parent="Options" instance=ExtResource("2_syh1q")]
 layout_mode = 2
