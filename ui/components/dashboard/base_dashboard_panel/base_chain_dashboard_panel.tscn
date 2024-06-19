@@ -12,9 +12,9 @@
 [ext_resource type="Texture2D" uid="uid://u2c8qj3wcgro" path="res://assets/images/stop-symbolic.svg" id="8_sf64t"]
 [ext_resource type="Script" path="res://ui/components/dashboard/base_dashboard_panel/ActionButton.gd" id="9_53my3"]
 [ext_resource type="Theme" uid="uid://bcvi5ljrnn8t4" path="res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_running.tres" id="11_c7v3q"]
-[ext_resource type="Texture2D" uid="uid://btvncw88xfvn" path="res://assets/images/info-settings.svg" id="13_cajt3"]
-[ext_resource type="Texture2D" uid="uid://jpde6uqywmlg" path="res://assets/images/trash-svgrepo-com(1).svg" id="14_xvgjr"]
-[ext_resource type="Texture2D" uid="uid://cdnb6d7o25ctt" path="res://assets/images/trashwalleticon.svg" id="15_1jbx2"]
+[ext_resource type="Texture2D" uid="uid://cx6bbyd1qg3u8" path="res://ui/geariconfinal2.png" id="13_5ideu"]
+[ext_resource type="Texture2D" uid="uid://dirsvxtym10jq" path="res://ui/trashpropersize.png" id="14_1jmio"]
+[ext_resource type="Texture2D" uid="uid://dldqmh6vyfrx8" path="res://ui/trash delete wallet.png" id="15_y34su"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0u1v5"]
 bg_color = Color(0.188235, 0.188235, 0.188235, 1)
@@ -149,7 +149,8 @@ custom_minimum_size = Vector2(45, 45)
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
-icon = ExtResource("13_cajt3")
+icon = ExtResource("13_5ideu")
+text_overrun_behavior = 4
 icon_alignment = 1
 
 [node name="SettingsButton2" type="Button" parent="Margin/Footer"]
@@ -160,9 +161,7 @@ size_flags_vertical = 4
 tooltip_text = "Delete node, keep wallet
 "
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-icon = ExtResource("14_xvgjr")
-text_overrun_behavior = 1
-clip_text = true
+icon = ExtResource("14_1jmio")
 icon_alignment = 1
 
 [node name="SettingsButton3" type="Button" parent="Margin/Footer"]
@@ -171,7 +170,7 @@ layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
 tooltip_text = "Delete node, delete wallet"
-icon = ExtResource("15_1jbx2")
+icon = ExtResource("15_y34su")
 icon_alignment = 1
 
 [node name="LeftColor" type="ColorRect" parent="."]
