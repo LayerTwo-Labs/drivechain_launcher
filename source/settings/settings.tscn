@@ -1,15 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://bi3mevmny3dj3"]
+[gd_scene load_steps=3 format=3 uid="uid://bi3mevmny3dj3"]
 
-[ext_resource type="FontFile" uid="uid://dxrc1jrsxo1uj" path="res://assets/fonts/Saira-Bold.ttf" id="1_2rxe3"]
 [ext_resource type="PackedScene" uid="uid://csx4lnf3n6r84" path="res://source/settings/data_directories/data_directories.tscn" id="1_iwxd0"]
 [ext_resource type="PackedScene" uid="uid://bcajgwunu16on" path="res://source/settings/display_settings/display_settings.tscn" id="2_bic18"]
 
 [node name="Settings" type="MarginContainer"]
 custom_minimum_size = Vector2(835, 553)
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
 
 [node name="Window" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -30,6 +25,4 @@ custom_minimum_size = Vector2(128, 48)
 layout_mode = 2
 size_flags_horizontal = 4
 focus_mode = 0
-theme_override_fonts/font = ExtResource("1_2rxe3")
-theme_override_font_sizes/font_size = 24
 text = "RESET"

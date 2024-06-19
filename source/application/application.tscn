@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://d3umh8q67cxar"]
+[gd_scene load_steps=4 format=3 uid="uid://d3umh8q67cxar"]
 
 [ext_resource type="Theme" uid="uid://dweflhn2l0cbd" path="res://resource/theme/basic.theme" id="1_s6rh2"]
+[ext_resource type="PackedScene" uid="uid://bm4wk2nic02cm" path="res://source/fast_withdrawal/fast_withdrawal.tscn" id="2_mndp3"]
 [ext_resource type="PackedScene" uid="uid://bi3mevmny3dj3" path="res://source/settings/settings.tscn" id="2_qna4f"]
 
 [node name="Application" type="Control"]
@@ -28,10 +29,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
 
 [node name="TabContainer" type="TabContainer" parent="MarginContainer"]
 custom_minimum_size = Vector2(816, 544)
@@ -41,34 +39,18 @@ current_tab = 4
 [node name="Wallet" type="MarginContainer" parent="MarginContainer/TabContainer"]
 visible = false
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
 
 [node name="Nodes" type="MarginContainer" parent="MarginContainer/TabContainer"]
 visible = false
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
 
-[node name="Fast Withdrawal" type="MarginContainer" parent="MarginContainer/TabContainer"]
+[node name="Fast Withdrawal" parent="MarginContainer/TabContainer" instance=ExtResource("2_mndp3")]
 visible = false
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
 
 [node name="Tools" type="MarginContainer" parent="MarginContainer/TabContainer"]
 visible = false
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
 
 [node name="Settings" parent="MarginContainer/TabContainer" instance=ExtResource("2_qna4f")]
 layout_mode = 2

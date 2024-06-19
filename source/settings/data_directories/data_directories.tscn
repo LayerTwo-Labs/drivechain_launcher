@@ -1,15 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://csx4lnf3n6r84"]
-
-[ext_resource type="FontFile" uid="uid://dxrc1jrsxo1uj" path="res://assets/fonts/Saira-Bold.ttf" id="1_pt33n"]
+[gd_scene format=3 uid="uid://csx4lnf3n6r84"]
 
 [node name="DataDirectories" type="VBoxContainer"]
 
 [node name="Heading" type="Label" parent="."]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
-theme_override_fonts/font = ExtResource("1_pt33n")
 theme_override_font_sizes/font_size = 28
 text = "DATA DIRECTORIES"
 horizontal_alignment = 1
@@ -25,22 +20,12 @@ layout_mode = 2
 [node name="ApplicationDataDirectory" type="Label" parent="Options/Labels"]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 2
-theme_override_fonts/font = ExtResource("1_pt33n")
-theme_override_font_sizes/font_size = 18
 text = "APPLICATION DATA DIRECTORY"
 vertical_alignment = 1
 
 [node name="DriveChainDataDirectory" type="Label" parent="Options/Labels"]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 2
-theme_override_fonts/font = ExtResource("1_pt33n")
-theme_override_font_sizes/font_size = 18
 text = "DRIVECHAIN DATA DIRECTORY"
 vertical_alignment = 1
 
@@ -52,9 +37,6 @@ size_flags_horizontal = 3
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 focus_mode = 0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("1_pt33n")
-theme_override_font_sizes/font_size = 16
 placeholder_text = "/home/jdavis/.local/share/drivechain_launcher"
 editable = false
 
@@ -62,9 +44,6 @@ editable = false
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 focus_mode = 0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("1_pt33n")
-theme_override_font_sizes/font_size = 16
 placeholder_text = "/home/jdavis/.local/share/drivechain_launcher"
 editable = false
 
@@ -76,7 +55,6 @@ custom_minimum_size = Vector2(40, 36)
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
-theme_override_fonts/font = ExtResource("1_pt33n")
 text = "..."
 
 [node name="DriveChainDataDirectory" type="Button" parent="Options/BrowseButtons"]
@@ -84,5 +62,4 @@ custom_minimum_size = Vector2(40, 36)
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
-theme_override_fonts/font = ExtResource("1_pt33n")
 text = "..."
