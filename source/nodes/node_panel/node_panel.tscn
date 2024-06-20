@@ -205,6 +205,7 @@ size_flags_vertical = 4
 custom_minimum_size = Vector2(160, 32)
 layout_mode = 2
 size_flags_vertical = 4
+focus_mode = 0
 theme_override_font_sizes/font_size = 14
 text = "DOWNLOAD"
 icon = ExtResource("6_bpmae")
@@ -226,12 +227,14 @@ text = "NodePanel"
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_vertical = 4
+focus_mode = 0
 icon = ExtResource("7_2nmum")
 
 [node name="Delete" type="Button" parent="Container/Header"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_vertical = 4
+focus_mode = 0
 icon = ExtResource("8_8l4af")
 
 [node name="Description" type="Label" parent="Container"]
