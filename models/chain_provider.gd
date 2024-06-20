@@ -163,7 +163,7 @@ func write_start_script():
 		Appstate.platform.LINUX:
 			file.store_line("#!/bin/bash")
 			if env != "":
-				file.store_link("export "+env)
+				file.store_line("export "+env)
 
 			file.store_line(cmd)
 
