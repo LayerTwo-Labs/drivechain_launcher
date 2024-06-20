@@ -14,7 +14,7 @@ func _ready():
 	description_label.text = description
 	download_button.pressed.connect(_on_download_button_pressed)
 	if disabled:
-		download_button.hide()
+		download_button.disabled = true
 		heading_label.self_modulate.v = disabled_color_value
 		description_label.self_modulate.v = disabled_color_value
 
