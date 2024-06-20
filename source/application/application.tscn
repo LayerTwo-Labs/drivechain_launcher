@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://d3umh8q67cxar"]
 
-[ext_resource type="Theme" uid="uid://dweflhn2l0cbd" path="res://resource/theme/blue.theme" id="1_27wtq"]
+[ext_resource type="Theme" uid="uid://h5leavcufiab" path="res://resource/theme/black.theme" id="1_ool8a"]
 [ext_resource type="PackedScene" uid="uid://bm4wk2nic02cm" path="res://source/fast_withdrawal/fast_withdrawal.tscn" id="2_mndp3"]
 [ext_resource type="PackedScene" uid="uid://bi3mevmny3dj3" path="res://source/settings/settings.tscn" id="2_qna4f"]
 [ext_resource type="PackedScene" uid="uid://3423r8wl8vxb" path="res://source/nodes/nodes.tscn" id="2_xvhh7"]
@@ -12,7 +12,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_27wtq")
+theme = ExtResource("1_ool8a")
 
 [node name="Background" type="Panel" parent="."]
 layout_mode = 1
