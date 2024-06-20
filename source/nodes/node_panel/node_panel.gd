@@ -10,7 +10,7 @@ class_name NodePanel extends MarginContainer
 @onready var description_label: Label = $Container/Description
 
 func _ready():
-	heading_label.text = "-> " + heading
+	heading_label.text = heading
 	description_label.text = description
 	download_button.pressed.connect(_on_download_button_pressed)
 	if disabled:
