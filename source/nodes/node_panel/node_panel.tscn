@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://cq65ocurdi7c1"]
+[gd_scene load_steps=18 format=3 uid="uid://cq65ocurdi7c1"]
 
 [ext_resource type="Script" path="res://source/nodes/node_panel/node_panel.gd" id="1_ijj0w"]
 [ext_resource type="Texture2D" uid="uid://bd7416ly17qhn" path="res://assets/images/play-symbolic.svg" id="1_xhpop"]
@@ -10,6 +10,22 @@
 [ext_resource type="Texture2D" uid="uid://btvncw88xfvn" path="res://assets/images/info-settings.svg" id="7_2nmum"]
 [ext_resource type="Texture2D" uid="uid://jpde6uqywmlg" path="res://assets/images/trash-svgrepo-com(1).svg" id="8_8l4af"]
 [ext_resource type="Texture2D" uid="uid://u2c8qj3wcgro" path="res://assets/images/stop-symbolic.svg" id="8_gme82"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c0cgl"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.42, 0.42, 0.42, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 8.0
+expand_margin_top = 8.0
+expand_margin_right = 8.0
+expand_margin_bottom = 8.0
 
 [sub_resource type="Animation" id="Animation_46h0p"]
 length = 0.001
@@ -166,11 +182,15 @@ _data = {
 
 [node name="NodePanel" type="MarginContainer"]
 size_flags_horizontal = 3
-theme_override_constants/margin_left = 0
-theme_override_constants/margin_top = 0
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 8
 script = ExtResource("1_ijj0w")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_c0cgl")
 
 [node name="Container" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -199,7 +219,7 @@ autoplay = "download"
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 text = "NodePanel"
 
 [node name="Settings" type="Button" parent="Container/Header"]
@@ -215,9 +235,8 @@ size_flags_vertical = 4
 icon = ExtResource("8_8l4af")
 
 [node name="Description" type="Label" parent="Container"]
-custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 text = "Description"
 text_overrun_behavior = 3
