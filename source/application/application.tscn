@@ -56,3 +56,4 @@ visible = false
 layout_mode = 2
 
 [editable path="MarginContainer/TabContainer/Nodes"]
+[editable path="MarginContainer/TabContainer/Nodes/ScrollContainer/Window/NodePanel1"]

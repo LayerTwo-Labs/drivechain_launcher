@@ -181,13 +181,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 
-[node name="Heading" type="Label" parent="Container/Header"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 24
-text = "NodePanel"
-
 [node name="Download" type="Button" parent="Container/Header"]
 custom_minimum_size = Vector2(160, 32)
 layout_mode = 2
@@ -202,6 +195,13 @@ libraries = {
 }
 autoplay = "download"
 
+[node name="Heading" type="Label" parent="Container/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 24
+text = "NodePanel"
+
 [node name="Settings" type="Button" parent="Container/Header"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
@@ -215,6 +215,7 @@ size_flags_vertical = 4
 icon = ExtResource("8_8l4af")
 
 [node name="Description" type="Label" parent="Container"]
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 15
