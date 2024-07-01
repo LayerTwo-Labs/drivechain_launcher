@@ -9,7 +9,7 @@ const VERSION_CONFIG               : String = "res://version.cfg"
 
 const DRIVENET_NODE                : String = "172.105.148.135"
 
-@onready var chain_state           : Resource = preload("res://models/chain_state.tscn")
+@onready var chain_state           : Resource = load("res://models/chain_state.tscn")
 @onready var chain_provider_info   : Resource = preload("res://ui/components/dashboard/chain_providers_info/chain_provider_info.tscn")
 #@onready var z_params_modal        : Resource = preload("res://ui/components/dashboard/z_params_modal/z_params_modal.tscn")
 

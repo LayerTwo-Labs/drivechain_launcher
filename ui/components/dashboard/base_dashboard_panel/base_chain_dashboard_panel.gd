@@ -30,7 +30,7 @@ var cooldown_timer : Timer
 @onready var progress_bar       : Control = $Margin/Footer/ProgressBar
 @onready var settings_button    : Control = $Margin/Footer/SettingsButton
 @onready var delete_node_button : Control = $Margin/Footer/SettingsButton2
-@onready var reset_confirm_scene = preload("res://ui/components/settings/reset_confirm_scene.tscn")
+@onready var reset_confirm_scene = load("res://ui/components/settings/reset_confirm_scene.tscn")
 var available         : bool = true
 
 var enabled_modulate  : Color
