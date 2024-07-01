@@ -82,8 +82,6 @@ func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 	
 	
 func update_view():
-	block_height.visible = chain_state.state == ChainState.c_state.RUNNING
-	block_height.text = 'Block height: %d' % chain_state.height
 
 	if chain_state == null:
 		show_unsupported_state()
@@ -103,6 +101,9 @@ func update_view():
 			show_waiting_on_drivechain_state()
 	else:
 		show_running_state()
+		
+	block_height.visible = chain_state.state == ChainState.c_state.RUNNING
+	block_height.text = 'Block height: %d' % chain_state.height
 	
 func show_waiting_on_drivechain_state():
 	action_button.disabled = true
