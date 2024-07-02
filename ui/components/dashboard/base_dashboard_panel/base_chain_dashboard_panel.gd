@@ -123,7 +123,7 @@ func show_running_state():
 		action_button.theme = load("res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_running.tres")
 		get_parent().get_parent().get_node("Label").hide()
 	else:
-		refresh_bmm_button.visible = true
+		#refresh_bmm_button.visible = true
 		refresh_bmm_button.set_pressed_no_signal(chain_state.refreshbmm)
 
 	# Stop any cooldown timer that might be running since the state is now running
