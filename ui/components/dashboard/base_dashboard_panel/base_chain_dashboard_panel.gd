@@ -30,7 +30,7 @@ var cooldown_timer : Timer
 @onready var progress_bar       : Control = $Margin/Footer/ProgressBar
 @onready var settings_button    : Control = $Margin/Footer/SettingsButton
 @onready var delete_node_button : Control = $Margin/Footer/SettingsButton2
-@onready var reset_confirm_scene = preload("res://ui/components/settings/reset_confirm_scene.tscn")
+@onready var reset_confirm_scene = load("res://ui/components/settings/reset_confirm_scene.tscn")
 var available         : bool = true
 
 var enabled_modulate  : Color
@@ -82,8 +82,6 @@ func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 	
 	
 func update_view():
-	block_height.visible = chain_state.state == ChainState.c_state.RUNNING
-	block_height.text = 'Block height: %d' % chain_state.height
 
 	if chain_state == null:
 		show_unsupported_state()
@@ -103,6 +101,9 @@ func update_view():
 			show_waiting_on_drivechain_state()
 	else:
 		show_running_state()
+		
+	block_height.visible = chain_state.state == ChainState.c_state.RUNNING
+	block_height.text = 'Block height: %d' % chain_state.height
 	
 func show_waiting_on_drivechain_state():
 	action_button.disabled = true
@@ -122,7 +123,7 @@ func show_running_state():
 		action_button.theme = load("res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_running.tres")
 		get_parent().get_parent().get_node("Label").hide()
 	else:
-		refresh_bmm_button.visible = true
+		#refresh_bmm_button.visible = true
 		refresh_bmm_button.set_pressed_no_signal(chain_state.refreshbmm)
 
 	# Stop any cooldown timer that might be running since the state is now running
