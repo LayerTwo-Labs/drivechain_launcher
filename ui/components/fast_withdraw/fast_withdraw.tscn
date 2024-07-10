@@ -59,10 +59,10 @@ offset_bottom = 344.0
 
 [node name="SpinBoxAmount" type="SpinBox" parent="."]
 layout_mode = 0
-offset_left = 620.0
-offset_top = 66.0
-offset_right = 776.0
-offset_bottom = 97.0
+offset_left = 669.0
+offset_top = 64.0
+offset_right = 825.0
+offset_bottom = 95.0
 min_value = 1.0
 value = 1.0
 suffix = "BTC"
@@ -110,9 +110,9 @@ offset_right = 216.0
 offset_bottom = 50.0
 text = "Not Connected"
 
-[connection signal="pressed" from="ButtonRequestInvoice" to="." method="_on_button_test_pressed"]
 [connection signal="pressed" from="ButtonRequestInvoice" to="." method="_on_button_request_invoice_pressed"]
-[connection signal="pressed" from="ButtonInvoicePaid" to="." method="_on_button_test_complete_pressed"]
+[connection signal="pressed" from="ButtonRequestInvoice" to="." method="_on_button_test_pressed"]
 [connection signal="pressed" from="ButtonInvoicePaid" to="." method="_on_button_invoice_paid_pressed"]
+[connection signal="pressed" from="ButtonInvoicePaid" to="." method="_on_button_test_complete_pressed"]
 [connection signal="pressed" from="ButtonCopyAddress" to="." method="_on_button_copy_address_pressed"]
 [connection signal="pressed" from="ButtonConnect" to="." method="_on_button_connect_pressed"]

@@ -1,12 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://dwhtby81ylt3s"]
+[gd_scene load_steps=9 format=3 uid="uid://dwhtby81ylt3s"]
 
-[ext_resource type="Theme" uid="uid://deiietf7bytje" path="res://ui/components/left_menu/left_menu_button.tres" id="1_vs06l"]
 [ext_resource type="Script" path="res://ui/components/left_menu/left_menu.gd" id="1_yja75"]
-[ext_resource type="Texture2D" uid="uid://b3cf3lw2nhpjs" path="res://assets/images/close.svg" id="2_ahqh1"]
 [ext_resource type="Texture2D" uid="uid://blq6pvspmkcbj" path="res://assets/images/prev.svg" id="3_3lhq3"]
-[ext_resource type="Texture2D" uid="uid://djtv7qiy8hkat" path="res://assets/images/dashboard-3-line.svg" id="3_rgc2b"]
-[ext_resource type="Texture2D" uid="uid://srldhyvbmy57" path="res://assets/images/settings-4-line.svg" id="4_cr7m3"]
-[ext_resource type="Texture2D" uid="uid://drsftlr0wcb3m" path="res://assets/images/chain.svg" id="4_v0or6"]
 [ext_resource type="Texture2D" uid="uid://c5ddyq86urmmy" path="res://assets/images/next.svg" id="7_k0tsh"]
 [ext_resource type="Script" path="res://ui/components/left_menu/Quotes.gd" id="7_kx1k8"]
 [ext_resource type="PackedScene" uid="uid://b5wmjp1psgsvr" path="res://ui/components/fast_withdraw/fast_withdraw.tscn" id="10_kuvno"]
@@ -44,58 +39,11 @@ size_flags_vertical = 8
 size_flags_stretch_ratio = 0.0
 theme_override_constants/separation = 8
 
-[node name="SettingsButton" type="Button" parent="MarginContainer/HBox"]
-layout_mode = 2
-focus_mode = 0
-theme = ExtResource("1_vs06l")
-toggle_mode = true
-icon = ExtResource("4_cr7m3")
-alignment = 0
-
-[node name="FastWithdrawButton" type="Button" parent="MarginContainer/HBox"]
-layout_mode = 2
-text = "Fast Withdraw"
-icon = ExtResource("4_v0or6")
-
-[node name="DashboardButton" type="Button" parent="MarginContainer/HBox"]
-visible = false
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-size_flags_vertical = 4
-focus_mode = 0
-theme = ExtResource("1_vs06l")
-toggle_mode = true
-button_pressed = true
-text = "DASHBOARD"
-icon = ExtResource("3_rgc2b")
-alignment = 0
-
 [node name="PrevButton" type="Button" parent="MarginContainer/HBox"]
-visible = false
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-icon = ExtResource("3_3lhq3")
-flat = true
-
-[node name="Spacer" type="Control" parent="MarginContainer/HBox"]
-visible = false
-custom_minimum_size = Vector2(10, 50)
-layout_mode = 2
-
-[node name="PlaygroundButton" type="Button" parent="MarginContainer/HBox"]
-visible = false
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-size_flags_vertical = 4
-focus_mode = 0
-theme = ExtResource("1_vs06l")
-toggle_mode = true
-text = "PLAYGROUND"
-alignment = 0
+text = "Prev"
 
 [node name="Quotes" type="Label" parent="MarginContainer/HBox"]
-visible = false
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -105,39 +53,12 @@ text = "\"Used to the conditions of a capitalistic environment, the average Amer
 horizontal_alignment = 2
 autowrap_mode = 2
 
-[node name="Spacer2" type="Control" parent="MarginContainer/HBox"]
-visible = false
-custom_minimum_size = Vector2(10, 50)
+[node name="Author" type="Label" parent="MarginContainer/HBox"]
 layout_mode = 2
-
-[node name="Spacer3" type="Control" parent="MarginContainer/HBox"]
-layout_mode = 2
-size_flags_horizontal = 3
 
 [node name="NextButton" type="Button" parent="MarginContainer/HBox"]
-visible = false
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-icon = ExtResource("7_k0tsh")
-flat = true
-
-[node name="CloseButton" type="Button" parent="MarginContainer/HBox"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-icon = ExtResource("2_ahqh1")
-flat = true
-
-[node name="QuotesButton" type="Button" parent="MarginContainer/HBox"]
-custom_minimum_size = Vector2(36, 36)
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 4
-theme_override_font_sizes/font_size = 16
-text = "Q"
-icon_alignment = 1
+text = "Next"
 
 [node name="FastWithdrawWindow" type="Window" parent="."]
 title = "Fast Withdrawal"
@@ -216,13 +137,6 @@ autowrap_mode = 2
 script = ExtResource("7_kx1k8")
 author_label = NodePath("../Header/Author")
 
-[connection signal="toggled" from="MarginContainer/HBox/SettingsButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
-[connection signal="pressed" from="MarginContainer/HBox/FastWithdrawButton" to="." method="_on_fast_withdraw_button_pressed"]
-[connection signal="toggled" from="MarginContainer/HBox/DashboardButton" to="." method="_on_left_menu_button_toggled" binds= [0]]
-[connection signal="pressed" from="MarginContainer/HBox/PrevButton" to="MarginContainer/HBox/Quotes" method="_on_prev_button_pressed"]
-[connection signal="toggled" from="MarginContainer/HBox/PlaygroundButton" to="." method="_on_left_menu_button_toggled" binds= [1]]
-[connection signal="pressed" from="MarginContainer/HBox/NextButton" to="MarginContainer/HBox/Quotes" method="_on_next_button_pressed"]
-[connection signal="pressed" from="MarginContainer/HBox/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="close_requested" from="FastWithdrawWindow" to="." method="_on_fast_withdraw_window_close_requested"]
 [connection signal="pressed" from="QuotesDialog/Box/Header/PrevButton" to="QuotesDialog/Box/Quotes" method="_on_prev_button_pressed"]
 [connection signal="pressed" from="QuotesDialog/Box/Header/NextButton" to="QuotesDialog/Box/Quotes" method="_on_next_button_pressed"]
