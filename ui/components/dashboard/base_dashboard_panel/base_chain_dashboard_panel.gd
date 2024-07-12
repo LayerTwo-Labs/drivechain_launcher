@@ -12,8 +12,8 @@ var cooldown_timer : Timer
 
 @export var drivechain_title_font_size : int = 32
 @export var drivechain_descr_font_size : int = 16
-@export var drivechain_minimum_height  : int = 64
-@export var subchain_title_font_size   : int = 24
+@export var drivechain_minimum_height  : int = 100
+@export var subchain_title_font_size   : int = 20
 @export var subchain_descr_font_size   : int = 12
 @export var subchain_minimum_height    : int = 10
 
@@ -30,10 +30,7 @@ var cooldown_timer : Timer
 @onready var progress_bar       : Control = $Margin/Footer/ProgressBar
 @onready var settings_button    : Control = $Margin/Footer/SettingsButton
 @onready var delete_node_button : Control = $Margin/Footer/SettingsButton2
-@onready var reset_confirm_scene = preload("res://ui/components/settings/reset_confirm_scene.tscn")
-@onready var description_button: Button = $Margin/Footer/DescriptionButton
-@onready var description_dialog: AcceptDialog = $DescriptionDialog
-
+@onready var reset_confirm_scene = load("res://ui/components/settings/reset_confirm_scene.tscn")
 var available         : bool = true
 
 var enabled_modulate  : Color
@@ -49,10 +46,7 @@ func _ready():
 	Appstate.connect("chain_states_changed", self.update_view)
 	enabled_modulate  = modulate
 	disabled_modulate = modulate.darkened(0.3)
-
-func connect_signals():
-	description_button.pressed.connect(description_dialog.popup)
-
+	
 func _on_cooldown_timer_timeout():
 	action_button.disabled = false # Re-enable the button
 	action_button.modulate = enabled_modulate # Reset button color to normal
@@ -80,18 +74,14 @@ func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 	action_button.check_state()
 	title.text = chain_provider.display_name
 	desc.text = chain_provider.description
-	description_dialog.get_node("Box/Title").text = title.text
-	description_dialog.get_node("Box/Description").text = desc.text
 	block_height.visible = chain_state.state == ChainState.c_state.RUNNING
 	action_button.text = str(int(_chain_provider.binary_zip_size * 0.000001)) + " mb"
 	#download_button.tooltip_text = _chain_provider.download_url
 	
 	update_view()
-	connect_signals()
-
+	
+	
 func update_view():
-	block_height.visible = chain_state.state == ChainState.c_state.RUNNING
-	block_height.text = 'Block height: %d' % chain_state.height
 
 	if chain_state == null:
 		show_unsupported_state()
@@ -111,6 +101,9 @@ func update_view():
 			show_waiting_on_drivechain_state()
 	else:
 		show_running_state()
+		
+	block_height.visible = chain_state.state == ChainState.c_state.RUNNING
+	block_height.text = 'Block height: %d' % chain_state.height
 	
 func show_waiting_on_drivechain_state():
 	action_button.disabled = true
@@ -130,7 +123,7 @@ func show_running_state():
 		action_button.theme = load("res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_running.tres")
 		get_parent().get_parent().get_node("Label").hide()
 	else:
-		refresh_bmm_button.visible = true
+		#refresh_bmm_button.visible = true
 		refresh_bmm_button.set_pressed_no_signal(chain_state.refreshbmm)
 
 	# Stop any cooldown timer that might be running since the state is now running
@@ -158,13 +151,14 @@ func show_download_state():
 	
 	
 func show_unsupported_state():
-	settings_button.disabled = true
-	action_button.hide()
-#	auto_mine_button.visible = false
-	refresh_bmm_button.visible = false
-	secondary_desc.visible = true
-	secondary_desc.text = "[i]This sidechain is currently not available for this platform -- try Linux instead.[/i]"
-	modulate = disabled_modulate
+	#settings_button.disabled = true
+	#action_button.hide()
+##	auto_mine_button.visible = false
+	#refresh_bmm_button.visible = false
+	#secondary_desc.visible = true
+	#secondary_desc.text = "[i]This sidechain is currently not available for this platform -- try Linux instead.[/i]"
+	#modulate = disabled_modulate
+	pass
 	
 
 
@@ -491,22 +485,16 @@ func _on_download_complete(result, response_code, _headers, body):
 func unzip_file_and_setup_binary(base_dir: String, zip_path: String):
 	var prog = "unzip"
 	var args = [zip_path, "-d", base_dir]
-	print(zip_path)
-	print(base_dir)
-	
 	if Appstate.get_platform() == Appstate.platform.WIN:
 		prog = "powershell.exe"
-		var escaped_zip_path = "'" + zip_path.replace("/", "\\") + "'"
-		var escaped_base_dir = "'" + base_dir.replace("/", "\\") + "'"
-		args = ["-Command", "Expand-Archive -Force " + escaped_zip_path + " " + escaped_base_dir]
-		print(args)
+		args = ["-Command", 'Expand-Archive -Force ' + zip_path + ' ' + base_dir]
 
-	print("Unzipping ", zip_path, ": ", prog, " ", args)
+
+	print("Unzipping ", zip_path, ": ", prog, " ", args, )
 
 	# We used to check for the exit code here. However, unzipping sometimes
 	# throw bad errors on symbolic links, but output the files just fine...
-	var result = OS.execute(prog, args)
-	print("Unzip result: ", result)
+	OS.execute(prog, args) 
 
 	chain_provider.write_start_script()
 	if Appstate.get_platform() != Appstate.platform.WIN:
@@ -524,7 +512,7 @@ func unzip_file_and_setup_binary(base_dir: String, zip_path: String):
 		#OS.execute("chmod", ["+x", ProjectSettings.globalize_path(chain_provider.base_dir + "/" + zside_params_name)])
 
 	update_view()
-
+	
 	
 func reset_download():
 	remove_child(download_req)

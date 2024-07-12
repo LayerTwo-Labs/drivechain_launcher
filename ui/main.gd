@@ -9,6 +9,7 @@ func _ready():
 	get_tree().root.title += " | " + Appstate.app_config.get_value("", "version")
 	for i in range(tab_container.get_tab_count()):
 		tab_container.set_tab_hidden(i, false)
+	GlobalFont.apply_font_override(self)
 
 func _on_menu_button_pressed(v: int):
 	if v == 1:  # Assuming 1 is for settings
