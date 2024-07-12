@@ -22,9 +22,10 @@ config/windows_native_icon="res://icon.ico"
 
 Appstate="*res://autoloads/appstate.tscn"
 Net="*res://net.gd"
-DashboardPanel="*res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.tscn"
-chain_state="*res://models/chain_state.tscn"
-ResetSidechainWindow="*res://ui/components/dashboard/chain_providers_info/reset_sidechain_window.tscn"
+DashboardPanel="*res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.gd"
+chain_state="*res://models/chain_state.gd"
+ResetSidechainWindow="*res://ui/components/dashboard/chain_providers_info/reset_sidechain_window.gd"
+GlobalFont="*res://resource/GlobalFont.gd"
 
 [display]
 
@@ -46,7 +47,7 @@ import/blender/enabled=false
 [gui]
 
 theme/custom="res://ui/themes/default_dark.tres"
-theme/custom_font="res://resource/font/kenvector_future.ttf"
+theme/custom_font="res://assets/fonts/Cantarell-Regular.ttf"
 theme/default_font_multichannel_signed_distance_field=true
 
 [rendering]

@@ -12,8 +12,8 @@ var cooldown_timer : Timer
 
 @export var drivechain_title_font_size : int = 32
 @export var drivechain_descr_font_size : int = 16
-@export var drivechain_minimum_height  : int = 64
-@export var subchain_title_font_size   : int = 24
+@export var drivechain_minimum_height  : int = 100
+@export var subchain_title_font_size   : int = 20
 @export var subchain_descr_font_size   : int = 12
 @export var subchain_minimum_height    : int = 10
 
@@ -29,10 +29,7 @@ var cooldown_timer : Timer
 @onready var progress_bar       : Control = $Margin/Footer/ProgressBar
 @onready var settings_button    : Control = $Margin/Footer/SettingsButton
 @onready var delete_node_button : Control = $Margin/Footer/SettingsButton2
-@onready var reset_confirm_scene = preload("res://ui/components/settings/reset_confirm_scene.tscn")
-@onready var description_button: Button = $Margin/Footer/DescriptionButton
-@onready var description_dialog: AcceptDialog = $DescriptionDialog
-
+@onready var reset_confirm_scene = load("res://ui/components/settings/reset_confirm_scene.tscn")
 var available         : bool = true
 
 var enabled_modulate  : Color
@@ -48,10 +45,7 @@ func _ready():
 	Appstate.connect("chain_states_changed", self.update_view)
 	enabled_modulate  = modulate
 	disabled_modulate = modulate.darkened(0.3)
-
-func connect_signals():
-	description_button.pressed.connect(description_dialog.popup)
-
+	
 func _on_cooldown_timer_timeout():
 	action_button.disabled = false # Re-enable the button
 	action_button.modulate = enabled_modulate # Reset button color to normal
@@ -79,15 +73,13 @@ func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 	action_button.check_state()
 	title.text = chain_provider.display_name
 	desc.text = chain_provider.description
-	description_dialog.get_node("Box/Title").text = title.text
-	description_dialog.get_node("Box/Description").text = desc.text
 	block_height.visible = chain_state.state == ChainState.c_state.RUNNING
 	action_button.text = str(int(_chain_provider.binary_zip_size * 0.000001)) + " mb"
 	#download_button.tooltip_text = _chain_provider.download_url
 	
 	update_view()
-	connect_signals()
-
+	
+	
 func update_view():
 
 	if chain_state == null:
@@ -159,13 +151,14 @@ func show_download_state():
 	
 	
 func show_unsupported_state():
-	settings_button.disabled = true
-	action_button.hide()
-#	auto_mine_button.visible = false
-	refresh_bmm_button.visible = false
-	secondary_desc.visible = true
-	secondary_desc.text = "[i]This sidechain is currently not available for this platform -- try Linux instead.[/i]"
-	modulate = disabled_modulate
+	#settings_button.disabled = true
+	#action_button.hide()
+##	auto_mine_button.visible = false
+	#refresh_bmm_button.visible = false
+	#secondary_desc.visible = true
+	#secondary_desc.text = "[i]This sidechain is currently not available for this platform -- try Linux instead.[/i]"
+	#modulate = disabled_modulate
+	pass
 	
 
 

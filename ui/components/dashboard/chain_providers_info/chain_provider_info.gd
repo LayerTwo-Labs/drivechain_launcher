@@ -46,5 +46,3 @@ func _on_reset_button_pressed() -> void:
 	var reset_sidechain_window = reset_sidechain_window_scene.instantiate()
 	reset_sidechain_window.setup(chain_provider)  # Pass the existing chain_provider to the new window
 	get_tree().root.get_node("Main").add_child(reset_sidechain_window)
-
-	

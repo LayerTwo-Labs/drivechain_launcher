@@ -241,4 +241,3 @@ func get_executable_path() -> String:
 	
 func get_local_zip_hash() -> String:
 	return FileAccess.get_sha256(ProjectSettings.globalize_path(base_dir + "/" + id + ".zip"))
-	
