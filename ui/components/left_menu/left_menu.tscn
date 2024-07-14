@@ -44,6 +44,7 @@ layout_mode = 2
 text = "Prev"
 
 [node name="Quotes" type="Label" parent="MarginContainer/HBox"]
+visible = false
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -55,6 +56,10 @@ autowrap_mode = 2
 
 [node name="Author" type="Label" parent="MarginContainer/HBox"]
 layout_mode = 2
+
+[node name="Spacer3" type="Control" parent="MarginContainer/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="NextButton" type="Button" parent="MarginContainer/HBox"]
 layout_mode = 2
@@ -115,7 +120,7 @@ vertical_alignment = 1
 
 [node name="NextButton" type="Button" parent="QuotesDialog/Box/Header"]
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 8
 size_flags_vertical = 4
 icon = ExtResource("7_k0tsh")
 flat = true
