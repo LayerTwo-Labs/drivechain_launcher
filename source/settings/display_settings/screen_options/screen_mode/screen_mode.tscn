@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://o2ty0o4fho1f"]
+[gd_scene load_steps=3 format=3 uid="uid://o2ty0o4fho1f"]
 
 [ext_resource type="Script" path="res://source/settings/display_settings/screen_options/screen_mode/screen_mode.gd" id="1_c16cl"]
+[ext_resource type="FontFile" uid="uid://c33ier0iywrki" path="res://assets/fonts/LEMONMILK-Regular.otf" id="2_wu5q6"]
 
 [node name="ScreenMode" type="HBoxContainer"]
 size_flags_horizontal = 3
@@ -9,6 +10,7 @@ script = ExtResource("1_c16cl")
 [node name="Label" type="Label" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("2_wu5q6")
 text = "FULLSCREEN"
 vertical_alignment = 1
 

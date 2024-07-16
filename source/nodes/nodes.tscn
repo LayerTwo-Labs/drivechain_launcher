@@ -15,42 +15,24 @@ theme_override_constants/separation = 8
 
 [node name="NodePanel1" parent="ScrollContainer/Window" instance=ExtResource("1_qsgf1")]
 layout_mode = 2
-heading = "Bitcoin + BIPs 300/301"
-description = "BIP 300 & 301 enabled bitcoin."
 
 [node name="NodePanel2" parent="ScrollContainer/Window" instance=ExtResource("1_qsgf1")]
 layout_mode = 2
-heading = "Testchain"
-description = "A blank sidechain w/ GUI. The easiest way to learn BIPs 300/301."
 
 [node name="NodePanel3" parent="ScrollContainer/Window" instance=ExtResource("1_qsgf1")]
 layout_mode = 2
-heading = "Bitnames"
-description = "Own one username that you use everywhere - replaces DNS, logging in, and email"
 
 [node name="NodePanel4" parent="ScrollContainer/Window" instance=ExtResource("1_qsgf1")]
 layout_mode = 2
-heading = "BitAssets"
-description = "A sidechain for issuing Bit-Art (NFTs) and digital assets (ICOs, tokens)."
 
 [node name="NodePanel5" parent="ScrollContainer/Window" instance=ExtResource("1_qsgf1")]
 layout_mode = 2
-heading = "Bit-Ethereum"
-description = "A clone of Ethereum, the #2 coin."
 
 [node name="NodePanel6" parent="ScrollContainer/Window" instance=ExtResource("1_qsgf1")]
 layout_mode = 2
-heading = "Thunder"
-description = "A high performance largeblock sidechain"
 
 [node name="NodePanel7" parent="ScrollContainer/Window" instance=ExtResource("1_qsgf1")]
 layout_mode = 2
-heading = "zSide"
-description = "A zCash clone, for privacy."
-disabled = true
 
 [node name="NodePanel8" parent="ScrollContainer/Window" instance=ExtResource("1_qsgf1")]
 layout_mode = 2
-heading = "Latest Core Plus"
-description = "Bitcoin Core v25 + BIPS 118, 119, & 345"
-disabled = true

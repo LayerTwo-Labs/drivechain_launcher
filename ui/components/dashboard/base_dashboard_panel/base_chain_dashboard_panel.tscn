@@ -7,8 +7,9 @@
 [ext_resource type="FontFile" uid="uid://ciu7chyqqs4k7" path="res://assets/fonts/Saira_Expanded-Bold.ttf" id="4_njapg"]
 [ext_resource type="FontFile" uid="uid://dgxbgdcr3s84u" path="res://assets/fonts/Saira_Expanded-Regular.ttf" id="6_kg3t2"]
 [ext_resource type="Theme" uid="uid://b4iussektjaa5" path="res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_downloaded.tres" id="7_1bvyp"]
-[ext_resource type="Texture2D" uid="uid://srldhyvbmy57" path="res://assets/images/settings-4-line.svg" id="9_3krsb"]
-[ext_resource type="Script" path="res://ui/components/dashboard/base_dashboard_panel/ActionButton.gd" id="9_53my3"]
+[ext_resource type="Theme" uid="uid://crnt3bsai3744" path="res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_undownloaded.tres" id="7_bihi7"]
+[ext_resource type="Script" path="res://source/nodes/node_panel/ActionButton.gd" id="8_8xxdw"]
+[ext_resource type="Texture2D" uid="uid://u2c8qj3wcgro" path="res://assets/images/stop-symbolic.svg" id="8_sf64t"]
 [ext_resource type="Theme" uid="uid://bcvi5ljrnn8t4" path="res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_running.tres" id="11_c7v3q"]
 [ext_resource type="Texture2D" uid="uid://vfwftvcbvob6" path="res://assets/images/info-symbolic 1.svg" id="13_bierr"]
 [ext_resource type="Texture2D" uid="uid://btvncw88xfvn" path="res://assets/images/info-settings.svg" id="13_cajt3"]
@@ -176,7 +177,7 @@ focus_mode = 0
 theme = ExtResource("7_1bvyp")
 icon = ExtResource("4_a5xlm")
 expand_icon = true
-script = ExtResource("9_53my3")
+script = ExtResource("8_8xxdw")
 download_icon = ExtResource("6_qglv3")
 download_theme = ExtResource("7_bihi7")
 run_icon = ExtResource("4_a5xlm")

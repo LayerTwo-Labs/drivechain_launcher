@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://cafws02qn1h2f"]
 
-[ext_resource type="FontFile" uid="uid://b1w37357tl3er" path="res://assets/fonts/Cantarell-Bold.ttf" id="1_a0rcy"]
-[ext_resource type="Script" path="res://ui/components/dashboard/chain_providers_info/chain_provider_info.gd" id="1_mqwgc"]
-[ext_resource type="Texture2D" uid="uid://hcq0d87vm0xk" path="res://assets/images/folder-open-symbolic 1.svg" id="2_x056b"]
+[ext_resource type="Script" path="res://source/nodes/chain_providers_info/chain_provider_info.gd" id="1_0uufu"]
+[ext_resource type="FontFile" uid="uid://b1w37357tl3er" path="res://assets/fonts/Cantarell-Bold.ttf" id="2_jumpv"]
+[ext_resource type="Texture2D" uid="uid://hcq0d87vm0xk" path="res://assets/images/folder-open-symbolic 1.svg" id="3_3cbqg"]
 
 [node name="ChainProviderInfo" type="ColorRect"]
 anchors_preset = 15
@@ -13,7 +13,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color(0, 0, 0, 0.721569)
-script = ExtResource("1_mqwgc")
+script = ExtResource("1_0uufu")
 
 [node name="Center" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -43,7 +43,7 @@ size_flags_vertical = 4
 
 [node name="Title" type="Label" parent="Center/Panel/Margin/VBox/Titlebar"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("1_a0rcy")
+theme_override_fonts/font = ExtResource("2_jumpv")
 theme_override_font_sizes/font_size = 24
 text = "Settings"
 vertical_alignment = 1
@@ -103,7 +103,7 @@ expand_to_text_length = true
 
 [node name="Button" type="Button" parent="Center/Panel/Margin/VBox/SidechainDirectory"]
 layout_mode = 2
-icon = ExtResource("2_x056b")
+icon = ExtResource("3_3cbqg")
 
 [node name="LocalHash" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
 layout_mode = 2

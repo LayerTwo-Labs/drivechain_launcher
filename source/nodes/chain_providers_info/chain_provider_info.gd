@@ -5,7 +5,7 @@ extends ColorRect
 @onready var remote_hash = $Center/Panel/Margin/VBox/RemoteHash/Hash
 @onready var directory = $Center/Panel/Margin/VBox/SidechainDirectory/Value
 @onready var local_hash = $Center/Panel/Margin/VBox/LocalHash/Hash
-@onready var reset_sidechain_window_scene = load("res://ui/components/dashboard/chain_providers_info/reset_sidechain_window.tscn")
+@onready var reset_sidechain_window_scene = load("res://source/nodes/chain_providers_info/reset_sidechain_window.tscn")
 var chain_provider: ChainProvider
 
 func setup(_chain_provider: ChainProvider):

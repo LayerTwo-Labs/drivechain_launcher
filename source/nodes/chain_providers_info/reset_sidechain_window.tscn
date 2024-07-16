@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cpud5qbwgtucx"]
 
-[ext_resource type="Script" path="res://ui/components/dashboard/chain_providers_info/reset_sidechain_window.gd" id="1_eqo5x"]
+[ext_resource type="Script" path="res://source/nodes/chain_providers_info/reset_sidechain_window.gd" id="1_eqo5x"]
 [ext_resource type="Theme" uid="uid://b730juygqetth" path="res://ui/themes/dangerous_button.tres" id="2_jkg3p"]
 
 [node name="ResetSidechainWindow" type="ColorRect"]

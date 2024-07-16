@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="drivechain_launcher"
-run/main_scene="res://ui/main.tscn"
+run/main_scene="res://source/application/application.tscn"
 config/use_custom_user_dir=true
 config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://icon.png"
@@ -24,7 +24,7 @@ Appstate="*res://autoloads/appstate.tscn"
 Net="*res://net.gd"
 DashboardPanel="*res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.gd"
 chain_state="*res://models/chain_state.gd"
-ResetSidechainWindow="*res://ui/components/dashboard/chain_providers_info/reset_sidechain_window.gd"
+ResetSidechainWindow="*res://source/nodes/chain_providers_info/reset_sidechain_window.gd"
 GlobalFont="*res://resource/GlobalFont.gd"
 
 [display]
@@ -47,8 +47,7 @@ import/blender/enabled=false
 [gui]
 
 theme/custom="res://ui/themes/default_dark.tres"
-theme/custom_font="res://assets/fonts/Cantarell-Regular.ttf"
-theme/default_font_multichannel_signed_distance_field=true
+theme/custom_font="res://assets/fonts/Satoshi-Regular.otf"
 
 [rendering]
 

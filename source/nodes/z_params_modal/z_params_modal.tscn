@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b3a4mpyl881ep"]
 
-[ext_resource type="Script" path="res://ui/components/dashboard/z_params_modal/z_params_modal.gd" id="1_7bjbv"]
+[ext_resource type="Script" path="res://source/nodes/z_params_modal/z_params_modal.gd" id="1_7bjbv"]
 
 [node name="ChainProviderInfo" type="ColorRect"]
 anchors_preset = 15
