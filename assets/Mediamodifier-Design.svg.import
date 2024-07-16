@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://5d2d4ed2y7p3"
-path="res://.godot/imported/Mediamodifier-Design(2).svg-1aef0d334e1742f214effe500d577b0e.ctex"
+path="res://.godot/imported/Mediamodifier-Design.svg-9d1e220925b1a876f5e5ee1468b72113.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Mediamodifier-Design(2).svg"
-dest_files=["res://.godot/imported/Mediamodifier-Design(2).svg-1aef0d334e1742f214effe500d577b0e.ctex"]
+source_file="res://assets/Mediamodifier-Design.svg"
+dest_files=["res://.godot/imported/Mediamodifier-Design.svg-9d1e220925b1a876f5e5ee1468b72113.ctex"]
 
 [params]
 

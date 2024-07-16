@@ -101,11 +101,11 @@ func update_sidechain_view():
 	
 func update_overlay():
 	if is_drivechain:
-		overlay.color = Color(1, 1, 1, 0)  # Fully transparent
+		overlay.color = Color(1, 1, 1, 0)  
 	else:
 		var drivechain_provider = Appstate.get_drivechain_provider()
 		if drivechain_provider.is_ready_for_execution():
-			overlay.color = Color(1, 1, 1, 0)  # Fully transparent
+			overlay.color = Color(1, 1, 1, 0) 
 			overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		else:
 			overlay.color = Color(1, 1, 1, 0.5)  # Semi-transparent white
@@ -393,19 +393,14 @@ func save_wallet_paths_info(wallet_paths_info: Dictionary) -> void:
 	else:
 		print("Failed to open JSON file for writing: ", WALLET_INFO_PATH)
 
-# You can add any additional helper functions or logic here if needed
-
-# For example, you might want to add a function to check if the chain is a sidechain:
 func is_sidechain() -> bool:
 	return not is_drivechain
 
-# Or a function to get the current state of the chain:
 func get_current_state() -> int:
 	if chain_state == null:
 		return -1  # or some other value to indicate an invalid state
 	return chain_state.state
 
-# You could also add a function to refresh the chain's data:
 func refresh_chain_data():
 	if chain_provider and chain_state:
 		chain_provider.refresh()
