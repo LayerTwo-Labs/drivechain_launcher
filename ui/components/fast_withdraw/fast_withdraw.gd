@@ -1,14 +1,17 @@
 extends Control
 
-const SERVER_LOCALHOST = "127.0.0.1"
-const SERVER_L2L_GA = "172.105.148.135"
-
-const PORT = 8382
+const SERVER_LOCALHOST : String = "127.0.0.1"
+const SERVER_L2L_GA : String = "172.105.148.135"
+const PORT : int = 8382
 
 var invoice_address : String = ""
+var connected_to_server : bool = false
 
+signal fast_withdraw_server_connection_status_changed
 
 func _ready() -> void:
+	$LabelConnectionStatus.visible = false
+	
 	multiplayer.connected_to_server.connect(_on_connected_to_withdrawal_server)
 	multiplayer.connection_failed.connect(_on_failed_connect_to_withdrawal_server)
 	multiplayer.server_disconnected.connect(_on_disconnected_from_withdrawal_server)
@@ -23,16 +26,18 @@ func _on_connected_to_withdrawal_server() -> void:
 	
 	$LabelConnectionStatus.text = "Connected"
 	
-	$ButtonConnect.disabled = true
+	connected_to_server = true
+	fast_withdraw_server_connection_status_changed.emit()
 	
 	
 func _on_disconnected_from_withdrawal_server() -> void:
 	if $"/root/Net".print_debug_net:
 		print("Disonnected to fast withdraw server")
 	
-	$LabelConnectionStatus.text = "Not Connected"
-	
-	$ButtonConnect.disabled = false
+	$LabelConnectionStatus.text = "Disconnected"
+	$LabelInvoice.text = ""
+	connected_to_server = false
+	fast_withdraw_server_connection_status_changed.emit()
 	
 	
 func _on_failed_connect_to_withdrawal_server() -> void:
@@ -40,8 +45,9 @@ func _on_failed_connect_to_withdrawal_server() -> void:
 		print("Failed to connect to fast withdraw server")
 		
 	$LabelConnectionStatus.text = "Not Connected"
-	
-	$ButtonConnect.disabled = false
+
+	connected_to_server = false
+	fast_withdraw_server_connection_status_changed.emit()
 
 
 func connect_to_withdrawal_server() -> void:
@@ -62,8 +68,6 @@ func connect_to_withdrawal_server() -> void:
 			print_debug("Error: ", error)
 	
 	$LabelConnectionStatus.text = "Connecting..."
-	
-	$ButtonConnect.disabled = true
 	
 	multiplayer.multiplayer_peer = peer
 
@@ -111,9 +115,11 @@ func _on_button_invoice_paid_pressed() -> void:
 
 
 func _on_button_request_invoice_pressed() -> void:
+	# Establish connection with fast withdraw server
+	connect_to_withdrawal_server()
+	$LabelConnectionStatus.visible = true
+	
+	await fast_withdraw_server_connection_status_changed
+	
 	# Send fast withdraw request only to server
 	$"/root/Net".request_fast_withdraw.rpc_id(1, $SpinBoxAmount.value, $LineEditMainchainAddress.text)
-
-
-func _on_button_connect_pressed() -> void:
-	connect_to_withdrawal_server()
