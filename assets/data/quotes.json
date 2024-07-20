@@ -1,5 +1,9 @@
 [
   {
+  "quote": "Firms and other organizations [are] permanently and randomly subject to decline and decay —that is, to a gradual loss of rationality, efficiency, and surplus-producing energy— no matter how well the institutional framework within which they function is designed.",
+  "author": "Albert Hirschman"
+  },
+  {
 	"quote": "It is in the interest of tyrants to reduce the people to ignorance and vice. For they cannot live in any country where virtue and knowledge prevail.",
 	"author": "Samuel Adams"
   },
@@ -20,7 +24,7 @@
 	"author": "Henry George"
   },
   {
-	"quote": "When everybody owns something, nobody owns it, and nobody has a direct interest in maintaining or improving its condition. That is why buildings in the Soviet Union - like public housing in the United States - look decrepit within a year or two of their construction.",
+	"quote": "The internet is going to be one of the major forces for reducing the role of government. The one thing that's missing —but that will soon be developed— is a reliable e-cash.",
 	"author": "Milton Friedman"
   },
   {
@@ -30,5 +34,9 @@
   {
 	"quote": "Nobody ever saw a dog make a fair and deliberate exchange of one bone for another with another dog. Nobody ever saw one animal by its gestures and natural cries signify to another, this is mine, that yours; I am willing to give this for that.",
 	"author": "Adam Smith"
+  },
+  {
+  "quote": "Ambition is common to all men; and those, who are unable to rise to distinction, are at least willing to reduce others to their own standard.",
+  "author": "William Godwin"
   }
 ]

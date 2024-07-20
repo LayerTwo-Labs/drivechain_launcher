@@ -29,7 +29,8 @@ var cooldown_timer : Timer
 @onready var refresh_bmm_button : Control = $Margin/Footer/RefreshBMM
 @onready var progress_bar       : Control = $Margin/Footer/ProgressBar
 @onready var settings_button    : Control = $Margin/Footer/SettingsButton
-
+@onready var delete_node_button : Control = $Margin/Footer/SettingsButton2
+@onready var reset_confirm_scene = load("res://ui/components/settings/reset_confirm_scene.tscn")
 var available         : bool = true
 
 var enabled_modulate  : Color
@@ -81,8 +82,6 @@ func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 	
 	
 func update_view():
-	block_height.visible = chain_state.state == ChainState.c_state.RUNNING
-	block_height.text = 'Block height: %d' % chain_state.height
 
 	if chain_state == null:
 		show_unsupported_state()
@@ -102,6 +101,9 @@ func update_view():
 			show_waiting_on_drivechain_state()
 	else:
 		show_running_state()
+		
+	block_height.visible = chain_state.state == ChainState.c_state.RUNNING
+	block_height.text = 'Block height: %d' % chain_state.height
 	
 func show_waiting_on_drivechain_state():
 	action_button.disabled = true
@@ -121,7 +123,7 @@ func show_running_state():
 		action_button.theme = load("res://ui/components/dashboard/base_dashboard_panel/drivechain_btn_running.tres")
 		get_parent().get_parent().get_node("Label").hide()
 	else:
-		refresh_bmm_button.visible = true
+		#refresh_bmm_button.visible = true
 		refresh_bmm_button.set_pressed_no_signal(chain_state.refreshbmm)
 
 	# Stop any cooldown timer that might be running since the state is now running
@@ -157,37 +159,37 @@ func show_unsupported_state():
 	secondary_desc.text = "[i]This sidechain is currently not available for this platform -- try Linux instead.[/i]"
 	modulate = disabled_modulate
 	
-const WALLET_INFO_PATH = "user://wallets_backup/wallet_info.json"
 
-#func clear_backup_directory(target_backup_path: String) -> void:
-	#print("\nAttempting to clear backup directory at: ", target_backup_path, "\n")
-#
-	#var command: String
-	#var arguments: Array = []
-	#var output: Array = []
-	#var exit_code: int
-#
-	## Determine the command based on the operating system
-	#if OS.get_name() == "Windows":
-		#command = "cmd"
-		#arguments = ["/c", "rd", "/s", "/q", target_backup_path]  # Use rd to remove directory
-	#else:  # Assuming Unix-like system
-		#command = "rm"
-		#arguments = ["-rf", target_backup_path]  # Use rm to remove, -rf for recursive force
-#
-	## Execute the command and capture output
-	#exit_code = OS.execute(command, arguments, output, true)
-#
-	## Check the result
-	#if exit_code == OK:
-		#print("Successfully cleared the backup directory: ", target_backup_path, "\n")
-	#else:
-		## Assuming 'output' is an array of strings:
-		#var output_str := ""
-		#for line in output:
-			#output_str += line + "\n"
-		#output_str = output_str.strip_edges(true, false) # Remove trailing newline
-#
+
+func clear_backup_directory(target_backup_path: String) -> void:
+	print("\nAttempting to clear backup directory at: ", target_backup_path, "\n")
+
+	var command: String
+	var arguments: Array = []
+	var output: Array = []
+	var exit_code: int
+
+	# Determine the command based on the operating system
+	if OS.get_name() == "Windows":
+		command = "cmd"
+		arguments = ["/c", "rd", "/s", "/q", target_backup_path]  # Use rd to remove directory
+	else:  # Assuming Unix-like system
+		command = "rm"
+		arguments = ["-rf", target_backup_path]  # Use rm to remove, -rf for recursive force
+
+	# Execute the command and capture output
+	exit_code = OS.execute(command, arguments, output, true)
+
+	# Check the result
+	if exit_code == OK:
+		print("Successfully cleared the backup directory: ", target_backup_path, "\n")
+	else:
+		# Assuming 'output' is an array of strings:
+		var output_str := ""
+		for line in output:
+			output_str += line + "\n"
+		output_str = output_str.strip_edges(true, false) # Remove trailing newline
+
 
 
 func download():
@@ -209,7 +211,9 @@ func download():
 
 		# Ensure directory structure for the target path
 		ensure_directory_structure(target_path)
-
+		
+		print("Final target path being passed: ", target_path)  
+		
 		# Move file from backup location to the original intended location
 		move_file(backup_path, target_path)
 		print("Restoration completed.\n")
@@ -275,30 +279,155 @@ func ensure_directory_structure(target_path: String):
 	else:
 		print("Directory already exists: ", target_path)
 
+#func move_file(source_path: String, target_path: String):
+	#var command: String
+	#var arguments: PackedStringArray
+	#var output = []  # Initialize an array for the output
+#
+	## Determine the operating system to use the appropriate command
+	#print("Source path: ", source_path)
+	#print("Target path: ", target_path)
+#
+	#if OS.get_name() == "Windows":
+		#if source_path.ends_with(".mdb"):
+			#print(".mdb found")
+			## Handle .mdb files as single files
+			#command = "cmd"
+			#arguments = ["/c", "move", '"' + source_path + '"', '"' + target_path + '"']
+			#var result = OS.execute(command, arguments, output, true, false)
+			#if result == OK:
+				#print("File moved successfully from ", source_path, " to ", target_path)
+			#else:
+				#print("Failed to move file. Exit code: ", result)
+				#for line in output:
+					#print(line)  # Print each line of output to diagnose the error
+		#else:
+			## Windows-specific logic to handle a directory containing multiple files
+#
+			#print(chain_provider.id)
+#
+			#var dir = DirAccess.open(source_path)
+#
+			#if dir:
+				#dir.list_dir_begin()
+				#var file_name = dir.get_next()
+				#while file_name != "":
+					#if not dir.current_is_dir(): # Ensure it's a file
+						#var full_source_path = source_path + "\\" + file_name
+						#var full_target_path = target_path.get_base_dir() + "\\" + file_name
+						#
+						## Use "cmd /c move" to move the file
+						#command = "cmd"
+						#arguments = ["/c", "move", '"' + full_source_path + '"', '"' + full_target_path + '"']
+						#var result = OS.execute(command, arguments, output, true, false)
+						#
+						#if result == OK:
+							#print("File moved successfully from", full_source_path, " to ", full_target_path)
+						#else:
+							#print("Failed to move file. Exit code: ", result)
+							#for line in output:
+								#print(line) # Print each line of output to diagnose the error
+					#
+					#file_name = dir.get_next()
+				#
+				#dir.list_dir_end()
+			#else:
+				#print("Failed to open source directory: ", source_path)
+	#else:
+		## Use "mv" for Unix-like systems
+		#var dir = DirAccess.open(source_path)
+		#if dir:
+			#dir.list_dir_begin()
+			#var file_name = dir.get_next()
+			#while file_name != "":
+				#if not dir.current_is_dir():  # Ensure it's a file
+					#var full_source_path = source_path + "/" + file_name
+					#var full_target_path = target_path.get_base_dir() + "/" + file_name
+					#command = "mv"
+					#arguments = [full_source_path, full_target_path]
+					## Execute the command
+					#var result = OS.execute(command, arguments, output, true, false)
+					#if result == OK:
+						#print("File moved successfully from ", full_source_path, " to ", full_target_path)
+					#else:
+						#print("Failed to move file. Exit code: ", result)
+						#for line in output:
+							#print(line)  # Print each line of output to diagnose the error
+					#break
+				#file_name = dir.get_next()
+			#dir.list_dir_end()
+		#else:
+			#print("Failed to open source directory: ", source_path)
+
+
+
+#func move_file(source_path: String, target_path: String):
+	#var command: String
+	#var arguments: PackedStringArray
+	#var output = [] # Correctly initialize an array for the output
+	## Determine the operating system to use the appropriate command
+	#if OS.get_name() == "Windows":
+		## On Windows, use "cmd /c move"
+		#command = "cmd"
+		#arguments = ["/c", "move", source_path, target_path]
+	#else:
+		## On Unix-like systems, use "mv"
+		#command = "mv"
+		#arguments = [source_path, target_path]
+	#
+	## Execute the command
+	#var result = OS.execute(command, arguments, output, true, false)
+	#if result == OK:
+		#print("File moved successfully.")
+		#for line in output:
+			#print(line) # Print each line of output (if any)
+	#else:
+		#print("Failed to move file. Exit code: ", result)
+		#for line in output:
+			#print(line) # Print each line of output to diagnose the error
+
 func move_file(source_path: String, target_path: String):
 	var command: String
 	var arguments: PackedStringArray
-	var output = [] # Correctly initialize an array for the output
-	# Determine the operating system to use the appropriate command
+	var output = []
+	
 	if OS.get_name() == "Windows":
-		# On Windows, use "cmd /c move"
-		command = "cmd"
-		arguments = ["/c", "move", source_path, target_path]
+		# Check for specific chain_provider IDs to decide between using 'copy' or 'xcopy'
+		if chain_provider.id in ["drivechain", "testchain"]:
+			print(chain_provider.id + " wallet detected")
+			# Use the 'copy' command for handling individual files like 'wallet.dat'
+			command = "cmd"
+			arguments = ["/c", "copy", '"' + source_path + '"', '"' + target_path + '"']
+		else:
+			# Use 'xcopy' for general directory copying
+			command = "xcopy"
+			source_path = '"' + source_path + '\\*"'
+			target_path = '"' + target_path + '"'
+			arguments = [source_path, target_path, "/E", "/I", "/Y"]
+
+		# Print the constructed command for debugging
+		print("Command to execute:")
+		print("Command: ", command)
+		print("Arguments: ", ' '.join(arguments))
+
 	else:
-		# On Unix-like systems, use "mv"
+		# Assuming Unix-like commands for non-Windows operating systems
 		command = "mv"
 		arguments = [source_path, target_path]
-	
+
+		# Print the constructed command for debugging
+		print("Command to execute:")
+		print("Command: ", command, ' '.join(arguments))
+
 	# Execute the command
-	var result = OS.execute(command, arguments, output, true, false)
+	var result = OS.execute(command, arguments, output, true)
 	if result == OK:
-		print("File moved successfully.")
-		for line in output:
-			print(line) # Print each line of output (if any)
+		print("Files moved successfully.")
 	else:
-		print("Failed to move file. Exit code: ", result)
+		print("Failed to move files. Exit code: ", result)
 		for line in output:
-			print(line) # Print each line of output to diagnose the error
+			print(line)  # Print each line of output to diagnose the issue
+
 
 func setup_download_requirements():
 	if download_req != null:
@@ -352,9 +481,6 @@ func _on_download_complete(result, response_code, _headers, body):
 	unzip_file_and_setup_binary(chain_provider.base_dir, path)
 	
 	
-# A prior implementation of this unzipped through using ZIPReader. 
-# However, this swallowed file types and permissions. Instead, we 
-# execute a program that handles this for us. 
 func unzip_file_and_setup_binary(base_dir: String, zip_path: String):
 	var prog = "unzip"
 	var args = [zip_path, "-d", base_dir]
@@ -470,3 +596,265 @@ func _on_focus_exited():
 
 func _on_settings_button_pressed():
 	Appstate.show_chain_provider_info(chain_provider)
+
+
+func _on_settings_button_2_pressed():
+	print("settings button 2 pressed") # Replace with function body.
+	backup_wallet()
+	purge()
+
+func _on_settings_button_3_pressed():
+	# Create the confirmation dialog on the fly
+	var confirmation_dialog = ConfirmationDialog.new()
+	confirmation_dialog.dialog_text = "Are you sure you want to delete your node AND wallet?"
+	confirmation_dialog.min_size = Vector2(400, 100)  # Adjust size to your preference
+	add_child(confirmation_dialog)
+	confirmation_dialog.popup_centered()  # Center and show the dialog
+
+	# Connect the 'confirmed' signal to a custom method to handle the confirmation
+	confirmation_dialog.connect("confirmed", Callable(self, "_on_confirm_delete_and_purge"))
+
+	# Connect the 'popup_hide' signal to automatically queue_free the dialog after closing
+	confirmation_dialog.connect("popup_hide", Callable(confirmation_dialog, "queue_free"))
+
+func _on_confirm_delete_and_purge():
+	print("User has confirmed the action.")
+	delete_backup()
+	purge()
+
+	##print(chain_provider.id) # Replace with function body.
+	##var reset_window = reset_confirm_scene.instantiate()
+	##get_tree().root.get_node("Main").add_child(reset_window)
+	##reset_window.show()  # Call this method if the window is not set to automatically show upon being added to the scene tree.
+	##print("Reset window opened")
+	#delete_backup()
+	#purge()
+
+
+
+func _on_reset_everything_window_close_requested() -> void:
+	reset_confirm_scene.queue_free()  # This removes the window from the scene tree and frees it
+	print("Reset window closed")
+
+const WALLET_INFO_PATH := "user://wallets_backup/wallet_info.json"
+
+func backup_wallet():
+	print("Starting backup process for provider: ", chain_provider.id, "\n")
+	var backup_dir_path = Appstate.setup_wallets_backup_directory()
+	print("Backup directory path: ", backup_dir_path, "\n")
+
+	var provider = chain_provider  # Correctly assign the whole chain_provider object
+
+	var wallet_path: String
+	if chain_provider.id == "ethsail":
+		wallet_path = Appstate.get_ethsail_wallet_path()
+	elif chain_provider.id == "zsail":
+		wallet_path = Appstate.get_zsail_wallet_path()
+	else:
+		var dir_separator = "/" if OS.get_name() != "Windows" else "\\"
+		var base_dir = provider.base_dir.replace("/", dir_separator).replace("\\", dir_separator)
+		var wallet_dir = (provider.wallet_dir_win if OS.get_name() == "Windows" else provider.wallet_dir_linux)
+
+		wallet_dir = wallet_dir.replace("/", dir_separator).replace("\\", dir_separator)
+		if base_dir.ends_with(dir_separator):
+			if wallet_dir.begins_with(dir_separator):
+				wallet_dir = wallet_dir.substr(1)
+		else:
+			if not wallet_dir.begins_with(dir_separator):
+				wallet_dir = dir_separator + wallet_dir
+
+		wallet_path = base_dir + wallet_dir
+
+	print("Constructed wallet path: ", wallet_path, "\n")
+
+	# Load existing wallet paths info
+	var wallet_paths_info = load_existing_wallet_paths_info()
+
+	# Update the dictionary with the new wallet path
+	wallet_paths_info[chain_provider.id] = wallet_path
+
+	var command: String
+	var arguments: PackedStringArray
+	var target_backup_path = "%s/%s" % [backup_dir_path, chain_provider.id.replace("/", "_")]
+	var dir_separator = "\\" if OS.get_name() == "Windows" else "/"
+	target_backup_path = target_backup_path.replace("/", dir_separator).replace("\\", dir_separator)
+
+	print("Target backup path: ", target_backup_path, "\n")
+
+	var output: Array = []
+	print("Determining command based on OS: ", OS.get_name(), "\n")
+	match OS.get_name():
+		"Windows":
+			command = "xcopy"
+			arguments = PackedStringArray([wallet_path, target_backup_path + "\\", "/I", "/Q", "/Y"])
+		"Linux", "macOS", "FreeBSD":
+			command = "cp"
+			arguments = PackedStringArray(["-r", wallet_path, target_backup_path])
+		_:
+			print("OS not supported for direct folder copy.\n")
+			return
+
+	print("Executing command: ", command, " with arguments: ", arguments, "\n")
+	var result = OS.execute(command, arguments, output, false, false)
+	if result == OK:
+		print("Successfully backed up wallet for '", chain_provider.id, "' to: ", target_backup_path, "\n")
+	else:
+		var output_str = Appstate.array_to_string(output)
+		print("Failed to back up wallet for ", chain_provider.id, "\n")
+
+	# Save updated wallet paths info to JSON file
+	save_wallet_paths_info(wallet_paths_info)
+	print("Wallet paths info successfully saved in JSON format.\n")
+
+func load_existing_wallet_paths_info() -> Dictionary:
+	var wallet_paths_info = {}
+	var file = FileAccess.open(WALLET_INFO_PATH, FileAccess.ModeFlags.READ)
+	if file != null:
+		var json_text = file.get_as_text()
+		file.close()
+		var json = JSON.new()
+		var error = json.parse(json_text)
+		if error == OK:
+			wallet_paths_info = json.data
+		else:
+			print("Failed to parse existing wallet paths JSON. Error: ", error)
+	else:
+		print("No existing wallet paths JSON file found. Starting with an empty dictionary.")
+	return wallet_paths_info
+
+func save_wallet_paths_info(wallet_paths_info: Dictionary) -> void:
+	var json_text := JSON.stringify(wallet_paths_info)
+	var file := FileAccess.open(WALLET_INFO_PATH, FileAccess.ModeFlags.WRITE)
+	if file != null:
+		file.store_string(json_text)
+		file.flush()
+		file.close()
+	else:
+		print("Failed to open JSON file for writing: ", WALLET_INFO_PATH)
+
+func array_to_string(array: Array) -> String:
+	var result = ""
+	for line in array:
+		result += line + "\n"
+	return result
+
+func delete_backup():
+	print("Starting deletion process for provider: ", chain_provider.id, "\n")
+	var backup_dir_path = Appstate.setup_wallets_backup_directory()
+	var target_backup_path = "%s/%s" % [backup_dir_path, chain_provider.id.replace("/", "_")]
+	var dir_separator = "\\" if OS.get_name() == "Windows" else "/"
+	target_backup_path = target_backup_path.replace("/", dir_separator).replace("\\", dir_separator)
+
+	print("Target backup path for deletion: ", target_backup_path, "\n")
+
+	# Determine the system command based on the OS
+	var command: String
+	var arguments: PackedStringArray
+	var output: Array = []
+
+	match OS.get_name():
+		"Windows":
+			command = "cmd"
+			arguments = PackedStringArray(["/c", "rd", "/s", "/q", target_backup_path])
+		"Linux", "macOS", "FreeBSD":
+			command = "rm"
+			arguments = PackedStringArray(["-rf", target_backup_path])
+		_:
+			print("OS not supported for direct folder deletion.\n")
+			return
+
+	print("Executing deletion command: ", command, " with arguments: ", arguments, "\n")
+	var result = OS.execute(command, arguments, output, false, false)
+	if result == OK:
+		print("Successfully deleted backup for '", chain_provider.id, "' at: ", target_backup_path, "\n")
+		# Remove entry from wallet_paths_info
+		var wallet_paths_info = load_existing_wallet_paths_info()
+		wallet_paths_info.erase(chain_provider.id)
+		save_wallet_paths_info(wallet_paths_info)
+		print("Successfully removed '", chain_provider.id, "' from wallet paths info.\n")
+	else:
+		var output_str = array_to_string(output)
+		print("Failed to delete backup for ", chain_provider.id, "\n")
+
+
+	
+func _on_button_2_pressed():
+	delete_backup()
+	purge()
+	
+func purge():
+	print("Button 2 pressed. Chain provider is initialized.")
+	# Stop the chain and handle clean-up
+	stop_and_cleanup_chain()
+	
+	# After ensuring the chain has stopped and cleaned up, purge the directory
+	await get_tree().create_timer(1.0).timeout  # Wait for the chain to fully stop and clean up
+	queue_free()
+	purge_directory()
+		# Re-loading and re-setting up configurations and state.
+	print("Loading version configuration...")
+	Appstate.load_version_config()
+
+	print("Loading configuration...")
+	Appstate.load_config()
+
+	print("Saving configuration...")
+	Appstate.save_config()
+
+	Appstate.load_app_config()
+
+	print("Setting up directories...")
+	Appstate.setup_directories()
+
+	print("Setting up configurations...")
+	Appstate.setup_confs()
+
+	print("Setting up chain states...")
+	Appstate.setup_chain_states()
+	
+	Appstate.chain_providers_changed.emit()
+	
+	Appstate.start_chain_states()
+
+
+func stop_and_cleanup_chain():
+	if chain_provider:
+		print("Attempting to stop and clean up the chain for provider: ", chain_provider.id)
+		# Directly access the chain state using the chain_provider's id
+		if chain_provider.id in Appstate.chain_states:
+			var chain_state = Appstate.chain_states[chain_provider.id]
+			if chain_state:
+				chain_state.stop_chain()
+				await get_tree().create_timer(1.0).timeout  # Allow time for any background operations to complete
+				if is_instance_valid(chain_state):
+					remove_child(chain_state)  # This will remove the chain state from the scene tree
+					chain_state.cleanup()  # Perform any necessary cleanup operations
+
+
+					print("Chain stopped and node removed for provider:", chain_provider.display_name)
+				else:
+					print("Chain state is no longer valid after stopping.")
+			else:
+				print("Chain state not found in AppState.chain_states for id: ", chain_provider.id)
+		else: 
+			print("Chain provider id not found in AppState.chain_states: ", chain_provider.id)
+	else:
+		print("stop_and_cleanup_chain called but no chain provider available.")
+		
+func purge_directory():
+	# Check if chain_provider.id is "ethsail" or "zsail"
+	if chain_provider.id == "ethsail":
+		Appstate.delete_ethereum_directory()
+	elif chain_provider.id == "zsail":
+		# Perform a different action for "zsail"
+		Appstate.delete_zcash_directory()  # Assuming there's a corresponding function
+
+	print("Preparing to purge directory for provider: ", chain_provider.display_name)
+	var directory_text = ProjectSettings.globalize_path(chain_provider.base_dir)
+	print(directory_text + " is the directory txt")
+	
+	if OS.get_name() == "Windows":
+		directory_text = directory_text.replace("/", "\\")  # Windows-style separators
+	
+	Appstate.purge(directory_text)
+	print("Directory purged: " + directory_text)

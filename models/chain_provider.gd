@@ -50,6 +50,7 @@ func _init(dict: Dictionary):
 				self.binary_zip_hash = dict.get('download_hash_linux', '')
 				self.binary_zip_size = dict.get('download_size_linux', 0)
 			self.base_dir = Appstate.get_home() + "/" + dict.get('base_dir_linux', '')
+			
 		Appstate.platform.WIN:
 			var file_path = dict.get('download_file_win', '')
 			if file_path != '':
@@ -57,8 +58,9 @@ func _init(dict: Dictionary):
 				self.binary_zip_path += ".exe"
 				self.binary_zip_hash = dict.get('download_hash_win', '')
 				self.binary_zip_size = dict.get('download_size_win', 0)
-			self.base_dir = Appstate.get_home() + "\\AppData\\Roaming\\" + dict.get('base_dir_win', '')
-
+			self.base_dir = Appstate.get_home() + "\\AppData\\Roaming\\" + dict.get('base_dir_win', '').replace('/', '\\')
+			print("Windows base_dir:", self.base_dir)
+			print("Windows wallet_dir_win:", self.wallet_dir_win)
 		Appstate.platform.MAC:
 			var file_path = dict.get('download_file_mac', '')
 			if file_path != '':
@@ -75,6 +77,7 @@ func _init(dict: Dictionary):
 		dict.get("binary_zip_path", "")
 	)
 	
+
 	
 func available_for_platform() -> bool:
 	return self.download_url != ""
@@ -138,25 +141,23 @@ func write_start_script():
 
 	var env = ""
 	if id == "testsail" || id == "ethsail" || id == "zsail":
-		env = "SIDESAIL_DATADIR="+base_dir
-		
+		env = "SIDESAIL_DATADIR=" + base_dir
+
 	var cmd = get_executable_path()
 	match id:
-		"thunder","bitnames","bitassets":
+		"thunder", "bitnames", "bitassets":
 			var drivechain = Appstate.get_drivechain_provider()
 			if drivechain == null:
 				return
-				
+
+			# Remove explicit network, mainchain RPC, and RPC port configurations
 			var data_dir = " -d " + ProjectSettings.globalize_path(base_dir + "/data")
-			var net_addr = " -n " + "127.0.0.1:" + str(port * 2)
-			var dc_addr = " -m " + "127.0.0.1:" + str(drivechain.port)
-			var rpc_addr = " -r " + "127.0.0.1:" + str(port)
 			var dc_user = " -u " + drivechain.rpc_user
 			var dc_pass = " -p " + drivechain.rpc_password
-			cmd = cmd + data_dir + net_addr + dc_addr + dc_user + dc_pass + rpc_addr
+			cmd = cmd + data_dir + dc_user + dc_pass
 		_:
 			cmd = cmd + " --conf=" + get_conf_path()
-		
+
 	var file = FileAccess.open(get_start_path(), FileAccess.WRITE)
 	match Appstate.get_platform():
 		Appstate.platform.LINUX:
@@ -180,9 +181,8 @@ func write_start_script():
 			
 			file.store_line("start " + cmd)
 
-			
 	file.close()
-	
+
 	
 func write_dir():
 	var dir = ProjectSettings.globalize_path(base_dir)

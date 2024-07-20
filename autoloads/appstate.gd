@@ -9,7 +9,7 @@ const VERSION_CONFIG               : String = "res://version.cfg"
 
 const DRIVENET_NODE                : String = "172.105.148.135"
 
-@onready var chain_state           : Resource = preload("res://models/chain_state.tscn")
+@onready var chain_state           : Resource = load("res://models/chain_state.tscn")
 @onready var chain_provider_info   : Resource = preload("res://ui/components/dashboard/chain_providers_info/chain_provider_info.tscn")
 #@onready var z_params_modal        : Resource = preload("res://ui/components/dashboard/z_params_modal/z_params_modal.tscn")
 
@@ -29,7 +29,7 @@ func _ready():
 	if Appstate.get_platform() == platform.UNSUPPORTED:
 		push_error("Unsupported platform")
 		get_tree().quit()
-		
+
 	load_app_config()
 	load_version_config()
 	load_config()
@@ -37,12 +37,88 @@ func _ready():
 	setup_directories()
 	setup_confs()
 	setup_chain_states()
-	
+
 	chain_providers_changed.emit()
-	
+
 	start_chain_states()
 	create_cleanup_batch_script()
-	#find_and_print_wallet_paths()
+	#backup_wallets()
+#
+	#print("Starting backup process...\n")
+	#var backup_dir_path = setup_wallets_backup_directory()
+	#print("Backup directory path: ", backup_dir_path, "\n")
+#
+	#var wallet_paths_info = {}
+	#print("Enumerating chain providers...\n")
+#
+	#for id in chain_providers.keys():
+		#print("--------------------------------Processing provider with ID: ", id, "----------------------------------------------\n")
+		#var provider = chain_providers[id]
+#
+		#var wallet_path: String
+		#if id == "ethsail":
+			## Dynamically construct the wallet path for "ethsail" to ensure it works for any user.
+			#wallet_path = get_ethsail_wallet_path()
+		#elif id == "zsail":
+			## Dynamically construct the wallet path for "zsail" to ensure it works for any user.
+			#wallet_path = get_zsail_wallet_path()
+		#else:
+			## Constructing the wallet path for other providers directly from configuration
+			#var dir_separator = "/" if OS.get_name() != "Windows" else "\\"
+			#var base_dir = provider.base_dir.replace("/", dir_separator).replace("\\", dir_separator)
+			#var wallet_dir = (provider.wallet_dir_win if OS.get_name() == "Windows" else provider.wallet_dir_linux)
+#
+			## Check if wallet_dir starts with a slash, and add one if missing
+			#if not wallet_dir.begins_with("/") and not wallet_dir.begins_with("\\"):
+				#wallet_dir = dir_separator + wallet_dir
+#
+			## Replace slashes in wallet_dir with the appropriate separator
+			#wallet_dir = wallet_dir.replace("/", dir_separator).replace("\\", dir_separator)
+#
+			#wallet_path = base_dir + wallet_dir
+#
+		#print("Constructed wallet path: ", wallet_path, "\n")
+				## Save original path info
+		#wallet_paths_info[id] = wallet_path
+#
+		## Determine the system command based on the OS
+		#var command: String
+		#var arguments: PackedStringArray
+		#var target_backup_path = "%s/%s" % [backup_dir_path, id.replace("/", "_")]
+		#if OS.get_name() == "Windows":
+			#target_backup_path = target_backup_path.replace("/", "\\")
+		#print("Target backup path: ", target_backup_path, "\n")
+		#
+				### Check if the backup directory already exists
+		##var dir_access = DirAccess.open(backup_dir_path)
+		##if dir_access.dir_exists(target_backup_path):
+			##print("Existing backup found. Clearing the backup directory...\n")
+			##var remove_result = dir_access.remove(target_backup_path)
+			##if remove_result != OK:
+				##print("Failed to remove existing backup directory: ", target_backup_path, "\n")
+				##continue
+				##
+		#var output: Array = []
+		#print("Determining command based on OS: ", OS.get_name(), "\n")
+		#match OS.get_name():
+			#"Windows":
+				#command = "xcopy"
+				#arguments = PackedStringArray([wallet_path, target_backup_path + "\\", "/E", "/I", "/Q"])
+			#"Linux", "macOS", "FreeBSD":
+				#command = "cp"
+				#arguments = PackedStringArray(["-r", wallet_path, target_backup_path])
+			#_:
+				#print("OS not supported for direct folder copy.\n")
+				#return
+#
+		#print("Executing command: ", command, " with arguments: ", arguments, "\n")
+		## Execute the command
+		#var result = OS.execute(command, arguments, output, false, false)
+		#if result == OK:
+			#print("Successfully backed up wallet for '", id, "' to: ", target_backup_path, "\n")
+		#else:
+			#var output_str = array_to_string(output)
+			#print("Failed to back up wallet for ", id, "\n")
 
 const WALLET_INFO_PATH := "user://wallets_backup/wallet_info.json"
 
@@ -50,88 +126,101 @@ func backup_wallets():
 	print("Starting backup process...\n")
 	var backup_dir_path = setup_wallets_backup_directory()
 	print("Backup directory path: ", backup_dir_path, "\n")
-	var wallet_paths_info = {}
-	
+
+	# Load existing wallet paths info
+	var wallet_paths_info = load_existing_wallet_paths_info()
 	print("Enumerating chain providers...\n")
+
 	for id in chain_providers.keys():
 		print("--------------------------------Processing provider with ID: ", id, "----------------------------------------------\n")
 		var provider = chain_providers[id]
-		
+
 		var wallet_path: String
 		if id == "ethsail":
-			# Dynamically construct the wallet path for "ethsail" to ensure it works for any user.
 			wallet_path = get_ethsail_wallet_path()
 		elif id == "zsail":
-			# Dynamically construct the wallet path for "zsail" to ensure it works for any user.
 			wallet_path = get_zsail_wallet_path()
 		else:
-			# Constructing the wallet path for other providers
-			wallet_path = provider.base_dir
-			if provider.wallet_dir_linux.begins_with("/"):
-				wallet_path += provider.wallet_dir_linux
+			var dir_separator = "/" if OS.get_name() != "Windows" else "\\"
+			var base_dir = provider.base_dir.replace("/", dir_separator).replace("\\", dir_separator)
+			var wallet_dir = provider.wallet_dir_win if OS.get_name() == "Windows" else provider.wallet_dir_linux
+			wallet_dir = wallet_dir.replace("/", dir_separator).replace("\\", dir_separator)
+			if base_dir.ends_with(dir_separator):
+				if wallet_dir.begins_with(dir_separator):
+					wallet_dir = wallet_dir.substr(1)
 			else:
-				wallet_path = "%s/%s" % [wallet_path, provider.wallet_dir_linux]
-			wallet_path = wallet_path.replace("//", "/").replace("/./", "/")
-		
+				if not wallet_dir.begins_with(dir_separator):
+					wallet_dir = dir_separator + wallet_dir
+			wallet_path = base_dir + wallet_dir
+
 		print("Constructed wallet path: ", wallet_path, "\n")
-		# Save original path info
 		wallet_paths_info[id] = wallet_path
-		
-		# Determine the system command based on the OS
+
 		var command: String
 		var arguments: PackedStringArray
 		var target_backup_path = "%s/%s" % [backup_dir_path, id.replace("/", "_")]
+		var dir_separator = "\\" if OS.get_name() == "Windows" else "/"
+		target_backup_path = target_backup_path.replace("/", dir_separator).replace("\\", dir_separator)
 		print("Target backup path: ", target_backup_path, "\n")
-		
-		# Check if the backup directory already exists
-		var dir_access = DirAccess.open(backup_dir_path)
-		if dir_access.dir_exists(target_backup_path):
-			print("Existing backup found. Clearing the backup directory...\n")
-			var remove_result = dir_access.remove(target_backup_path)
-			if remove_result != OK:
-				print("Failed to remove existing backup directory: ", target_backup_path, "\n")
-				continue
 		
 		var output: Array = []
 		print("Determining command based on OS: ", OS.get_name(), "\n")
 		match OS.get_name():
 			"Windows":
 				command = "xcopy"
-				arguments = PackedStringArray([wallet_path + "\\", target_backup_path + "\\", "/E", "/I", "/Q"])
+				arguments = PackedStringArray([wallet_path, target_backup_path + "\\", "/I", "/Q", "/Y"])
 			"Linux", "macOS", "FreeBSD":
 				command = "cp"
 				arguments = PackedStringArray(["-r", wallet_path, target_backup_path])
 			_:
 				print("OS not supported for direct folder copy.\n")
 				return
-		
+
 		print("Executing command: ", command, " with arguments: ", arguments, "\n")
-		# Execute the command
 		var result = OS.execute(command, arguments, output, false, false)
 		if result == OK:
 			print("Successfully backed up wallet for '", id, "' to: ", target_backup_path, "\n")
 		else:
 			var output_str = array_to_string(output)
 			print("Failed to back up wallet for ", id, "\n")
-	
-	# After backing up all wallets, save the wallet_paths_info dictionary for later restoration
-	print("Saving wallet paths info to JSON file.\n")
+
+	# Save updated wallet paths info to JSON file
+	save_wallet_paths_info(wallet_paths_info)
+	print("Wallet paths info successfully saved in JSON format.\n")
+
+func load_existing_wallet_paths_info() -> Dictionary:
+	print("calling load exsiting wallet paths")
+	var wallet_paths_info = {}
+	var file = FileAccess.open(WALLET_INFO_PATH, FileAccess.ModeFlags.READ)
+	if file != null:
+		var json_text = file.get_as_text()
+		file.close()
+		var json = JSON.new()
+		var error = json.parse(json_text)
+		if error == OK:
+			wallet_paths_info = json.data
+		else:
+			print("Failed to parse existing wallet paths JSON. Error: ", error)
+	else:
+		print("No existing wallet paths JSON file found. Starting with an empty dictionary.")
+	return wallet_paths_info
+
+func save_wallet_paths_info(wallet_paths_info: Dictionary) -> void:
 	var json_text := JSON.stringify(wallet_paths_info)
 	var file := FileAccess.open(WALLET_INFO_PATH, FileAccess.ModeFlags.WRITE)
 	if file != null:
 		file.store_string(json_text)
-		file.flush()  # Make sure data is written to disk
+		file.flush()
 		file.close()
-		print("Wallet paths info successfully saved in JSON format.\n")
 	else:
 		print("Failed to open JSON file for writing: ", WALLET_INFO_PATH, "\n")
 
-
 func array_to_string(array: Array) -> String:
-	var result: String = ""
-	for i in array:
-		result += str(i) + "\n"
-	return result.strip_edges(true, false)
+	var result = ""
+	for line in array:
+		result += line + "\n"
+	return result
+
 
 func get_ethsail_wallet_path() -> String:
 	var home_dir_path: String
@@ -140,12 +229,12 @@ func get_ethsail_wallet_path() -> String:
 		return "%s/.ethereum/keystore" % home_dir_path
 	else: # Assuming Windows
 		home_dir_path = OS.get_environment("USERPROFILE")
-		return "%s\\AppData\\Roaming\\Ethereum\\keystore" % home_dir_path
-	
+		return "%s\\AppData\\Local\\Ethereum\\keystore\\" % home_dir_path
+
 func get_zsail_wallet_path() -> String:
 	var os_name := OS.get_name()
 	var zsail_provider = chain_providers["zsail"]
-	var home_dir_path : String 
+	var home_dir_path : String
 	match os_name:
 		"Linux":
 			home_dir_path = OS.get_environment("HOME") + "/" + zsail_provider.wallet_dir_linux
@@ -162,7 +251,7 @@ func get_keystore_path() -> String:
 		home_dir = OS.get_environment("USERPROFILE")
 	else: # Assuming Unix-like for anything not Windows
 		home_dir = OS.get_environment("HOME")
-	
+
 	# Construct the keystore path based on the platform
 	var keystore_path: String
 	if OS.get_name() == "Windows":
@@ -171,15 +260,15 @@ func get_keystore_path() -> String:
 	else:
 		# On Unix-like systems, it's often directly under the user's home directory
 		keystore_path = "%s/.ethereum/keystore" % home_dir
-	
+
 	return keystore_path
 
 func load_app_config():
-	
+
 	DisplayServer.window_set_title("Drivechain Launcher")
 	var dpi = DisplayServer.screen_get_dpi()
 	var scale_factor: float = clampf(snappedf(dpi * 0.01, 0.1), 1, 2)
-	
+
 	app_config = ConfigFile.new()
 	var err = app_config.load(APP_CONFIG_PATH)
 	if err != OK:
@@ -187,21 +276,72 @@ func load_app_config():
 		app_config.save(APP_CONFIG_PATH)
 	else:
 		scale_factor = app_config.get_value("", "scale_factor", scale_factor)
-		
+
 	update_display_scale(scale_factor)
-	
+
 func update_display_scale(scale_factor: float):
 	scale_factor = clampf(scale_factor, 1, 2)
 	var screen_size = DisplayServer.screen_get_size(0)
 	var new_screen_size = Vector2i(screen_size.x / 2, screen_size.y / 2)
 	DisplayServer.window_set_size(new_screen_size)
 	get_tree().root.set_content_scale_factor(scale_factor)
-	
+
 	app_config = ConfigFile.new()
 	app_config.load(APP_CONFIG_PATH)
 	app_config.set_value("", "scale_factor", scale_factor)
 	app_config.save(APP_CONFIG_PATH)
-	
+
+func purge(base_dir: String) -> void:
+	var dir = DirAccess.open(base_dir)
+	if dir:
+		dir.set_include_navigational(true)
+		dir.set_include_hidden(true)
+		dir.list_dir_begin()
+		var filename = dir.get_next()
+		while filename != "":
+			if filename != "." and filename != "..":
+				var full_path = base_dir.path_join(filename)
+				var status = OK  # Initialize status here
+				if dir.current_is_dir():
+					purge(full_path)  # Recursively delete contents of directories
+					status = dir.remove(full_path)
+					if status != OK:  # Use the status variable for error checking
+						push_error("Failed to remove directory: %s" % full_path)
+				else:
+					status = dir.remove(full_path)
+					if status != OK:
+						push_error("Failed to remove file: %s" % full_path)
+				print("Attempting to delete: " + full_path + ", Status: " + str(status))
+			filename = dir.get_next()
+		dir.list_dir_end()
+	else:
+		push_error("Failed to open directory: %s" % base_dir)
+
+
+
+
+
+func purge_all(base_dir: String):
+	#
+	#delete_zcash_directory()
+	#delete_ethereum_directory()
+	#
+	var dir = DirAccess.open(base_dir)
+	if dir:
+		dir.list_dir_begin()
+		var filename = dir.get_next()
+		while filename != "":
+			var full_path = base_dir + "/" + filename  # Corrected path concatenation
+			if dir.current_is_dir():
+				purge_all(full_path)  # Recursively delete contents of directories
+				dir.remove(full_path)  # Remove the directory after clearing it
+			else:
+				dir.remove(full_path)  # Directly remove file
+			filename = dir.get_next()
+		dir.list_dir_end()
+	else:
+		print("Failed to open directory: %s" % base_dir)
+
 
 func purge_except_backup(base_dir: String, keep_dir_name: String):
 	delete_zcash_directory()
@@ -232,7 +372,7 @@ func delete_ethereum_directory():
 	var error_output = Array()
 	var home_path = OS.get_environment("HOME") if OS.get_name() == "Linux" else OS.get_environment("USERPROFILE") # X11 is Linux
 	var ethereum_path = home_path + "/.ethereum" if OS.get_name() == "Linux" else home_path + "\\.ethereum"
-	
+
 	if os_name == "Windows":
 		command = "cmd.exe"
 		arguments.push_back("/C")
@@ -246,9 +386,9 @@ func delete_ethereum_directory():
 	else:
 		print("Unsupported operating system: " + os_name)
 		return
-	
+
 	print("Attempting to delete: " + ethereum_path)
-	
+
 	var result = OS.execute(command, arguments, output, true, true)
 	if result == OK and output.size() == 0:
 		print("Successfully deleted: " + ethereum_path)
@@ -296,18 +436,21 @@ func delete_zcash_directory():
 		else:
 			print("Reason: Unknown error.")
 
-
-
 func setup_wallets_backup_directory():
 	var backup_dir_name := "wallets_backup"
 	var user_data_dir := OS.get_user_data_dir()
-	var backup_dir_path := "%s/%s" % [user_data_dir, backup_dir_name]
+
+	# Normalize path for Windows
+	if OS.get_name() == "Windows":
+		user_data_dir = user_data_dir.replace("/", "\\")
+
+	var backup_dir_path := "%s\\%s" % [user_data_dir, backup_dir_name]
 
 	var dir_access = DirAccess.open(user_data_dir)
 	if dir_access:
 		if dir_access.dir_exists(backup_dir_name):
 			print("Wallets backup directory already exists at: %s" % backup_dir_path)
-			clear_backup_directory(backup_dir_path)
+			#clear_backup_directory(backup_dir_path)
 		# Create the directory after clearing it.
 		var error = dir_access.make_dir_recursive(backup_dir_name)
 		if error != OK:
@@ -317,48 +460,55 @@ func setup_wallets_backup_directory():
 		dir_access.list_dir_end()
 	else:
 		print("Failed to access user data directory.")
-	return backup_dir_path
+	return backup_dir_path 
 
 
-func reset_everything():
-	backup_wallets()
-	print("Starting reset process...")
-	# Purge directories while preserving the wallets_backup folder.
+
+func reset_everything(preserve_wallets: bool = true):
 	var user_data_dir = OS.get_user_data_dir()
-
-	purge_except_backup(user_data_dir, "wallets_backup")
-
-
-	# Remaining operations on chains and configurations.
 	for i in chain_states:
-		#print("Stopping chain: %s" % i)
 		chain_states[i].stop_chain()
 		await get_tree().create_timer(0.1).timeout
-		#print("Removing chain state child: %s" % i)
 		remove_child(chain_states[i])
-		#print("Cleaning up chain state: %s, with data: %s" % [i, str(chain_states[i])])
 		chain_states[i].cleanup()
+
+	if preserve_wallets:
+		backup_wallets()
+		print("Backing up wallets and starting reset process...")
+		delete_zcash_directory()
+		delete_ethereum_directory()
+		purge_except_backup(user_data_dir, "wallets_backup")
+	else:
+		print("Purging everything, including wallets...")
+			
+		delete_zcash_directory()
+		delete_ethereum_directory()
+		purge_all(user_data_dir)  # This will delete everything, including the wallets backup
+		# After a full purge, there is nothing left to do, so return from the function.
+		print("Full purge completed successfully.")
+
+	# If preserve_wallets is true, the function continues with the remaining reset process.
+
 
 	if OS.get_name() == "Windows":
 		print("Executing Windows-specific cleanup...")
-		execute_cleanup_script_windows()  # Windows-specific cleanup 
+		execute_cleanup_script_windows()
 		return
-	
+
 	print("Removing chain providers...")
 	for i in chain_providers:
-		#print("Moving chain provider to trash:", i)
 		var err = OS.move_to_trash(ProjectSettings.globalize_path(chain_providers[i].base_dir))
 		if err != OK:
 			print("Error moving to trash:", err)
 
+	# Clearing the state data.
 	print("Clearing chain states...")
 	chain_states.clear()
-	#print("Chain states after clearing: %s" % str(chain_states))
 
 	print("Clearing chain providers...")
 	chain_providers.clear()
-	#print("Chain providers after clearing: %s" % str(chain_providers))
 
+	# Re-loading and re-setting up configurations and state.
 	print("Loading version configuration...")
 	load_version_config()
 
@@ -367,7 +517,7 @@ func reset_everything():
 
 	print("Saving configuration...")
 	save_config()
-	
+
 	load_app_config()
 
 	print("Setting up directories...")
@@ -384,13 +534,27 @@ func reset_everything():
 
 	print("Starting chain states...")
 	start_chain_states()
-	
+
 	create_cleanup_batch_script()
 
 	print("Reset process completed successfully.")
 
+func restart_program():
+	# Get the current scene
+	var current_scene = get_tree().current_scene
+
+	# Save the name of the current scene
+	var scene_name = current_scene.filename
+
+	# Change to an empty scene to allow the current scene to unload
+	get_tree().change_scene_to_placeholder()
+
+	# Load and change back to the original scene
+	get_tree().change_scene(scene_name)
+
+
 func clear_backup_directory(target_backup_path: String) -> void:
-	print("\nAttempting to clear backup directory \n")
+	print("\nAttempting to clear backup directory\n")
 
 	var command: String
 	var arguments: Array = []
@@ -400,29 +564,25 @@ func clear_backup_directory(target_backup_path: String) -> void:
 	# Determine the command based on the operating system
 	if OS.get_name() == "Windows":
 		command = "cmd"
-		arguments = ["/c", "rd", "/s", "/q", target_backup_path]  # Use rd to remove directory
+		arguments = ["/c", "rd", "/s", "/q", target_backup_path.replace("/", "\\")]  # Adjusted for backslashes
 	else:  # Assuming Unix-like system
 		command = "rm"
-		arguments = ["-rf", target_backup_path]  # Use rm to remove, -rf for recursive force
+		arguments = ["-rf", target_backup_path]
 
 	# Execute the command and capture output
 	exit_code = OS.execute(command, arguments, output, true)
 
 	# Check the result
 	if exit_code == OK:
-		print("Successfully cleared the backup directory \n")
+		print("Successfully cleared the backup directory\n")
 	else:
-		# Assuming 'output' is an array of strings:
-		var output_str := ""
+		print("Failed to clear the backup directory. Output:\n")
 		for line in output:
-			output_str += line + "\n"
-		output_str = output_str.strip_edges(true, false) # Remove trailing newline
-
-
+			print(line)
 
 func create_cleanup_batch_script():
 	var script_path := "user://cleanup_drivechain_data.bat"
-	var launcher_path := OS.get_executable_path() # Dynamically obtain the launcher's executab	create_cleanup_batch_script()le path
+	var launcher_path := OS.get_executable_path() # Dynamically obtain the launcher's executable path
 
 	# Start the script content with an explicit type declaration
 	var script_content: String = """
@@ -434,6 +594,7 @@ func create_cleanup_batch_script():
 	SET LAUNCHER_SIDECHAINS_DIR=drivechain_launcher_sidechains
 	SET TESTCHAIN_DIR=Testchain
 	SET CFG_FILE=chain_providers.cfg
+	SET GETH_DIR=Ethereum
 	REM Define the name of the config file to delete
 
 	REM Introduce a short delay
@@ -466,6 +627,16 @@ func create_cleanup_batch_script():
 		ECHO %CFG_FILE% file not found in the Drivechain Launcher directory.
 	)
 
+	REM Delete the Ethereum directory used by Geth
+	IF EXIST "%LOCALAPPDATA%\\Ethereum" (
+		ECHO Deleting the Ethereum directory...
+		RMDIR /S /Q "%LOCALAPPDATA%\\Ethereum"
+		ECHO Ethereum directory deletion complete.
+	) ELSE (
+		ECHO Ethereum directory not found.
+	)
+
+
 	REM Start the Drivechain Launcher
 	SET LAUNCHER_PATH="{launcher_path}"
 	IF "%LAUNCHER_PATH%"=="" (
@@ -492,6 +663,7 @@ func create_cleanup_batch_script():
 	else:
 		print("Failed to create batch script.")
 
+
 func execute_cleanup_script_windows():
 	create_cleanup_batch_script()
 	print("Starting detached cleanup script...")
@@ -515,14 +687,14 @@ func execute_cleanup_script_windows():
 
 
 
-	
+
 func load_version_config():
 	version_config = ConfigFile.new()
 	var err = version_config.load(VERSION_CONFIG)
 	if err != OK:
 		print(ProjectSettings.globalize_path(VERSION_CONFIG) + " not found. Something went terribly wrong")
 		get_tree().quit() # TODO: Set exit code
-		
+
 	var version = version_config.get_value("", "version")
 	var current_version = app_config.get_value("", "version", "")
 	if current_version == "":
@@ -534,8 +706,8 @@ func load_version_config():
 			app_config.set_value("", "version", version)
 			app_config.save(APP_CONFIG_PATH)
 			reset_everything()
-			
-			
+
+
 func load_config():
 	chain_providers_config = ConfigFile.new()
 	var err = chain_providers_config.load(CHAIN_PROVIDERS_PATH)
@@ -548,8 +720,8 @@ func load_config():
 
 	else:
 		print("Loaded config file from path ", ProjectSettings.globalize_path(CHAIN_PROVIDERS_PATH))
-				
-				
+
+
 	var sections = chain_providers_config.get_sections()
 	var dict = {}
 	for s in sections:
@@ -568,29 +740,29 @@ func load_config():
 		for k in keys:
 			inner_dict[k] = chain_providers_config.get_value(s, k) #TODO: Default?
 		dict[s] = inner_dict
-		
-		
+
+
 	for k in dict:
 		var inner_dict: Dictionary = dict.get(k)
 		if inner_dict == null:
 			continue
 		var cp = ChainProvider.new(inner_dict)
 		chain_providers[cp.id] = cp
-		
+
 	print(str(chain_providers.size()) + " Chain Providers loaded from config")
-	
-	
+
+
 func setup_directories():
 	for k in chain_providers:
 		chain_providers[k].write_dir()
-		
-		
+
+
 func setup_confs():
 	for k in chain_providers:
 		chain_providers[k].write_conf()
 		chain_providers[k].read_conf()
-		
-		
+
+
 func setup_chain_states():
 	for k in chain_providers:
 		var cp = chain_providers[k]
@@ -599,17 +771,17 @@ func setup_chain_states():
 			cs.setup(cp)
 			chain_states[cp.id] = cs
 			add_child(cs)
-			
-			
+
+
 func start_chain_states():
 	for k in chain_states:
 		chain_states[k].start()
-		
-		
+
+
 func save_config():
 	chain_providers_config.save(CHAIN_PROVIDERS_PATH)
-	
-	
+
+
 
 func get_platform_config_suffix() -> String:
 	match OS.get_name():
@@ -630,15 +802,15 @@ func get_platform() -> platform:
 		"Linux", "FreeBSD", "NetBSD", "OpenBSD", "BSD":
 			return Appstate.platform.LINUX
 	return Appstate.platform.UNSUPPORTED
-	
-	
+
+
 func get_home() -> String:
 	match get_platform():
 		Appstate.platform.WIN:
 			return OS.get_environment("USERPROFILE")
 	return OS.get_environment("HOME")
-	
-	
+
+
 func get_drivechain_dir() -> String:
 	match get_platform():
 		Appstate.platform.LINUX:
@@ -648,33 +820,33 @@ func get_drivechain_dir() -> String:
 		Appstate.platform.MAC:
 			return get_home() + "/Library/Application Support/Drivechain"
 	return ""
-	
-	
+
+
 func drivechain_running() -> bool:
 	if not chain_states.has('drivechain'):
 		return false
 	return chain_states['drivechain'].state == ChainState.c_state.RUNNING
-	
-	
+
+
 func get_drivechain_state() -> ChainState:
 	if not chain_states.has('drivechain'):
 		return null
 	return chain_states['drivechain']
-	
-	
+
+
 func get_drivechain_provider() -> ChainProvider:
 	if not chain_providers.has('drivechain'):
 		return null
 	return chain_providers['drivechain']
-	
-	
+
+
 func show_chain_provider_info(chain_provider: ChainProvider):
 	var info = chain_provider_info.instantiate()
 	info.name = "chain_provider_info"
 	get_tree().root.get_node("Main").add_child(info)
 	info.setup(chain_provider)
-	
-	
+
+
 #func show_zparams_modal(chain_provider: ChainProvider):
 	#var zparams = z_params_modal.instantiate()
 	#zparams.name = "z_params_modal"
