@@ -78,10 +78,10 @@ text = "Amount to withdraw:
 
 [node name="ButtonCopyAddress" type="Button" parent="."]
 layout_mode = 0
-offset_left = 247.0
-offset_top = 164.0
-offset_right = 372.0
-offset_bottom = 199.0
+offset_left = 390.0
+offset_top = 181.0
+offset_right = 515.0
+offset_bottom = 216.0
 text = "Copy Address
 "
 
@@ -125,8 +125,8 @@ popup/item_1/id = 1
 popup/item_2/text = "ZSide"
 popup/item_2/id = 2
 
-[connection signal="pressed" from="ButtonRequestInvoice" to="." method="_on_button_test_pressed"]
 [connection signal="pressed" from="ButtonRequestInvoice" to="." method="_on_button_request_invoice_pressed"]
+[connection signal="pressed" from="ButtonRequestInvoice" to="." method="_on_button_test_pressed"]
 [connection signal="pressed" from="ButtonInvoicePaid" to="." method="_on_button_invoice_paid_pressed"]
 [connection signal="pressed" from="ButtonInvoicePaid" to="." method="_on_button_test_complete_pressed"]
 [connection signal="pressed" from="ButtonCopyAddress" to="." method="_on_button_copy_address_pressed"]
