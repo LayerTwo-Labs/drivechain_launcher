@@ -13,10 +13,10 @@ script = ExtResource("1_4itd0")
 
 [node name="ButtonRequestInvoice" type="Button" parent="."]
 layout_mode = 0
-offset_left = 11.0
-offset_top = 54.0
-offset_right = 299.0
-offset_bottom = 85.0
+offset_left = 156.0
+offset_top = 79.0
+offset_right = 470.0
+offset_bottom = 114.0
 text = "Request fast withdrawal test invoice"
 
 [node name="LineEditMainchainAddress" type="LineEdit" parent="."]
@@ -29,33 +29,33 @@ placeholder_text = "Enter mainchain address"
 
 [node name="LabelInvoice" type="Label" parent="."]
 layout_mode = 0
-offset_left = 17.0
-offset_top = 100.0
-offset_right = 57.0
-offset_bottom = 123.0
+offset_left = 18.0
+offset_top = 135.0
+offset_right = 58.0
+offset_bottom = 158.0
 
 [node name="ButtonInvoicePaid" type="Button" parent="."]
 layout_mode = 0
 offset_left = 16.0
-offset_top = 228.0
-offset_right = 117.0
-offset_bottom = 259.0
+offset_top = 298.0
+offset_right = 126.0
+offset_bottom = 333.0
 text = "Invoice Paid"
 
 [node name="LineEditTXID" type="LineEdit" parent="."]
 layout_mode = 0
 offset_left = 16.0
-offset_top = 190.0
+offset_top = 259.0
 offset_right = 620.0
-offset_bottom = 221.0
+offset_bottom = 290.0
 placeholder_text = "Enter L2 payment txid"
 
 [node name="LabelComplete" type="Label" parent="."]
 layout_mode = 0
-offset_left = 19.0
-offset_top = 321.0
-offset_right = 550.0
-offset_bottom = 344.0
+offset_left = 17.0
+offset_top = 341.0
+offset_right = 548.0
+offset_bottom = 364.0
 
 [node name="SpinBoxAmount" type="SpinBox" parent="."]
 layout_mode = 0
@@ -78,10 +78,10 @@ text = "Amount to withdraw:
 
 [node name="ButtonCopyAddress" type="Button" parent="."]
 layout_mode = 0
-offset_left = 441.0
-offset_top = 111.0
-offset_right = 554.0
-offset_bottom = 142.0
+offset_left = 247.0
+offset_top = 164.0
+offset_right = 372.0
+offset_bottom = 199.0
 text = "Copy Address
 "
 
@@ -95,14 +95,39 @@ text = "Debug server"
 
 [node name="LabelConnectionStatus" type="Label" parent="."]
 layout_mode = 0
-offset_left = 337.0
-offset_top = 61.0
-offset_right = 453.0
-offset_bottom = 84.0
+offset_left = 488.0
+offset_top = 88.0
+offset_right = 604.0
+offset_bottom = 111.0
 text = "Not Connected"
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 51.0
+offset_right = 198.0
+offset_bottom = 72.0
+text = "Sidechain to withdraw from:
+"
+
+[node name="ChainSelectionButton" type="OptionButton" parent="."]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 79.0
+offset_right = 40.0
+offset_bottom = 99.0
+item_count = 3
+selected = 0
+popup/item_0/text = "Testchain"
+popup/item_0/id = 0
+popup/item_1/text = "Thunder"
+popup/item_1/id = 1
+popup/item_2/text = "ZSide"
+popup/item_2/id = 2
 
 [connection signal="pressed" from="ButtonRequestInvoice" to="." method="_on_button_test_pressed"]
 [connection signal="pressed" from="ButtonRequestInvoice" to="." method="_on_button_request_invoice_pressed"]
 [connection signal="pressed" from="ButtonInvoicePaid" to="." method="_on_button_invoice_paid_pressed"]
 [connection signal="pressed" from="ButtonInvoicePaid" to="." method="_on_button_test_complete_pressed"]
 [connection signal="pressed" from="ButtonCopyAddress" to="." method="_on_button_copy_address_pressed"]
+[connection signal="item_selected" from="ChainSelectionButton" to="." method="_on_chain_selection_button_item_selected"]
