@@ -9,7 +9,7 @@ const HEADER_PANEL_STYLE_BOX = preload("res://resource/style_box/nodes/header_pa
 @export var drivechain_descr_font_size : int = 16
 @export var drivechain_minimum_height  : int = 100
 @export var subchain_title_font_size   : int = 20
-@export var subchain_descr_font_size   : int = 12
+@export var subchain_descr_font_size   : int = 16
 @export var subchain_minimum_height    : int = 70
 @onready var overlay: ColorRect = $Overlay
 
@@ -47,7 +47,7 @@ func _ready():
 	if not is_drivechain:
 		Appstate.connect("drivechain_downloaded", Callable(self, "update_overlay"))
 	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var font_variation = load("res://path/to/your/lemon_milk_regular.tres")
+	var font_variation = load("res://assets/fonts/LEMONMILK-Regular.otf")
 	heading_label.add_theme_font_override("font", font_variation)
 	description_label.add_theme_font_override("font", font_variation)
 

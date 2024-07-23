@@ -1,96 +1,90 @@
 [gd_scene format=3 uid="uid://bm4wk2nic02cm"]
 
-[node name="Fast Withdrawal" type="MarginContainer"]
+[node name="Wallet" type="MarginContainer"]
 custom_minimum_size = Vector2(835, 553)
 
-[node name="Window" type="VBoxContainer" parent="."]
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 2
+tabs_visible = false
+
+[node name="Window" type="VBoxContainer" parent="TabContainer"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="ConnectionContainer" type="HBoxContainer" parent="Window"]
+[node name="Panel" type="Panel" parent="TabContainer/Window"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BoxContainer" type="BoxContainer" parent="TabContainer/Window/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="Control" type="Control" parent="TabContainer/Window/Panel/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LineEdit" type="TextEdit" parent="TabContainer/Window/Panel/BoxContainer"]
+custom_minimum_size = Vector2(300, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="ColorRect" type="ColorRect" parent="TabContainer/Window/Panel"]
+layout_mode = 2
+offset_right = 833.0
+offset_bottom = 424.0
+size_flags_horizontal = 3
+color = Color(0.278431, 0.278431, 0.278431, 1)
+
+[node name="RichTextLabel" type="Label" parent="TabContainer/Window/Panel/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 44
+text = "Click the button 
+to create wallet or choose advanced
+ mode for further customization."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ConnectionContainer" type="HBoxContainer" parent="TabContainer/Window"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="ButtonConnect" type="Button" parent="Window/ConnectionContainer"]
+[node name="LabelConnectionStatus" type="Label" parent="TabContainer/Window/ConnectionContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+
+[node name="Create" type="Button" parent="TabContainer/Window/ConnectionContainer"]
 custom_minimum_size = Vector2(107, 40)
 layout_mode = 2
 focus_mode = 0
-text = "connect
+text = "Create Wallet
 "
 
-[node name="LabelConnectionStatus" type="Label" parent="Window/ConnectionContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Not Connected"
-
-[node name="CheckButtonLocalhost" type="CheckButton" parent="Window/ConnectionContainer"]
+[node name="Advanced" type="CheckButton" parent="TabContainer/Window/ConnectionContainer"]
 custom_minimum_size = Vector2(319, 0)
 layout_mode = 2
 focus_mode = 0
-text = "Use localhost (debug) server"
+text = "Advanced Mode"
 flat = true
-alignment = 1
+alignment = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Window"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Window"]
+custom_minimum_size = Vector2(2.08165e-12, 50)
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="LineEditMainchainAddress" type="LineEdit" parent="Window/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "Enter mainchain address"
-
-[node name="Label" type="Label" parent="Window/HBoxContainer"]
-layout_mode = 2
-text = "Amount to withdraw:
-"
-
-[node name="SpinBoxAmount" type="SpinBox" parent="Window/HBoxContainer"]
-layout_mode = 2
-min_value = 1.0
-value = 1.0
-suffix = "BTC"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Window"]
-layout_mode = 2
-
-[node name="ButtonRequestInvoice" type="Button" parent="Window/VBoxContainer"]
-custom_minimum_size = Vector2(378, 40)
-layout_mode = 2
-size_flags_horizontal = 0
-focus_mode = 0
-text = "Request fast withdrawal test invoice"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Window/VBoxContainer"]
-layout_mode = 2
-
-[node name="LabelInvoice" type="Label" parent="Window/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ButtonCopyAddress" type="Button" parent="Window/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(157, 40)
-layout_mode = 2
-size_flags_vertical = 8
-focus_mode = 0
-text = "Copy Address
-"
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="Window"]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="LineEditTXID" type="LineEdit" parent="Window/VBoxContainer2"]
-layout_mode = 2
-placeholder_text = "Enter L2 payment txid"
-
-[node name="ButtonInvoicePaid" type="Button" parent="Window/VBoxContainer2"]
-custom_minimum_size = Vector2(142, 40)
-layout_mode = 2
-size_flags_horizontal = 0
-focus_mode = 0
-text = "Invoice Paid"
-
-[node name="LabelComplete" type="Label" parent="Window/VBoxContainer2"]
+[node name="Spacer" type="Control" parent="TabContainer/Window/HBoxContainer2"]
 layout_mode = 2

@@ -12,8 +12,4 @@ const CHAIN_CODE_SIZE = 32 # Size of the chain code in bytes
 @onready var addr_out = $VBoxContainer/HBoxContainer2/VBoxContainer2/AddressesOut
 
 func _ready():
-	input.connect("text_changed", Callable(self, "_on_text_in_changed"))
-
-func _on_text_in_changed(master: String):
-	#var wallet = BitcoinWallet.new()
 	pass

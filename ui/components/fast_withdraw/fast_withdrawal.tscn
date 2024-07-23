@@ -1,0 +1,101 @@
+[gd_scene format=3 uid="uid://bm4wk2nic02cm"]
+
+[node name="Fast Withdrawal" type="MarginContainer"]
+custom_minimum_size = Vector2(835, 553)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Window" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="ConnectionContainer" type="HBoxContainer" parent="Window"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="ButtonConnect" type="Button" parent="Window/ConnectionContainer"]
+custom_minimum_size = Vector2(107, 40)
+layout_mode = 2
+focus_mode = 0
+text = "connect
+"
+
+[node name="LabelConnectionStatus" type="Label" parent="Window/ConnectionContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Not Connected"
+
+[node name="CheckButtonLocalhost" type="CheckButton" parent="Window/ConnectionContainer"]
+custom_minimum_size = Vector2(319, 0)
+layout_mode = 2
+focus_mode = 0
+text = "Use localhost (debug) server"
+flat = true
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Window"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="LineEditMainchainAddress" type="LineEdit" parent="Window/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter mainchain address"
+
+[node name="Label" type="Label" parent="Window/HBoxContainer"]
+layout_mode = 2
+text = "Amount to withdraw:
+"
+
+[node name="SpinBoxAmount" type="SpinBox" parent="Window/HBoxContainer"]
+layout_mode = 2
+min_value = 1.0
+value = 1.0
+suffix = "BTC"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Window"]
+layout_mode = 2
+
+[node name="ButtonRequestInvoice" type="Button" parent="Window/VBoxContainer"]
+custom_minimum_size = Vector2(378, 40)
+layout_mode = 2
+size_flags_horizontal = 0
+focus_mode = 0
+text = "Request fast withdrawal test invoice"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Window/VBoxContainer"]
+layout_mode = 2
+
+[node name="LabelInvoice" type="Label" parent="Window/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ButtonCopyAddress" type="Button" parent="Window/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(157, 40)
+layout_mode = 2
+size_flags_vertical = 8
+focus_mode = 0
+text = "Copy Address
+"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Window"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="LineEditTXID" type="LineEdit" parent="Window/VBoxContainer2"]
+layout_mode = 2
+placeholder_text = "Enter L2 payment txid"
+
+[node name="ButtonInvoicePaid" type="Button" parent="Window/VBoxContainer2"]
+custom_minimum_size = Vector2(142, 40)
+layout_mode = 2
+size_flags_horizontal = 0
+focus_mode = 0
+text = "Invoice Paid"
+
+[node name="LabelComplete" type="Label" parent="Window/VBoxContainer2"]
+layout_mode = 2
