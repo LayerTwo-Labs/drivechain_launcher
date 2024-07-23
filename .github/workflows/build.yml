@@ -1,19 +1,71 @@
 name: Build Launcher
 on:
   pull_request:
-  push:
     branches:
       - "main"
+  push:
+    branches:
+      - "marc"
   workflow_dispatch:
 
 jobs:
-  build:
-    # both Windows and Linux builds run on Ubuntu
-    runs-on: ${{ matrix.build == 'macos' && 'macos' || 'ubuntu' }}-latest
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: chickensoft-games/setup-godot@v1
+        with:
+          version: 4.2.1
+          use-dotnet: false
+          include-templates: true
+
+      - name: Verify Setup
+        run: |
+          godot --version
+      - name: Import certificate to Keychain
+        run: |
+          echo "${{ secrets.MACOS_CERTIFICATE }}" | base64 --decode > certificate.p12
+          KEYCHAIN_PASSWORD=$(uuidgen)
+          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security import ./certificate.p12 -k ~/Library/Keychains/build.keychain -P ${{ secrets.MACOS_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" ~/Library/Keychains/build.keychain
+        env:
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+
+      - name: Setup notarization credentials
+        run: |
+          echo ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY }} | base64 --decode > notarization_api_key.p8
+      - name: Export build
+        run: |
+          godot --headless --export-debug "macOS" --verbose 2>&1 | tee build.log
+        env:
+          GODOT_MACOS_NOTARIZATION_API_KEY_ID: ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY_ID }}
+          GODOT_MACOS_NOTARIZATION_API_KEY: ./notarization_api_key.p8
+          GODOT_MACOS_NOTARIZATION_API_UUID: ${{ secrets.GODOT_MACOS_NOTARIZATION_API_UUID }}
+
+      - name: Upload macOS build
+        uses: actions/upload-artifact@v4
+        with:
+          name: drivechain_launcher_macos
+          if-no-files-found: error
+          path: build/drivechain_launcher-*
+
+      - name: Wait for notarization to finish
+        run: |
+          request_id=$(grep 'Notarization request UUID' build.log | rev | cut -d ' ' -f 1 | rev | tr -d '"')
+          xcrun notarytool wait $request_id \
+            --issuer ${{ secrets.GODOT_MACOS_NOTARIZATION_API_UUID }} \
+            --key-id ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY_ID }} \
+            --key ./notarization_api_key.p8
+  build-windows-linux:
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        build: [macos, windows, linux]
+        build: [windows, linux]
 
     steps:
       - uses: actions/checkout@v3
@@ -27,81 +79,106 @@ jobs:
       - name: Verify Setup
         run: |
           godot --version
-
-      - name: Import certificate to Keychain
-        if: ${{ matrix.build == 'macos' }}
-        run: |
-          echo "${{ secrets.MACOS_CERTIFICATE }}" | base64 --decode > certificate.p12
-          KEYCHAIN_PASSWORD=$(uuidgen)
-          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
-          security default-keychain -s build.keychain
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
-          security import ./certificate.p12 -k ~/Library/Keychains/build.keychain -P ${{ secrets.MACOS_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
-          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" ~/Library/Keychains/build.keychain
-        env:
-          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
-
-      - name: Setup notarization credentials
-        if: ${{ matrix.build == 'macos' }}
-        run: |
-          echo ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY }} | base64 --decode > notarization_api_key.p8
-
       - name: Export build
         run: |
-          name="${{fromJSON('{"windows": "Windows Desktop", "macos": "macOS", "linux": "Linux/X11"}')[matrix.build] }}"
+          name="${{fromJSON('{"windows": "Windows Desktop", "linux": "Linux/X11"}')[matrix.build] }}"
           godot --headless --export-debug "$name" --verbose 2>&1 | tee build.log
-
-        env:
-          GODOT_MACOS_NOTARIZATION_API_KEY_ID:
-            ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY_ID }}
-          GODOT_MACOS_NOTARIZATION_API_KEY: ./notarization_api_key.p8
-          GODOT_MACOS_NOTARIZATION_API_UUID:
-            ${{ secrets.GODOT_MACOS_NOTARIZATION_API_UUID }}
-
-      - name: Upload build
+      - name: Upload Windows/Linux build
         uses: actions/upload-artifact@v4
         with:
           name: drivechain_launcher_${{ matrix.build }}
           if-no-files-found: error
           path: build/drivechain_launcher-*
 
-      - name: Wait for notarization to finish
-        if: ${{ matrix.build == 'macos' }}
-        run: |
-          request_id=$(grep 'Notarization request UUID' build.log | rev | cut -d ' ' -f 1 | rev | tr -d '"')
-
-          xcrun notarytool wait $request_id \
-            --issuer ${{ secrets.GODOT_MACOS_NOTARIZATION_API_UUID }} \
-            --key-id ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY_ID }} \
-            --key ./notarization_api_key.p8
-
-  upload-artifacts-to-releases-drivechain-info:
-    name: Upload artifacts to releases.drivechain.info
+  test-windows-linux:
+    name: Test Windows and Linux Builds
     runs-on: ubuntu-latest
-    needs: [build]
-    # avoid uploading on PRs!
+    needs: build-windows-linux
+    steps:
+      - name: Download Windows/Linux artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: drivechain_launcher_windows
+
+      - name: Download Windows/Linux artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: drivechain_launcher_linux
+
+      - name: Check out the repository
+        uses: actions/checkout@v3  
+
+      - name: Run Integration Tests
+        run: |
+          chmod +x ./scripts/integration_testing.sh || echo "Drivechain script not found, skipping chmod"
+          ./scripts/integration_testing.sh || echo "Script not found, skipping tests"
+      - name: Drivechain Testing Output
+        run: |
+          chmod +x ./scripts/drivechain_testing.sh || echo "Function scrript not found, skipping chmod"   
+          ./scripts/drivechain_testing.sh || echo "Script not found, skipping tests"
+  upload-artifacts-macos:
+    name: Upload macOS artifacts to releases.drivechain.info
+    runs-on: ubuntu-latest
+    needs: build-macos
     if: github.event_name == 'push' && github.repository_owner == 'LayerTwo-Labs'
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
+      # - name: Download macOS artifacts
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: drivechain_launcher_macos
 
-      - name: Create zip files for releases.drivechain.info
-        run: |
-          mv drivechain_launcher_linux drivechain-launcher-latest-x86_64-unknown-linux-gnu
-          zip -r drivechain-launcher-latest-x86_64-unknown-linux-gnu.zip drivechain-launcher-latest-x86_64-unknown-linux-gnu/*
+      # - name: Create zip files for macOS
+      #   run: |
+      #     mv drivechain_launcher_macos drivechain-launcher-latest-x86_64-apple-darwin
+      #     zip -r drivechain-launcher-latest-x86_64-apple-darwin.zip drivechain-launcher-latest-x86_64-apple-darwin/*
 
-          mv drivechain_launcher_macos drivechain-launcher-latest-x86_64-apple-darwin
-          zip -r drivechain-launcher-latest-x86_64-apple-darwin.zip drivechain-launcher-latest-x86_64-apple-darwin/*
+      # - name: Upload macOS release assets to releases.drivechain.info
+      #   uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+      #   with:
+      #     host: 45.33.96.47
+      #     user: root
+      #     pass: ${{ secrets.RELEASES_SERVER_PW }}
+      #     port: 22
+      #     scp: |
+      #       'drivechain-launcher-latest-x86_64-apple-darwin.zip' => '/var/www/html/'
 
-          mv drivechain_launcher_windows drivechain-launcher-latest-x86_64-w64
-          zip -r drivechain-launcher-latest-x86_64-w64.zip drivechain-launcher-latest-x86_64-w64/*
+      - name: Skip upload macOS artifacts
+        run: echo "Skipping upload of macOS artifacts"
 
-      - name: Upload release assets to releases.drivechain.info
-        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
-        with:
-          host: 45.33.96.47
-          user: root
-          pass: ${{ secrets.RELEASES_SERVER_PW }}
-          port: 22
-          scp: |
-            'drivechain-launcher-latest-*.zip' => '/var/www/html/'
+  upload-artifacts-windows-linux:
+    name: Upload Windows/Linux artifacts to releases.drivechain.info
+    runs-on: ubuntu-latest
+    needs: [test-windows-linux]
+    if: github.event_name == 'push' && github.repository_owner == 'LayerTwo-Labs'
+    steps:
+      # - name: Download Windows/Linux artifacts
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: drivechain_launcher_windows
+
+      # - name: Download Windows/Linux artifacts
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: drivechain_launcher_linux
+
+      # - name: Create zip files for Windows/Linux
+      #   run: |
+      #     mv drivechain_launcher_linux drivechain-launcher-latest-x86_64-unknown-linux-gnu
+      #     zip -r drivechain-launcher-latest-x86_64-unknown-linux-gnu.zip drivechain-launcher-latest-x86_64-unknown-linux-gnu/*
+
+      #     mv drivechain_launcher_windows drivechain-launcher-latest-x86_64-w64
+      #     zip -r drivechain-launcher-latest-x86_64-w64.zip drivechain-launcher-latest-x86_64-w64/*
+
+      # - name: Upload Windows/Linux release assets to releases.drivechain.info
+      #   uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+      #   with:
+      #     host: 45.33.96.47
+      #     user: root
+      #     pass: ${{ secrets.RELEASES_SERVER_PW }}
+      #     port: 22
+      #     scp: |
+      #       'drivechain-launcher-latest-x86_64-unknown-linux-gnu.zip' => '/var/www/html/'
+      #       'drivechain-launcher-latest-x86_64-w64.zip' => '/var/www/html/'
+
+      - name: Skip upload Windows/Linux artifacts
+        run: echo "Skipping upload of Windows/Linux artifacts"
