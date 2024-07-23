@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://d3umh8q67cxar"]
+[gd_scene load_steps=13 format=3 uid="uid://d3umh8q67cxar"]
 
 [ext_resource type="Theme" uid="uid://h5leavcufiab" path="res://resource/theme/black.theme" id="1_ool8a"]
 [ext_resource type="Script" path="res://source/application/tabs_format.gd" id="2_6g70o"]
@@ -9,8 +9,6 @@
 [ext_resource type="Texture2D" uid="uid://itqhnp8fc877" path="res://assets/images/help-circle-outline-svgrepo-com.svg" id="4_a3gdc"]
 [ext_resource type="Texture2D" uid="uid://dgqkqb642nnfx" path="res://assets/images/exit-svgrepo-com.svg" id="4_ry4n6"]
 [ext_resource type="Script" path="res://source/application/mnemonic.gd" id="4_sm74a"]
-[ext_resource type="Script" path="res://source/application/AddressInfoPanel.gd" id="5_naq5m"]
-[ext_resource type="Script" path="res://source/application/AddressInfo.gd" id="6_fskls"]
 [ext_resource type="PackedScene" uid="uid://bm4wk2nic02cm" path="res://ui/components/fast_withdraw/fast_withdrawal.tscn" id="7_y15xs"]
 [ext_resource type="Script" path="res://ui/components/fast_withdraw/fast_withdrawal_format.gd" id="8_xa106"]
 
@@ -82,16 +80,18 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(2.08165e-12, 40)
 layout_mode = 2
 
-[node name="LineEdit" type="TextEdit" parent="MarginContainer/TabContainer/Wallet/MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
+[node name="MnemonicIn" type="TextEdit" parent="MarginContainer/TabContainer/Wallet/MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
 custom_minimum_size = Vector2(2.08165e-12, 100)
 layout_mode = 2
 placeholder_text = "Enter 12 words separated by a space"
+wrap_mode = 1
+autowrap_mode = 2
 
 [node name="Control2" type="Control" parent="MarginContainer/TabContainer/Wallet/MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
 custom_minimum_size = Vector2(2.08165e-12, 50)
 layout_mode = 2
 
-[node name="Button" type="Button" parent="MarginContainer/TabContainer/Wallet/MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
+[node name="Load" type="Button" parent="MarginContainer/TabContainer/Wallet/MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
 custom_minimum_size = Vector2(2.08165e-12, 60)
 layout_mode = 2
 text = "LOAD WALLET"
@@ -150,17 +150,22 @@ icon = ExtResource("4_ry4n6")
 [node name="LineEdit" type="LineEdit" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "Input random string or generate random"
+placeholder_text = "Input random string or fast create"
+max_length = 64
 expand_to_text_length = true
 
 [node name="Random" type="Button" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(2.08165e-12, 50)
 layout_mode = 2
-text = "Generate Random Entropy"
+text = "Fast Create"
 
 [node name="Help" type="Button" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
 layout_mode = 2
 icon = ExtResource("4_a3gdc")
+
+[node name="Hide" type="CheckButton" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Hide"
 
 [node name="Spacer" type="Control" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer"]
 custom_minimum_size = Vector2(2.08165e-12, 20)
@@ -190,120 +195,20 @@ horizontal_alignment = 1
 [node name="Spacer" type="Control" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="Paths" type="Panel" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2"]
+[node name="Paths" type="VBoxContainer" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-script = ExtResource("5_naq5m")
 
 [node name="Header" type="Label" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -81.5
-offset_right = 81.5
-offset_bottom = 29.0
-grow_horizontal = 2
-text = "Address Information"
+layout_mode = 2
+text = "BIP 32 HD Information"
 horizontal_alignment = 1
 
-[node name="AddressContainer" type="VBoxContainer" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths"]
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -25.0
-offset_bottom = 77.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ColorRect2" type="ColorRect" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/AddressContainer"]
-custom_minimum_size = Vector2(2.08165e-12, 4)
+[node name="LaunchPopUp" type="Button" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths"]
+custom_minimum_size = Vector2(2.08165e-12, 100)
 layout_mode = 2
-
-[node name="AddrTemplate" type="HBoxContainer" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/AddressContainer"]
-layout_mode = 2
-alignment = 1
-
-[node name="Path" type="Label" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/AddressContainer/AddrTemplate"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "Path"
-
-[node name="Control2" type="Control" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/AddressContainer/AddrTemplate"]
-custom_minimum_size = Vector2(40, 2.08165e-12)
-layout_mode = 2
-
-[node name="ColorRect" type="ColorRect" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/AddressContainer/AddrTemplate"]
-custom_minimum_size = Vector2(2, 2.08165e-12)
-layout_mode = 2
-
-[node name="Control3" type="Control" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/AddressContainer/AddrTemplate"]
-custom_minimum_size = Vector2(60, 2.08165e-12)
-layout_mode = 2
-
-[node name="PrivKey" type="Label" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/AddressContainer/AddrTemplate"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "Private Key"
-
-[node name="CheckButton" type="CheckButton" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/AddressContainer/AddrTemplate"]
-layout_mode = 2
-
-[node name="Control4" type="Control" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/AddressContainer/AddrTemplate"]
-custom_minimum_size = Vector2(20, 2.08165e-12)
-layout_mode = 2
-
-[node name="ColorRect2" type="ColorRect" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/AddressContainer/AddrTemplate"]
-custom_minimum_size = Vector2(2, 2.08165e-12)
-layout_mode = 2
-
-[node name="Control5" type="Control" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/AddressContainer/AddrTemplate"]
-custom_minimum_size = Vector2(40, 2.08165e-12)
-layout_mode = 2
-
-[node name="Address" type="Label" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/AddressContainer/AddrTemplate"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "Address"
-
-[node name="ColorRect" type="ColorRect" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/AddressContainer"]
-custom_minimum_size = Vector2(2.08165e-12, 4)
-layout_mode = 2
-
-[node name="GridContainer" type="GridContainer" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/AddressContainer"]
-layout_mode = 2
-script = ExtResource("6_fskls")
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -156.0
-offset_top = -29.0
-offset_right = 156.0
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="Prev" type="Button" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/HBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "Prev"
-
-[node name="Page" type="Label" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-horizontal_alignment = 1
-
-[node name="Next" type="Button" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/HBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "Next
-"
+size_flags_vertical = 10
+text = "CREATE WALLET"
 
 [node name="Spacer2" type="Control" parent="MarginContainer/TabContainer/Wallet/MarginContainer2/VBoxContainer"]
 custom_minimum_size = Vector2(2.08165e-12, 20)
