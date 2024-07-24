@@ -5,11 +5,17 @@ extends HBoxContainer
 func _ready():
 	resolution_list_button.item_selected.connect(_on_resolution_selected)
 	set_default_resolution()
+	remove_non_default_options()
 
 func set_default_resolution():
 	if resolution_list_button.get_item_count() > 6:  # Ensure there are at least 6 items
 		apply_resolution(6)  # Apply the 6th resolution in the list (index 5)
 		resolution_list_button.select(6)  # Select the 6th item in the OptionButton
+
+func remove_non_default_options():
+	var default_resolution = resolution_list_button.get_item_text(6)
+	resolution_list_button.clear()
+	resolution_list_button.add_item(default_resolution)
 
 func _on_resolution_selected(index: int):
 	var resolution = apply_resolution(index)

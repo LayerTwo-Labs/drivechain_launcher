@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://bm4wk2nic02cm"]
+[gd_scene format=3 uid="uid://q0oe03uvidck"]
 
 [node name="Wallet" type="MarginContainer"]
 custom_minimum_size = Vector2(835, 553)

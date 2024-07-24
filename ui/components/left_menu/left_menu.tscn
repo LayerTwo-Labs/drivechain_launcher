@@ -1,10 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://dwhtby81ylt3s"]
+[gd_scene load_steps=8 format=3 uid="uid://dwhtby81ylt3s"]
 
 [ext_resource type="Script" path="res://ui/components/left_menu/left_menu.gd" id="1_yja75"]
 [ext_resource type="Texture2D" uid="uid://blq6pvspmkcbj" path="res://assets/images/prev.svg" id="3_3lhq3"]
 [ext_resource type="Texture2D" uid="uid://c5ddyq86urmmy" path="res://assets/images/next.svg" id="7_k0tsh"]
 [ext_resource type="Script" path="res://ui/components/left_menu/Quotes.gd" id="7_kx1k8"]
-[ext_resource type="PackedScene" uid="uid://b5wmjp1psgsvr" path="res://ui/components/fast_withdraw/fast_withdraw.tscn" id="10_kuvno"]
 [ext_resource type="FontFile" uid="uid://ciu7chyqqs4k7" path="res://assets/fonts/Saira_Expanded-Bold.ttf" id="11_6qy05"]
 [ext_resource type="FontFile" uid="uid://dgxbgdcr3s84u" path="res://assets/fonts/Saira_Expanded-Regular.ttf" id="12_nwgc3"]
 
@@ -17,11 +16,11 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -43.0
+offset_top = -123.0
 grow_horizontal = 2
 grow_vertical = 0
 size_flags_horizontal = 3
-size_flags_vertical = 8
+size_flags_vertical = 6
 theme_override_styles/panel = SubResource("StyleBoxFlat_c8gs8")
 script = ExtResource("1_yja75")
 
@@ -33,9 +32,7 @@ theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
 [node name="HBox" type="HBoxContainer" parent="MarginContainer"]
-custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-size_flags_vertical = 8
 size_flags_stretch_ratio = 0.0
 theme_override_constants/separation = 8
 
@@ -44,40 +41,22 @@ layout_mode = 2
 text = "Prev"
 
 [node name="Quotes" type="Label" parent="MarginContainer/HBox"]
-visible = false
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 10
-text = "\"Used to the conditions of a capitalistic environment, the average American takes it for granted that every year business makes something new and better accessible to him. Looking backward upon the years of his own life, he realizes that many implements that were totally unknown in the days of his youth and many others which at that time could be enjoyed only by a small minority are now standard equipment of almost every household.\"
---Ludwig von Mises"
-horizontal_alignment = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="Author" type="Label" parent="MarginContainer/HBox"]
 layout_mode = 2
-
-[node name="Spacer3" type="Control" parent="MarginContainer/HBox"]
-layout_mode = 2
-size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
 
 [node name="NextButton" type="Button" parent="MarginContainer/HBox"]
 layout_mode = 2
 text = "Next"
-
-[node name="FastWithdrawWindow" type="Window" parent="."]
-title = "Fast Withdrawal"
-initial_position = 2
-size = Vector2i(800, 500)
-visible = false
-wrap_controls = true
-transient = true
-exclusive = true
-unresizable = true
-content_scale_mode = 1
-content_scale_aspect = 4
-
-[node name="FastWithdraw" parent="FastWithdrawWindow" instance=ExtResource("10_kuvno")]
 
 [node name="QuotesDialog" type="AcceptDialog" parent="."]
 title = "QUOTES"
@@ -142,6 +121,5 @@ autowrap_mode = 2
 script = ExtResource("7_kx1k8")
 author_label = NodePath("../Header/Author")
 
-[connection signal="close_requested" from="FastWithdrawWindow" to="." method="_on_fast_withdraw_window_close_requested"]
 [connection signal="pressed" from="QuotesDialog/Box/Header/PrevButton" to="QuotesDialog/Box/Quotes" method="_on_prev_button_pressed"]
 [connection signal="pressed" from="QuotesDialog/Box/Header/NextButton" to="QuotesDialog/Box/Quotes" method="_on_next_button_pressed"]

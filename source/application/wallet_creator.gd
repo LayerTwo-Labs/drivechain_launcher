@@ -95,9 +95,14 @@ func _on_return_button_pressed():
 	clear_all_output()
 
 func save_wallet_data():
-	var file = FileAccess.open("res://wallet_master_seeds.txt", FileAccess.WRITE)
-	var json_string = JSON.stringify(current_wallet_data)
-	file.store_line(json_string)
+	var seed_data = {
+		"seed_hex": current_wallet_data["seed"],
+		"seed_binary": current_wallet_data["bip39_bin"],
+		"mnemonic": current_wallet_data["mnemonic"]
+	}
+	var file = FileAccess.open("res://starters/wallet_master_seed.txt", FileAccess.WRITE)
+	var json_string = JSON.stringify(seed_data)
+	file.store_string(json_string)
 	file.close()
 
 func _create_wallet(input: String):
@@ -380,6 +385,12 @@ func _on_background_gui_input(event):
 
 func _on_popup_yes_pressed():
 	save_wallet_data()
+	
+	var Bitcoin = BitcoinWallet.new()
+	var sidechain_slots = get_sidechain_info()
+	var sidechain_data = Bitcoin.generate_sidechain_starters(current_wallet_data["seed"], current_wallet_data["mnemonic"], sidechain_slots)
+	save_sidechain_info(sidechain_data)
+	
 	_on_popup_close_pressed()
 
 func _on_popup_close_pressed() -> void:
@@ -400,12 +411,42 @@ func _toggle_output_visibility(is_visible: bool):
 
 	var bip39_info_label = bip39_panel.get_node("BIP39Info")
 	if bip39_info_label:
-		bip39_info_label.visible = is_visible
+		if is_visible:
+			# Restore the full content
+			update_bip39_panel(current_wallet_data)
+		else:
+			# Keep only headers visible
+			var headers_text = """[table=2]
+[cell][color=white][b][u]BIP39 Hex:[/u][/b][/color][/cell] [cell][/cell]
+[cell][color=white][b][u]BIP39 Bin:
+	
+	
+	
+[/u][/b][/color][/cell] [cell][/cell]
+[cell][color=white][b][u]BIP39 Checksum:[/u][/b][/color][/cell] [cell][/cell]
+[cell][color=white][b][u]BIP39 Checksum Hex:[/u][/b][/color][/cell] [cell][/cell]
+[/table]"""
+			bip39_info_label.text = headers_text
 
-	# Toggle visibility for Launch panel info
 	var launch_info_label = launch_panel.get_node("VBoxContainer/LaunchInfo")
 	if launch_info_label:
-		launch_info_label.visible = is_visible
+		if is_visible:
+			# Restore the full content
+			update_launch_panel(current_wallet_data)
+		else:
+			# Keep only headers visible
+			var headers_text = """[table=2]
+[cell][color=white][b][u]HD Key Data:
+
+[/u][/b][/color][/cell] [cell][/cell]
+[cell][color=white][b][u]Master Key:
+
+[/u][/b][/color][/cell] [cell][/cell]
+[cell][color=white][b][u]Chain Code:
+
+[/u][/b][/color][/cell] [cell][/cell]
+[/table]"""
+			launch_info_label.text = headers_text
 
 func _on_load_button_pressed():
 	var wallet = BitcoinWallet.new()
@@ -427,17 +468,25 @@ func _on_load_button_pressed():
 		return
 	print("Wallet generated successfully:")
 
-	# Write wallet info to file
-	var file = FileAccess.open("res://wallet_master_seeds.txt", FileAccess.WRITE)
-	if file:
-		var json_string = JSON.stringify(result)
-		file.store_line(json_string)
-		file.close()
-		if tabs:
-			tabs.current_tab = 1
-		print("Wallet information saved to wallet_master_seeds.txt")
-	else:
-		print("Error: Unable to write to wallet_master_seeds.txt")
+	# Save master wallet data in the new format
+	var seed_data = {
+		"mnemonic": result["mnemonic"],
+		"seed_binary": result["bip39_bin"],
+		"seed_hex": result["seed"]
+	}
+	var file = FileAccess.open("res://starters/wallet_master_seed.txt", FileAccess.WRITE)
+	var json_string = JSON.stringify(seed_data)
+	file.store_string(json_string)
+	file.close()
+
+	# Generate and save sidechain starters
+	var sidechain_slots = get_sidechain_info()
+	var sidechain_data = wallet.generate_sidechain_starters(result["seed"], result["mnemonic"], sidechain_slots)
+	save_sidechain_info(sidechain_data)
+
+	if tabs:
+		tabs.current_tab = 1
+	print("Wallet and sidechain information saved.")
 
 func _on_fast_button_pressed():
 	entropy_in.text = ""
@@ -445,3 +494,30 @@ func _on_fast_button_pressed():
 	var entropy = wallet_generator.fast_create()
 	entropy_in.text = entropy
 	_on_entropy_in_changed(entropy)
+	
+func get_sidechain_info():
+	var sidechain_info = []
+	var file = FileAccess.open("res://chain_providers.cfg", FileAccess.READ)
+	if file:
+		var current_section = ""
+		while !file.eof_reached():
+			var line = file.get_line().strip_edges()
+			if line.begins_with("[") and line.ends_with("]"):
+				current_section = line.substr(1, line.length() - 2)
+			elif line.begins_with("slot=") and current_section != "drivechain":
+				var slot = line.split("=")[1].to_int()
+				if slot != -1:
+					sidechain_info.append(slot)
+	return sidechain_info
+
+func save_sidechain_info(sidechain_data):
+	for key in sidechain_data.keys():
+		if key.begins_with("sidechain_"):
+			var slot = key.split("_")[1]
+			var filename = "res://starters/sidechain_%s_starter.txt" % slot
+			var file = FileAccess.open(filename, FileAccess.WRITE)
+			if file:
+				file.store_string(JSON.stringify(sidechain_data[key]))
+				file.close()
+			else:
+				print("Failed to save sidechain starter information for slot ", slot)

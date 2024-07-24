@@ -15,9 +15,9 @@ func setup_grid():
 	for child in get_children():
 		child.queue_free()
 	
-	var font = load("res://assets/fonts/Satoshi-Bold.otf")
+	var font = load(header_font_path)
 	var small_font = font.duplicate()
-	var default_size = 16  # Set this to your desired default font size
+	var default_size = 14  # Set this to your desired default font size
 	var small_size = int(default_size * 0.7)  # Adjust this factor to get the desired size
 	
 	# Set up the grid

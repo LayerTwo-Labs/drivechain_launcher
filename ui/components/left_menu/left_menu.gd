@@ -4,15 +4,21 @@ extends PanelContainer
 @onready var author_label: Label = $MarginContainer/HBox/Author
 @onready var next_button: Button = $MarginContainer/HBox/NextButton
 @onready var prev_button: Button = $MarginContainer/HBox/PrevButton
-
-var quotes: Array = []  # Changed to untyped Array
+var quotes: Array = []
 var current_quote_index: int = 0
+var quote_timer: Timer
 
 func _ready() -> void:
 	load_quotes()
 	change_quote(0)
 	next_button.pressed.connect(self._on_next_button_pressed)
 	prev_button.pressed.connect(self._on_prev_button_pressed)
+	
+	quote_timer = Timer.new()
+	quote_timer.timeout.connect(self._on_quote_timer_timeout)
+	quote_timer.set_wait_time(10)
+	add_child(quote_timer)
+	quote_timer.start()
 
 func load_quotes():
 	var file_path = "res://assets/data/quotes.json"
@@ -28,7 +34,7 @@ func load_quotes():
 			if error_parse == OK:
 				var data = json.get_data()
 				if data is Array:
-					quotes = data  # Directly assign the parsed data
+					quotes = data
 				else:
 					push_error("JSON data is not an array")
 			else:
@@ -41,8 +47,17 @@ func change_quote(index: int):
 		return
 	var quote_data = quotes[index]
 	if quote_data is Dictionary and quote_data.has("quote") and quote_data.has("author"):
-		quotes_label.text = "\"" + quote_data["quote"] + "\""
+		var quote_text = quote_data["quote"]
+		quotes_label.text = "\"" + quote_text + "\""
 		author_label.text = "- " + quote_data["author"]
+		
+		var word_count = quote_text.split(" ").size()
+		if word_count < 30:
+			quotes_label.add_theme_font_size_override("font_size", 17)
+		elif word_count < 50:
+			quotes_label.add_theme_font_size_override("font_size", 14)
+		else:
+			quotes_label.add_theme_font_size_override("font_size", 13)
 	else:
 		push_error("Invalid quote data format")
 
@@ -59,7 +74,17 @@ func fade_quote(index: int):
 func _on_next_button_pressed():
 	current_quote_index = (current_quote_index + 1) % quotes.size()
 	fade_quote(current_quote_index)
+	reset_quote_timer()
 
 func _on_prev_button_pressed():
 	current_quote_index = (current_quote_index - 1 + quotes.size()) % quotes.size()
 	fade_quote(current_quote_index)
+	reset_quote_timer()
+
+func _on_quote_timer_timeout():
+	current_quote_index = (current_quote_index + 1) % quotes.size()
+	fade_quote(current_quote_index)
+
+func reset_quote_timer():
+	quote_timer.stop()
+	quote_timer.start()

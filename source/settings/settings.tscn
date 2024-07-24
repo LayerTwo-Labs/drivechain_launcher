@@ -5,7 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://bcajgwunu16on" path="res://source/settings/display_settings/display_settings.tscn" id="2_bic18"]
 
 [node name="Settings" type="MarginContainer"]
-custom_minimum_size = Vector2(835, 553)
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_folyo")
 
 [node name="Window" type="VBoxContainer" parent="."]
