@@ -117,25 +117,23 @@ func _create_wallet(input: String):
 		update_bip39_panel(output)
 		update_launch_panel(output)
 		_toggle_output_visibility(true)  # Ensure output is visible
-		hide_button.button_pressed = false  # Reset hide button state
+		hide_button.button_pressed = false
 	else:
 		clear_all_output()
 
 func clear_all_output():
-	# Clear grid, but not headers
+
 	entropy_in.text = ""
 	for i in range(1, mnemonic_out.get_child_count()):
-		if i != 13 and i != 26:  # Skip BIN and INDEX headers
+		if i != 13 and i != 26:
 			var label = mnemonic_out.get_child(i).get_child(0) as Label
 			if label:
 				label.text = ""
 	
-	# Clear BIP39 info
 	var bip39_info_label = bip39_panel.get_node("BIP39Info")
 	if bip39_info_label:
 		bip39_info_label.text = ""
 	
-	# Clear Launch panel info
 	var launch_info_label = launch_panel.get_node("VBoxContainer/LaunchInfo")
 	if launch_info_label:
 		launch_info_label.text = ""
@@ -143,7 +141,6 @@ func clear_all_output():
 	setup_bip39_headers()
 	setup_launch_panel_headers()
 	
-	# Reset hide button state
 	hide_button.button_pressed = false
 	_toggle_output_visibility(true)
 		
@@ -419,9 +416,9 @@ func _toggle_output_visibility(is_visible: bool):
 			var headers_text = """[table=2]
 [cell][color=white][b][u]BIP39 Hex:[/u][/b][/color][/cell] [cell][/cell]
 [cell][color=white][b][u]BIP39 Bin:
-	
-	
-	
+
+
+
 [/u][/b][/color][/cell] [cell][/cell]
 [cell][color=white][b][u]BIP39 Checksum:[/u][/b][/color][/cell] [cell][/cell]
 [cell][color=white][b][u]BIP39 Checksum Hex:[/u][/b][/color][/cell] [cell][/cell]
@@ -431,10 +428,8 @@ func _toggle_output_visibility(is_visible: bool):
 	var launch_info_label = launch_panel.get_node("VBoxContainer/LaunchInfo")
 	if launch_info_label:
 		if is_visible:
-			# Restore the full content
 			update_launch_panel(current_wallet_data)
 		else:
-			# Keep only headers visible
 			var headers_text = """[table=2]
 [cell][color=white][b][u]HD Key Data:
 
