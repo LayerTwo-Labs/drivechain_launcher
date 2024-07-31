@@ -122,7 +122,6 @@ func _create_wallet(input: String):
 		clear_all_output()
 
 func clear_all_output():
-
 	entropy_in.text = ""
 	for i in range(1, mnemonic_out.get_child_count()):
 		if i != 13 and i != 26:
@@ -132,16 +131,35 @@ func clear_all_output():
 	
 	var bip39_info_label = bip39_panel.get_node("BIP39Info")
 	if bip39_info_label:
-		bip39_info_label.text = ""
+		var headers_text = """[table=2]
+[cell][color=white][b][u]BIP39 Hex:[/u][/b][/color][/cell] [cell][/cell]
+[cell][color=white][b][u]BIP39 Bin:
+
+
+
+[/u][/b][/color][/cell] [cell][/cell]
+[cell][color=white][b][u]BIP39 Checksum:[/u][/b][/color][/cell] [cell][/cell]
+[cell][color=white][b][u]BIP39 Checksum Hex:[/u][/b][/color][/cell] [cell][/cell]
+[/table]"""
+		bip39_info_label.text = headers_text
 	
 	var launch_info_label = launch_panel.get_node("VBoxContainer/LaunchInfo")
 	if launch_info_label:
-		launch_info_label.text = ""
-		
-	setup_bip39_headers()
-	setup_launch_panel_headers()
+		var headers_text = """[table=2]
+[cell][color=white][b][u]HD Key Data:
+
+[/u][/b][/color][/cell] [cell][/cell]
+[cell][color=white][b][u]Master Key:
+
+[/u][/b][/color][/cell] [cell][/cell]
+[cell][color=white][b][u]Chain Code:
+
+[/u][/b][/color][/cell] [cell][/cell]
+[/table]"""
+		launch_info_label.text = headers_text
 	
 	hide_button.button_pressed = false
+	current_wallet_data = {}
 	_toggle_output_visibility(true)
 		
 func _on_entropy_in_changed(new_text: String):
@@ -168,7 +186,11 @@ func update_bip39_panel(output: Dictionary):
 
 		var info_text = """[table=2]
 [cell][color=white][b][u]BIP39 Hex:[/u][/b][/color][/cell] [cell]{bip39_hex}[/cell]
-[cell][color=white][b][u]BIP39 Bin:[/u][/b][/color][/cell] [cell]{bip39_bin}[/cell]
+[cell][color=white][b][u]BIP39 Bin:
+
+
+
+[/u][/b][/color][/cell] [cell]{bip39_bin}[/cell]
 [cell][color=white][b][u]BIP39 Checksum:[/u][/b][/color][/cell] [cell][color=green]{bip39_csum}[/color][/cell]
 [cell][color=white][b][u]BIP39 Checksum Hex:[/u][/b][/color][/cell] [cell][color=green]{bip39_csum_hex}[/color][/cell]
 [/table]""".format({
@@ -282,6 +304,10 @@ func setup_launch_panel_headers():
 
 
 func _on_create_popup_pressed():
+
+	if entropy_in.text.is_empty():
+		return
+		
 	if popup_window != null:
 		_center_popup()
 		popup_window.show()
@@ -479,10 +505,6 @@ func _on_load_button_pressed():
 	var sidechain_data = wallet.generate_sidechain_starters(result["seed"], result["mnemonic"], sidechain_slots)
 	save_sidechain_info(sidechain_data)
 
-	if tabs:
-		tabs.current_tab = 1
-	print("Wallet and sidechain information saved.")
-
 func _on_fast_button_pressed():
 	entropy_in.text = ""
 	var wallet_generator = BitcoinWallet.new()
@@ -503,6 +525,10 @@ func get_sidechain_info():
 				var slot = line.split("=")[1].to_int()
 				if slot != -1:
 					sidechain_info.append(slot)
+	if tabs:
+		tabs.current_tab = 1
+	print("Wallet and sidechain information saved.")
+	
 	return sidechain_info
 
 func save_sidechain_info(sidechain_data):
