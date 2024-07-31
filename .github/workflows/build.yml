@@ -1,29 +1,144 @@
 name: Build Launcher
 on:
   pull_request:
-    branches:
-      - "main"
   push:
     branches:
-      - "marc"
+      - "main"
   workflow_dispatch:
 
 jobs:
-  build-macos:
-    runs-on: macos-latest
+  build:
+    # both Windows and Linux builds run on Ubuntu
+    runs-on: ${{ matrix.build == 'macos' && 'macos' || 'ubuntu' }}-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        build: [macos, windows, linux]
+        include:
+          - build: linux
+            godot-bin: 'godot.linuxbsd.editor.x86_64.mono'
+            godot-template-bins: 'godot.linuxbsd.template_*'
+            godot-templates-dir: '/home/runner/.local/share/godot/export_templates/4.2.2.stable.mono'
+          - build: macos
+            godot-bin: 'godot.macos.editor.universal'
+            godot-template-bins: 'godot.macos.template_*'
+            godot-templates-dir: '/Users/runner/Library/Application Support/Godot/export_templates/4.2.2.stable'
+          # Windows build runs on Ubuntu
+          - build: windows
+            godot-bin: 'godot.linuxbsd.editor.x86_64.mono'
+            godot-template-bins: 'godot.windows.template_*'
+            godot-templates-dir: '/home/runner/.local/share/godot/export_templates/4.2.2.stable.mono'
+
     steps:
       - uses: actions/checkout@v3
 
       - uses: chickensoft-games/setup-godot@v1
         with:
-          version: 4.2.1
-          use-dotnet: false
+          version: 4.2.2
+          # When running on Linux, we have to use the .NET build, as this is
+          # the only custom build available from the CI
+          use-dotnet: ${{ matrix.build == 'linux' || matrix.build == 'windows' }}
           include-templates: true
+
+      - name: Download Godot w/Bitcoin module
+        uses: robinraju/release-downloader@v1.11
+        with:
+          repository: LayerTwo-Labs/godot-bitcoin-module
+          tag: v4.2.2-bitcoin
+          filename: ${{ matrix.godot-bin }}
+
+      - name: Download Godot templates w/Bitcoin module
+        uses: robinraju/release-downloader@v1.11
+        with:
+          repository: LayerTwo-Labs/godot-bitcoin-module
+          tag: v4.2.2-bitcoin
+          filename: ${{ matrix.godot-template-bins }}
+
+      # FIXME: remove
+      - name: show files (linux / windows)
+        if: ${{ matrix.build == 'linux' || matrix.build == 'windows' }}
+        run: |
+          ls
+          echo 'TEMPLATES'
+          ls ${{ matrix.godot-templates-dir }}
+          echo 'VERSION TXT'
+          cat "${{ matrix.godot-templates-dir }}/version.txt"
+          echo $GODOT
+
+      # FIXME: remove
+      - name: show files (macos)
+        if: ${{ matrix.build == 'macos' }}
+        run: |
+          ls
+          #echo 'TEMPLATES'
+          #ls '/Users/runner/Library/Application Support/Godot/export_templates/4.2.2.stable'
+          #echo 'MACOS TEMPLATES'
+          #zipinfo -1 '/Users/runner/Library/Application Support/Godot/export_templates/4.2.2.stable/macos.zip'
+          #echo 'VERSION TXT'
+          #cat '/Users/runner/Library/Application Support/Godot/export_templates/4.2.2.stable/version.txt'
+          echo $GODOT
+
+      - name: Replace default templates with custom templates (linux)
+        if: ${{ matrix.build == 'linux' }}
+        run: |
+          rm "${{ matrix.godot-templates-dir }}/linux_debug.x86_64"
+          mv godot.linuxbsd.template_debug.x86_64.mono "${{ matrix.godot-templates-dir }}/linux_debug.x86_64"
+          rm "${{ matrix.godot-templates-dir }}/linux_release.x86_64"
+          mv godot.linuxbsd.template_release.x86_64.mono "${{ matrix.godot-templates-dir }}/linux_release.x86_64"
+
+      - name: Replace default templates with custom templates (macos)
+        if: ${{ matrix.build == 'macos' }}
+        run: |
+          # Temporary directory used to construct the zip file
+          TMP_ZIP_DIR=$(mktemp -d)
+          mkdir -p "${TMP_ZIP_DIR}/macos_template.app/Contents/MacOS"
+          mv "godot.macos.template_debug.universal" "${TMP_ZIP_DIR}/macos_template.app/Contents/MacOS/godot_macos_debug.universal"
+          mv "godot.macos.template_release.universal" "${TMP_ZIP_DIR}/macos_template.app/Contents/MacOS/godot_macos_release.universal"
+          zip --delete "${{ matrix.godot-templates-dir }}/macos.zip" "macos_template.app/Contents/MacOS/godot_macos_debug.universal"
+          zip --delete "${{ matrix.godot-templates-dir }}/macos.zip" "macos_template.app/Contents/MacOS/godot_macos_release.universal"
+          pushd "${TMP_ZIP_DIR}"
+          zip "${{ matrix.godot-templates-dir }}/macos.zip" "macos_template.app/Contents/MacOS/godot_macos_debug.universal"
+          zip "${{ matrix.godot-templates-dir }}/macos.zip" "macos_template.app/Contents/MacOS/godot_macos_release.universal"
+          popd
+
+      - name: Replace default templates with custom templates (windows)
+        if: ${{ matrix.build == 'windows' }}
+        run: |
+          rm "${{ matrix.godot-templates-dir }}/windows_debug_x86_64.exe"
+          mv "godot.windows.template_debug.x86_64.exe" "${{ matrix.godot-templates-dir }}/windows_debug_x86_64.exe"
+          rm "${{ matrix.godot-templates-dir }}/windows_debug_x86_64_console.exe"
+          mv "godot.windows.template_debug.x86_64.console.exe" "${{ matrix.godot-templates-dir }}/windows_debug_x86_64_console.exe"
+          rm "${{ matrix.godot-templates-dir }}/windows_release_x86_64.exe"
+          mv "godot.windows.template_release.x86_64.exe" "${{ matrix.godot-templates-dir }}/windows_release_x86_64.exe"
+          rm "${{ matrix.godot-templates-dir }}/windows_release_x86_64_console.exe"
+          mv "godot.windows.template_release.x86_64.console.exe" "${{ matrix.godot-templates-dir }}/windows_release_x86_64_console.exe"
+
+      # FIXME: remove
+      - name: show files (linux / windows)
+        if: ${{ matrix.build == 'linux' || matrix.build == 'windows' }}
+        run: |
+          ls
+          echo 'TEMPLATES'
+          ls ${{ matrix.godot-templates-dir }}
+
+      # FIXME: remove
+      - name: show files (macos)
+        if: ${{ matrix.build == 'macos' }}
+        run: |
+          ls
+          echo 'TEMPLATES'
+          ls '/Users/runner/Library/Application Support/Godot/export_templates/4.2.2.stable'
+          echo 'MACOS TEMPLATES'
+          zipinfo -1 '/Users/runner/Library/Application Support/Godot/export_templates/4.2.2.stable/macos.zip'
 
       - name: Verify Setup
         run: |
+          chmod +x ${{ matrix.godot-bin }}
+          mv ${{ matrix.godot-bin }} $GODOT
           godot --version
+
       - name: Import certificate to Keychain
+        if: ${{ matrix.build == 'macos' }}
         run: |
           echo "${{ secrets.MACOS_CERTIFICATE }}" | base64 --decode > certificate.p12
           KEYCHAIN_PASSWORD=$(uuidgen)
@@ -36,149 +151,69 @@ jobs:
           MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
 
       - name: Setup notarization credentials
+        if: ${{ matrix.build == 'macos' }}
         run: |
           echo ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY }} | base64 --decode > notarization_api_key.p8
+
+      # MUST be run before build
+      - name: Initialize godot cache
+        run: python3 .github/scripts/godot_ci_cache.py
+
       - name: Export build
         run: |
-          godot --headless --export-debug "macOS" --verbose 2>&1 | tee build.log
-        env:
-          GODOT_MACOS_NOTARIZATION_API_KEY_ID: ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY_ID }}
-          GODOT_MACOS_NOTARIZATION_API_KEY: ./notarization_api_key.p8
-          GODOT_MACOS_NOTARIZATION_API_UUID: ${{ secrets.GODOT_MACOS_NOTARIZATION_API_UUID }}
-
-      - name: Upload macOS build
-        uses: actions/upload-artifact@v4
-        with:
-          name: drivechain_launcher_macos
-          if-no-files-found: error
-          path: build/drivechain_launcher-*
-
-      - name: Wait for notarization to finish
-        run: |
-          request_id=$(grep 'Notarization request UUID' build.log | rev | cut -d ' ' -f 1 | rev | tr -d '"')
-          xcrun notarytool wait $request_id \
-            --issuer ${{ secrets.GODOT_MACOS_NOTARIZATION_API_UUID }} \
-            --key-id ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY_ID }} \
-            --key ./notarization_api_key.p8
-  build-windows-linux:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        build: [windows, linux]
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: chickensoft-games/setup-godot@v1
-        with:
-          version: 4.2.1
-          use-dotnet: false
-          include-templates: true
-
-      - name: Verify Setup
-        run: |
-          godot --version
-      - name: Export build
-        run: |
-          name="${{fromJSON('{"windows": "Windows Desktop", "linux": "Linux/X11"}')[matrix.build] }}"
+          name="${{fromJSON('{"windows": "Windows Desktop", "macos": "macOS", "linux": "Linux/X11"}')[matrix.build] }}"
           godot --headless --export-debug "$name" --verbose 2>&1 | tee build.log
-      - name: Upload Windows/Linux build
+        env:
+          GODOT_MACOS_NOTARIZATION_API_KEY_ID:
+            ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY_ID }}
+          GODOT_MACOS_NOTARIZATION_API_KEY: ./notarization_api_key.p8
+          GODOT_MACOS_NOTARIZATION_API_UUID:
+            ${{ secrets.GODOT_MACOS_NOTARIZATION_API_UUID }}
+
+      - name: Upload build
         uses: actions/upload-artifact@v4
         with:
           name: drivechain_launcher_${{ matrix.build }}
           if-no-files-found: error
           path: build/drivechain_launcher-*
 
-  test-windows-linux:
-    name: Test Windows and Linux Builds
-    runs-on: ubuntu-latest
-    needs: build-windows-linux
-    steps:
-      - name: Download Windows/Linux artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: drivechain_launcher_windows
-
-      - name: Download Windows/Linux artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: drivechain_launcher_linux
-
-      - name: Check out the repository
-        uses: actions/checkout@v3  
-
-      - name: Run Integration Tests
+      - name: Wait for notarization to finish
+        if: ${{ matrix.build == 'macos' }}
         run: |
-          chmod +x ./scripts/integration_testing.sh || echo "Drivechain script not found, skipping chmod"
-          ./scripts/integration_testing.sh || echo "Script not found, skipping tests"
-      - name: Drivechain Testing Output
-        run: |
-          chmod +x ./scripts/drivechain_testing.sh || echo "Function scrript not found, skipping chmod"   
-          ./scripts/drivechain_testing.sh || echo "Script not found, skipping tests"
-  upload-artifacts-macos:
-    name: Upload macOS artifacts to releases.drivechain.info
+          request_id=$(grep 'Notarization request UUID' build.log | rev | cut -d ' ' -f 1 | rev | tr -d '"')
+
+          xcrun notarytool wait $request_id \
+            --issuer ${{ secrets.GODOT_MACOS_NOTARIZATION_API_UUID }} \
+            --key-id ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY_ID }} \
+            --key ./notarization_api_key.p8
+
+  upload-artifacts-to-releases-drivechain-info:
+    name: Upload artifacts to releases.drivechain.info
     runs-on: ubuntu-latest
-    needs: build-macos
+    needs: [build]
+    # avoid uploading on PRs!
     if: github.event_name == 'push' && github.repository_owner == 'LayerTwo-Labs'
     steps:
-      # - name: Download macOS artifacts
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: drivechain_launcher_macos
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
 
-      # - name: Create zip files for macOS
-      #   run: |
-      #     mv drivechain_launcher_macos drivechain-launcher-latest-x86_64-apple-darwin
-      #     zip -r drivechain-launcher-latest-x86_64-apple-darwin.zip drivechain-launcher-latest-x86_64-apple-darwin/*
+      - name: Create zip files for releases.drivechain.info
+        run: |
+          mv drivechain_launcher_linux drivechain-launcher-latest-x86_64-unknown-linux-gnu
+          zip -r drivechain-launcher-latest-x86_64-unknown-linux-gnu.zip drivechain-launcher-latest-x86_64-unknown-linux-gnu/*
 
-      # - name: Upload macOS release assets to releases.drivechain.info
-      #   uses: cross-the-world/ssh-scp-ssh-pipelines@latest
-      #   with:
-      #     host: 45.33.96.47
-      #     user: root
-      #     pass: ${{ secrets.RELEASES_SERVER_PW }}
-      #     port: 22
-      #     scp: |
-      #       'drivechain-launcher-latest-x86_64-apple-darwin.zip' => '/var/www/html/'
+          mv drivechain_launcher_macos drivechain-launcher-latest-x86_64-apple-darwin
+          zip -r drivechain-launcher-latest-x86_64-apple-darwin.zip drivechain-launcher-latest-x86_64-apple-darwin/*
 
-      - name: Skip upload macOS artifacts
-        run: echo "Skipping upload of macOS artifacts"
+          mv drivechain_launcher_windows drivechain-launcher-latest-x86_64-w64
+          zip -r drivechain-launcher-latest-x86_64-w64.zip drivechain-launcher-latest-x86_64-w64/*
 
-  upload-artifacts-windows-linux:
-    name: Upload Windows/Linux artifacts to releases.drivechain.info
-    runs-on: ubuntu-latest
-    needs: [test-windows-linux]
-    if: github.event_name == 'push' && github.repository_owner == 'LayerTwo-Labs'
-    steps:
-      # - name: Download Windows/Linux artifacts
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: drivechain_launcher_windows
-
-      # - name: Download Windows/Linux artifacts
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: drivechain_launcher_linux
-
-      # - name: Create zip files for Windows/Linux
-      #   run: |
-      #     mv drivechain_launcher_linux drivechain-launcher-latest-x86_64-unknown-linux-gnu
-      #     zip -r drivechain-launcher-latest-x86_64-unknown-linux-gnu.zip drivechain-launcher-latest-x86_64-unknown-linux-gnu/*
-
-      #     mv drivechain_launcher_windows drivechain-launcher-latest-x86_64-w64
-      #     zip -r drivechain-launcher-latest-x86_64-w64.zip drivechain-launcher-latest-x86_64-w64/*
-
-      # - name: Upload Windows/Linux release assets to releases.drivechain.info
-      #   uses: cross-the-world/ssh-scp-ssh-pipelines@latest
-      #   with:
-      #     host: 45.33.96.47
-      #     user: root
-      #     pass: ${{ secrets.RELEASES_SERVER_PW }}
-      #     port: 22
-      #     scp: |
-      #       'drivechain-launcher-latest-x86_64-unknown-linux-gnu.zip' => '/var/www/html/'
-      #       'drivechain-launcher-latest-x86_64-w64.zip' => '/var/www/html/'
-
-      - name: Skip upload Windows/Linux artifacts
-        run: echo "Skipping upload of Windows/Linux artifacts"
+      - name: Upload release assets to releases.drivechain.info
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+        with:
+          host: 45.33.96.47
+          user: root
+          pass: ${{ secrets.RELEASES_SERVER_PW }}
+          port: 22
+          scp: |
+            'drivechain-launcher-latest-*.zip' => '/var/www/html/'
