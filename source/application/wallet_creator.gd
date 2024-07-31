@@ -29,6 +29,8 @@ func _ready():
 	load_button.connect("pressed", Callable(self, "_on_load_button_pressed"))
 	fast_button.connect("pressed", Callable(self, "_on_fast_button_pressed"))
 	
+	if tabs:
+		tabs.connect("tab_changed", Callable(self, "_on_tab_changed"))
 	setup_bip39_panel()
 	setup_launch_panel()
 
@@ -88,22 +90,13 @@ func setup_launch_panel():
 		vbox.add_child(existing_button)
 
 func _on_create_wallet_button_pressed():
+	reset_wallet_tab()
 	current_tab = 1
 
 func _on_return_button_pressed():
+	reset_wallet_tab()
 	current_tab = 0
 	clear_all_output()
-
-func save_wallet_data():
-	var seed_data = {
-		"seed_hex": current_wallet_data["seed"],
-		"seed_binary": current_wallet_data["bip39_bin"],
-		"mnemonic": current_wallet_data["mnemonic"]
-	}
-	var file = FileAccess.open("res://starters/wallet_master_seed.txt", FileAccess.WRITE)
-	var json_string = JSON.stringify(seed_data)
-	file.store_string(json_string)
-	file.close()
 
 func _create_wallet(input: String):
 	if input.strip_edges().is_empty():
@@ -406,15 +399,49 @@ func _on_background_gui_input(event):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_on_popup_close_pressed()
 
+func save_wallet_data():
+	if current_wallet_data.is_empty():
+		print("Error: No wallet data to save.")
+		return
+
+	var seed_data = {
+		"seed_hex": current_wallet_data.get("seed", ""),
+		"seed_binary": current_wallet_data.get("bip39_bin", ""),
+		"mnemonic": current_wallet_data.get("mnemonic", "")
+	}
+
+	if seed_data["seed_hex"].is_empty() or seed_data["seed_binary"].is_empty() or seed_data["mnemonic"].is_empty():
+		print("Error: Incomplete wallet data. Unable to save.")
+		return
+
+	var file = FileAccess.open("res://starters/wallet_master_seed.txt", FileAccess.WRITE)
+	var json_string = JSON.stringify(seed_data)
+	file.store_string(json_string)
+	file.close()
+	print("Wallet data saved successfully.")
+
 func _on_popup_yes_pressed():
+	if current_wallet_data.is_empty():
+		print("Error: No wallet data to save.")
+		_on_popup_close_pressed()
+		return
+
 	save_wallet_data()
 	
 	var Bitcoin = BitcoinWallet.new()
 	var sidechain_slots = get_sidechain_info()
+	
+	if not current_wallet_data.has("seed") or not current_wallet_data.has("mnemonic"):
+		print("Error: Incomplete wallet data. Unable to generate sidechain starters.")
+		_on_popup_close_pressed()
+		return
+
 	var sidechain_data = Bitcoin.generate_sidechain_starters(current_wallet_data["seed"], current_wallet_data["mnemonic"], sidechain_slots)
 	save_sidechain_info(sidechain_data)
-	
 	_on_popup_close_pressed()
+	if tabs:
+		tabs.current_tab = 1
+	print("Wallet and sidechain information saved.")
 
 func _on_popup_close_pressed() -> void:
 	if popup_window != null:
@@ -504,6 +531,9 @@ func _on_load_button_pressed():
 	var sidechain_slots = get_sidechain_info()
 	var sidechain_data = wallet.generate_sidechain_starters(result["seed"], result["mnemonic"], sidechain_slots)
 	save_sidechain_info(sidechain_data)
+	if tabs:
+		tabs.current_tab = 1
+	print("Wallet and sidechain information saved.")
 
 func _on_fast_button_pressed():
 	entropy_in.text = ""
@@ -525,10 +555,6 @@ func get_sidechain_info():
 				var slot = line.split("=")[1].to_int()
 				if slot != -1:
 					sidechain_info.append(slot)
-	if tabs:
-		tabs.current_tab = 1
-	print("Wallet and sidechain information saved.")
-	
 	return sidechain_info
 
 func save_sidechain_info(sidechain_data):
@@ -542,3 +568,18 @@ func save_sidechain_info(sidechain_data):
 				file.close()
 			else:
 				print("Failed to save sidechain starter information for slot ", slot)
+				
+func reset_wallet_tab():
+	
+	clear_all_output()
+	entropy_in.text = ""
+	mnemonic_in.text = ""
+	current_wallet_data = {}
+	hide_button.button_pressed = false
+	_toggle_output_visibility(true)
+	mnemonic_out.setup_grid()
+	current_tab = 0
+	
+func _on_tab_changed(tab):
+	if tab != get_index(): 
+		reset_wallet_tab()
