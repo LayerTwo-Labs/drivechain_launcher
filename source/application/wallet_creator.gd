@@ -33,6 +33,7 @@ func _ready():
 		tabs.connect("tab_changed", Callable(self, "_on_tab_changed"))
 	setup_bip39_panel()
 	setup_launch_panel()
+	ensure_starters_directory()
 
 func setup_bip39_panel():
 	var bip39_info_label = RichTextLabel.new()
@@ -414,7 +415,8 @@ func save_wallet_data():
 		print("Error: Incomplete wallet data. Unable to save.")
 		return
 
-	var file = FileAccess.open("res://starters/wallet_master_seed.txt", FileAccess.WRITE)
+	var user_data_dir = OS.get_user_data_dir()
+	var file = FileAccess.open(user_data_dir.path_join("starters/wallet_master_seed.txt"), FileAccess.WRITE)
 	var json_string = JSON.stringify(seed_data)
 	file.store_string(json_string)
 	file.close()
@@ -561,7 +563,8 @@ func save_sidechain_info(sidechain_data):
 	for key in sidechain_data.keys():
 		if key.begins_with("sidechain_"):
 			var slot = key.split("_")[1]
-			var filename = "res://starters/sidechain_%s_starter.txt" % slot
+			var user_data_dir = OS.get_user_data_dir()
+			var filename = user_data_dir.path_join("starters/sidechain_%s_starter.txt" % slot)
 			var file = FileAccess.open(filename, FileAccess.WRITE)
 			if file:
 				file.store_string(JSON.stringify(sidechain_data[key]))
@@ -583,3 +586,10 @@ func reset_wallet_tab():
 func _on_tab_changed(tab):
 	if tab != get_index(): 
 		reset_wallet_tab()
+
+func ensure_starters_directory():
+	var user_data_dir = OS.get_user_data_dir()
+	var starters_dir = user_data_dir.path_join("starters")
+	var dir = DirAccess.open(user_data_dir)
+	if not dir.dir_exists("starters"):
+		dir.make_dir("starters")
