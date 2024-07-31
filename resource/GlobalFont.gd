@@ -4,7 +4,7 @@ var default_font: Font
 
 func _ready():
 	# Load your custom font
-	default_font = load("res://assets/fonts/LEMONMILK-Regular.otf")
+	default_font = load("res://assets/fonts/Satoshi-Regular.otf")
 	
 	# Apply the font to all Control nodes
 	apply_font_override(get_tree().root)

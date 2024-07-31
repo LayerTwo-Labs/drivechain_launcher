@@ -2,11 +2,13 @@ class_name DownloadButton extends Button
 
 signal action_requested(action)
 
-const DOWNLOAD_ICON = preload("res://assets/images/download-cloud-line.svg")
-const RUN_ICON = preload("res://assets/images/play-symbolic.svg")
-const STOP_ICON = preload("res://assets/images/stop-symbolic.svg")
+const DOWNLOAD_ICON = preload("res://assets/images/download-cloud-svgrepo.svg")
+const RUN_ICON = preload("res://assets/images/play-svgrepo-com.svg")
+const STOP_ICON = preload("res://assets/images/stop-circle-svgrepo-com.svg")
+const CUSTOM_FONT = preload("res://assets/fonts/Satoshi-Regular.otf")
 
 enum STATE { NOT_DOWNLOADED, DOWNLOADING, NOT_RUNNING, RUNNING }
+
 var current_state = STATE.NOT_DOWNLOADED
 
 @onready var label: Label = $MarginContainer/HBoxContainer/Label
@@ -16,6 +18,11 @@ var current_state = STATE.NOT_DOWNLOADED
 
 func _ready():
 	pressed.connect(_on_pressed)
+	
+	# Set the custom font for the label
+	var font_variation = FontVariation.new()
+	font_variation.set_base_font(CUSTOM_FONT)
+	label.add_theme_font_override("font", font_variation)
 
 func set_state(new_state: STATE):
 	current_state = new_state

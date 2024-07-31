@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://cjfcxi77d8pjt"]
 
 [ext_resource type="Script" path="res://source/nodes/node_panel/download.gd" id="1_no5dn"]
-[ext_resource type="Texture2D" uid="uid://u6al2fx1l7ia" path="res://assets/images/download-cloud-line.svg" id="2_o7d75"]
+[ext_resource type="Texture2D" uid="uid://sitylibnubgw" path="res://assets/images/download-cloud-svgrepo.svg" id="2_g8yfn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2befl"]
 bg_color = Color(1, 1, 1, 1)
@@ -66,7 +66,6 @@ _data = {
 custom_minimum_size = Vector2(160, 32)
 size_flags_vertical = 4
 focus_mode = 0
-theme_override_font_sizes/font_size = 14
 script = ExtResource("1_no5dn")
 
 [node name="BackgroundColor" type="Panel" parent="."]
@@ -109,7 +108,7 @@ layout_mode = 2
 [node name="IconBox" type="TextureRect" parent="MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
-texture = ExtResource("2_o7d75")
+texture = ExtResource("2_g8yfn")
 expand_mode = 1
 stretch_mode = 5
 
@@ -117,7 +116,6 @@ stretch_mode = 5
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 15
 text = "DOWNLOAD"
 horizontal_alignment = 1

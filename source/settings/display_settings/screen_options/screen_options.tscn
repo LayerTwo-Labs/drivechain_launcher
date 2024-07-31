@@ -1,15 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://bdvk0ut5ley18"]
+[gd_scene load_steps=3 format=3 uid="uid://bdvk0ut5ley18"]
 
-[ext_resource type="PackedScene" uid="uid://o2ty0o4fho1f" path="res://source/settings/display_settings/screen_options/screen_mode/screen_mode.tscn" id="1_061sg"]
 [ext_resource type="Script" path="res://source/settings/display_settings/screen_options/screen_options.gd" id="1_fia8e"]
 [ext_resource type="PackedScene" uid="uid://mq0u80atvvee" path="res://source/settings/display_settings/screen_options/screen_resolution/screen_resolution.tscn" id="2_3q763"]
 
 [node name="ScreenOptions" type="HBoxContainer"]
+offset_right = 289.0
+offset_bottom = 36.0
 theme_override_constants/separation = 16
 script = ExtResource("1_fia8e")
-
-[node name="ScreenMode" parent="." instance=ExtResource("1_061sg")]
-layout_mode = 2
 
 [node name="ScreenResolution" parent="." instance=ExtResource("2_3q763")]
 layout_mode = 2

@@ -1,8 +1,8 @@
 class_name ThemeOptions extends HBoxContainer
 
 const theme_directory = "res://resource/theme/"
-const unchecked_icon = preload("res://assets/icons/CheckButton/CheckButton_UnChecked.png")
-const checked_icon = preload("res://assets/icons/CheckButton/CheckButton_Checked.png")
+const unchecked_icon = preload("res://assets/icons/CheckButton/CheckButton_Unchecked.svg")
+const checked_icon = preload("res://assets/icons/CheckButton/CheckButton_Checked.svg")
 
 @onready var options: GridContainer = $Options
 var active_option: Button

@@ -75,22 +75,28 @@ func setup_grid():
 
 func _on_window_resize():
 	var parent_size = get_parent().size
-	var grid_width = parent_size.x * 0.8  # Increased to 80% of parent width
-	
-	# Adjust this factor to increase cell height
-	var height_factor = 1  # Decreased for shorter cells
-	
-	var cell_width = grid_width / columns_count
-	var cell_height = cell_width * height_factor
+	var max_width = parent_size.x * 0.8  # 80% of parent width
+	var max_height = parent_size.y * 0.6  # 60% of parent height, adjust as needed
+
+	var cell_width = max_width / columns_count
+	var cell_height = cell_width * 0.6  # Adjust this factor for desired cell height
+
+	var grid_width = cell_width * columns_count
 	var grid_height = cell_height * rows_count
-	
+
+	# Ensure the grid doesn't exceed the maximum allowed size
+	grid_width = min(grid_width, max_width)
+	grid_height = min(grid_height, max_height)
+
+	# Update the grid size
 	custom_minimum_size = Vector2(grid_width, grid_height)
 	size = Vector2(grid_width, grid_height)
-	
+
+	# Update cell sizes
 	for child in get_children():
 		child.custom_minimum_size = Vector2(cell_width, cell_height)
-	
+
 	# Center the grid in its parent
 	position = Vector2((parent_size.x - grid_width) / 2, (parent_size.y - grid_height) / 2)
-	
+
 	queue_sort()

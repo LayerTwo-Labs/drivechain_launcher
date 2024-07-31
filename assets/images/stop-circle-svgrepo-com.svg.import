@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dqbgs0mj3akyd"
-path="res://.godot/imported/CheckButton_UnChecked.png-a53732001403b60992ddc059e4d394b0.ctex"
+uid="uid://ce2puikkj24gp"
+path="res://.godot/imported/stop-circle-svgrepo-com.svg-35ae1106268844c1edde3b1fcdcf9a00.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/icons/CheckButton/CheckButton_UnChecked.png"
-dest_files=["res://.godot/imported/CheckButton_UnChecked.png-a53732001403b60992ddc059e4d394b0.ctex"]
+source_file="res://assets/images/stop-circle-svgrepo-com.svg"
+dest_files=["res://.godot/imported/stop-circle-svgrepo-com.svg-35ae1106268844c1edde3b1fcdcf9a00.ctex"]
 
 [params]
 
@@ -32,3 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

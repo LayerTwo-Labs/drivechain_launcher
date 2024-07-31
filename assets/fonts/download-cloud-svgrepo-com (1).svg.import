@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cijc486q0yrfb"
-path="res://.godot/imported/CheckButton_Checked.png-19f8448c3f858cdc0ee4e63d6b9b5d4b.ctex"
+uid="uid://c6oemy25d708d"
+path="res://.godot/imported/download-cloud-svgrepo-com (1).svg-241da0b8a15c58fa4f2488dfd8e9d48e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/icons/CheckButton/CheckButton_Checked.png"
-dest_files=["res://.godot/imported/CheckButton_Checked.png-19f8448c3f858cdc0ee4e63d6b9b5d4b.ctex"]
+source_file="res://assets/fonts/download-cloud-svgrepo-com (1).svg"
+dest_files=["res://.godot/imported/download-cloud-svgrepo-com (1).svg-241da0b8a15c58fa4f2488dfd8e9d48e.ctex"]
 
 [params]
 
@@ -32,3 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false
