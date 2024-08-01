@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://cq65ocurdi7c1"]
+[gd_scene load_steps=9 format=3 uid="uid://cq65ocurdi7c1"]
 
 [ext_resource type="Script" path="res://source/nodes/node_panel/node_panel.gd" id="1_ijj0w"]
 [ext_resource type="Texture2D" uid="uid://2xouba13q8q7" path="res://assets/images/pattern_33.png" id="2_lb2fn"]
 [ext_resource type="PackedScene" uid="uid://cjfcxi77d8pjt" path="res://source/nodes/node_panel/download.tscn" id="2_ubul7"]
 [ext_resource type="Texture2D" uid="uid://drrrqh5w6tl8t" path="res://assets/images/icons8-settings.svg" id="4_8w22k"]
+[ext_resource type="FontFile" uid="uid://b1w37357tl3er" path="res://assets/fonts/Cantarell-Bold.ttf" id="4_h86ci"]
 [ext_resource type="Texture2D" uid="uid://jpde6uqywmlg" path="res://assets/images/trash-svgrepo-com(1).svg" id="8_8l4af"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dqqs8"]
@@ -25,6 +26,7 @@ expand_margin_bottom = 8.0
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_cnrh3"]
 
 [node name="NodePanel" type="Control"]
+texture_filter = 4
 custom_minimum_size = Vector2(403, 90)
 layout_mode = 3
 anchors_preset = 0
@@ -81,6 +83,7 @@ layout_mode = 2
 [node name="Heading" type="Label" parent="MarginContainer/Container/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("4_h86ci")
 theme_override_font_sizes/font_size = 28
 text = "NodePanel"
 

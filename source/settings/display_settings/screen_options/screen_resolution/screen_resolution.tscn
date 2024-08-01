@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://mq0u80atvvee"]
 
 [ext_resource type="Script" path="res://source/settings/display_settings/screen_options/screen_resolution/screen_resolution.gd" id="1_5rgnv"]
-[ext_resource type="FontFile" uid="uid://c33ier0iywrki" path="res://assets/fonts/LEMONMILK-Regular.otf" id="2_23b3w"]
+[ext_resource type="Theme" uid="uid://iix53v175t6k" path="res://ui/themes/default_dark.tres" id="2_7js7k"]
 
 [node name="ScreenResolution" type="HBoxContainer"]
 size_flags_horizontal = 3
@@ -10,7 +10,6 @@ script = ExtResource("1_5rgnv")
 [node name="Label" type="Label" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_fonts/font = ExtResource("2_23b3w")
 text = "RESOLUTION"
 vertical_alignment = 1
 
@@ -18,7 +17,7 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(192, 36)
 layout_mode = 2
 size_flags_horizontal = 8
-theme_override_fonts/font = ExtResource("2_23b3w")
+theme = ExtResource("2_7js7k")
 alignment = 1
 item_count = 8
 selected = 1

@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bcajgwunu16on"]
+[gd_scene load_steps=5 format=3 uid="uid://bcajgwunu16on"]
 
-[ext_resource type="FontFile" uid="uid://c33ier0iywrki" path="res://assets/fonts/LEMONMILK-Regular.otf" id="1_itrqd"]
+[ext_resource type="FontFile" uid="uid://ccfr6y00w3tjf" path="res://assets/fonts/Cantarell-Regular.ttf" id="1_bbx5e"]
 [ext_resource type="PackedScene" uid="uid://c0x1u7g3b58iw" path="res://source/settings/display_settings/theme_options/theme_options.tscn" id="2_syh1q"]
 [ext_resource type="PackedScene" uid="uid://bdvk0ut5ley18" path="res://source/settings/display_settings/screen_options/screen_options.tscn" id="3_8e0yi"]
+[ext_resource type="Theme" uid="uid://h5leavcufiab" path="res://resource/theme/black.theme" id="3_kp2a4"]
 
 [node name="DisplaySettings" type="VBoxContainer"]
 offset_right = 40.0
@@ -10,8 +11,7 @@ offset_bottom = 40.0
 
 [node name="Heading" type="Label" parent="."]
 layout_mode = 2
-theme_override_constants/outline_size = 4
-theme_override_fonts/font = ExtResource("1_itrqd")
+theme_override_fonts/font = ExtResource("1_bbx5e")
 theme_override_font_sizes/font_size = 28
 text = "DISPLAY  SETTINGS"
 horizontal_alignment = 1
@@ -23,6 +23,7 @@ theme_override_constants/separation = 16
 
 [node name="ScreenOptions" parent="Options" instance=ExtResource("3_8e0yi")]
 layout_mode = 2
+theme = ExtResource("3_kp2a4")
 
 [node name="ThemeOptions" parent="Options" instance=ExtResource("2_syh1q")]
 layout_mode = 2
