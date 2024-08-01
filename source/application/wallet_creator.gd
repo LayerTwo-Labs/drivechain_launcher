@@ -524,7 +524,8 @@ func _on_load_button_pressed():
 		"seed_binary": result["bip39_bin"],
 		"seed_hex": result["seed"]
 	}
-	var file = FileAccess.open("res://starters/wallet_master_seed.txt", FileAccess.WRITE)
+	var user_data_dir = OS.get_user_data_dir()
+	var file = FileAccess.open(user_data_dir.path_join("starters/wallet_master_seed.txt"), FileAccess.WRITE)
 	var json_string = JSON.stringify(seed_data)
 	file.store_string(json_string)
 	file.close()
