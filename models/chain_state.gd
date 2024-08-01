@@ -201,7 +201,7 @@ func find_ethsail_pids() -> Array:
 
 	if os_name != "Windows":
 		# Command for Unix-like systems to find processes by command-line pattern
-		var result = OS.execute("pgrep", ["-f", "ethsail --conf=/home/joshua/drivechain_launcher_sidechains/ethsail/ethsail.conf"], output, true)
+		var result = OS.execute("pgrep", ["-f", "ethsail.*ethsail.conf"], output, true)
 		if result == OK and output.size() > 0:
 			# Handle multiple PIDs
 			var pid_strings = output[0].split("\n")

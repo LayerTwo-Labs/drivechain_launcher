@@ -1,0 +1,180 @@
+[gd_scene load_steps=2 format=3 uid="uid://duvvgc45h86gp"]
+
+[ext_resource type="Script" path="res://ui/components/fast_withdraw/fast_withdraw.gd" id="1_4itd0"]
+
+[node name="FastWithdraw" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_4itd0")
+
+[node name="Control2" type="Control" parent="."]
+custom_minimum_size = Vector2(2.08165e-12, 5)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="HBoxContainer"]
+custom_minimum_size = Vector2(10, 2.08165e-12)
+layout_mode = 2
+
+[node name="LineEditMainchainAddress" type="LineEdit" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter mainchain address"
+expand_to_text_length = true
+
+[node name="Control2" type="Control" parent="HBoxContainer"]
+custom_minimum_size = Vector2(20, 2.08165e-12)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "Amount to withdraw:
+"
+
+[node name="Control3" type="Control" parent="HBoxContainer"]
+custom_minimum_size = Vector2(20, 2.08165e-12)
+layout_mode = 2
+
+[node name="SpinBoxAmount" type="SpinBox" parent="HBoxContainer"]
+layout_mode = 2
+min_value = 1.0
+value = 1.0
+suffix = "BTC"
+
+[node name="Control4" type="Control" parent="HBoxContainer"]
+custom_minimum_size = Vector2(10, 2.08165e-12)
+layout_mode = 2
+
+[node name="Control5" type="Control" parent="HBoxContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 5)
+layout_mode = 2
+
+[node name="Control" type="Control" parent="."]
+custom_minimum_size = Vector2(2.08165e-12, 10)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 2
+text = "  Sidechain to withdraw from:
+"
+
+[node name="Control6" type="Control" parent="."]
+custom_minimum_size = Vector2(2.08165e-12, 5)
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Control2" type="Control" parent="HBoxContainer2"]
+custom_minimum_size = Vector2(25, 2.08165e-12)
+layout_mode = 2
+
+[node name="ChainSelectionButton" type="OptionButton" parent="HBoxContainer2"]
+layout_mode = 2
+item_count = 3
+selected = 0
+popup/item_0/text = "Testchain"
+popup/item_0/id = 0
+popup/item_1/text = "Thunder"
+popup/item_1/id = 1
+popup/item_2/text = "ZSide"
+popup/item_2/id = 2
+
+[node name="Control3" type="Control" parent="HBoxContainer2"]
+custom_minimum_size = Vector2(15, 2.08165e-12)
+layout_mode = 2
+
+[node name="ButtonRequestInvoice" type="Button" parent="HBoxContainer2"]
+layout_mode = 2
+text = "Request fast withdrawal test invoice"
+
+[node name="Control4" type="Control" parent="HBoxContainer2"]
+custom_minimum_size = Vector2(15, 2.08165e-12)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LabelConnectionStatus" type="Label" parent="HBoxContainer2"]
+layout_mode = 2
+text = "Not Connected"
+
+[node name="Control5" type="Control" parent="HBoxContainer2"]
+custom_minimum_size = Vector2(15, 2.08165e-12)
+layout_mode = 2
+
+[node name="LabelInvoice" type="Label" parent="."]
+layout_mode = 2
+
+[node name="LabelComplete" type="Label" parent="."]
+layout_mode = 2
+
+[node name="ButtonCopyAddress" type="Button" parent="."]
+custom_minimum_size = Vector2(200, 2.08165e-12)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Copy Address
+"
+
+[node name="Control3" type="Control" parent="."]
+custom_minimum_size = Vector2(2.08165e-12, 5)
+layout_mode = 2
+
+[node name="Control4" type="Control" parent="."]
+custom_minimum_size = Vector2(2.08165e-12, 5)
+layout_mode = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Control5" type="Control" parent="HBoxContainer4"]
+custom_minimum_size = Vector2(15, 2.08165e-12)
+layout_mode = 2
+
+[node name="LineEditTXID" type="LineEdit" parent="HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter L2 payment txid"
+expand_to_text_length = true
+
+[node name="Control6" type="Control" parent="HBoxContainer4"]
+custom_minimum_size = Vector2(15, 2.08165e-12)
+layout_mode = 2
+
+[node name="Control5" type="Control" parent="."]
+custom_minimum_size = Vector2(2.08165e-12, 5)
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Control5" type="Control" parent="HBoxContainer3"]
+custom_minimum_size = Vector2(15, 2.08165e-12)
+layout_mode = 2
+
+[node name="ButtonInvoicePaid" type="Button" parent="HBoxContainer3"]
+layout_mode = 2
+text = "Invoice Paid"
+
+[node name="Control6" type="Control" parent="HBoxContainer3"]
+custom_minimum_size = Vector2(15, 2.08165e-12)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CheckButtonLocalhost" type="CheckButton" parent="HBoxContainer3"]
+custom_minimum_size = Vector2(200, 2.08165e-12)
+layout_mode = 2
+text = "Debug server"
+
+[node name="Control7" type="Control" parent="HBoxContainer3"]
+custom_minimum_size = Vector2(15, 2.08165e-12)
+layout_mode = 2
+
+[connection signal="pressed" from="HBoxContainer2/ButtonRequestInvoice" to="." method="_on_button_request_invoice_pressed"]
+[connection signal="pressed" from="ButtonCopyAddress" to="." method="_on_button_copy_address_pressed"]
+[connection signal="pressed" from="HBoxContainer3/ButtonInvoicePaid" to="." method="_on_button_invoice_paid_pressed"]

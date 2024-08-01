@@ -9,8 +9,8 @@ const VERSION_CONFIG               : String = "res://version.cfg"
 
 const DRIVENET_NODE                : String = "172.105.148.135"
 
-@onready var chain_state           : Resource = load("res://models/chain_state.tscn")
-@onready var chain_provider_info   : Resource = preload("res://ui/components/dashboard/chain_providers_info/chain_provider_info.tscn")
+@onready var chain_state           : Resource = preload("res://models/chain_state.tscn")
+@onready var chain_provider_info   : Resource = preload("res://source/nodes/chain_providers_info/chain_provider_info.tscn")
 #@onready var z_params_modal        : Resource = preload("res://ui/components/dashboard/z_params_modal/z_params_modal.tscn")
 
 var chain_providers_config : ConfigFile
@@ -24,6 +24,11 @@ var ethsail_pid: int = -1
 
 signal chain_providers_changed
 signal chain_states_changed
+signal drivechain_downloaded
+
+func set_drivechain_downloaded():
+	emit_signal("drivechain_downloaded")
+
 
 func _ready():
 	if Appstate.get_platform() == platform.UNSUPPORTED:
@@ -280,6 +285,7 @@ func load_app_config():
 	update_display_scale(scale_factor)
 
 func update_display_scale(scale_factor: float):
+	return #returning as this code overrides the project settings
 	scale_factor = clampf(scale_factor, 1, 2)
 	var screen_size = DisplayServer.screen_get_size(0)
 	var new_screen_size = Vector2i(screen_size.x / 2, screen_size.y / 2)
@@ -843,7 +849,7 @@ func get_drivechain_provider() -> ChainProvider:
 func show_chain_provider_info(chain_provider: ChainProvider):
 	var info = chain_provider_info.instantiate()
 	info.name = "chain_provider_info"
-	get_tree().root.get_node("Main").add_child(info)
+	get_tree().root.get_node("Application").get_node("ChainProviderInfoLayer").add_child(info)
 	info.setup(chain_provider)
 
 

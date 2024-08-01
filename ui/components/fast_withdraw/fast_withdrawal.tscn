@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://bm4wk2nic02cm"]
+
+[ext_resource type="PackedScene" uid="uid://duvvgc45h86gp" path="res://source/fast_withdrawal/fast_withdraw-new.tscn" id="1_5d7sy"]
+
+[node name="Fast Withdrawal" type="MarginContainer"]
+custom_minimum_size = Vector2(835, 553)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FastWithdraw" parent="." instance=ExtResource("1_5d7sy")]
+layout_mode = 2

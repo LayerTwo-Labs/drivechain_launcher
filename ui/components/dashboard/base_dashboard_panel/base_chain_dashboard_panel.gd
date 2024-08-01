@@ -151,13 +151,7 @@ func show_download_state():
 	
 	
 func show_unsupported_state():
-	settings_button.disabled = true
-	action_button.hide()
-#	auto_mine_button.visible = false
-	refresh_bmm_button.visible = false
-	secondary_desc.visible = true
-	secondary_desc.text = "[i]This sidechain is currently not available for this platform -- try Linux instead.[/i]"
-	modulate = disabled_modulate
+	pass
 	
 
 

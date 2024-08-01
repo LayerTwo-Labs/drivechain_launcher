@@ -201,10 +201,9 @@ func start_chain():
 		#if dir == null:
 			#print("zcash params not present, showing download modal")
 			#Appstate.show_zparams_modal(self)
-
+#
 			## important: return here! once the params are finished downloading,
 			## the binary will be launched by the params fetched modal.
-
 			#return 
 	
 
@@ -242,4 +241,3 @@ func get_executable_path() -> String:
 	
 func get_local_zip_hash() -> String:
 	return FileAccess.get_sha256(ProjectSettings.globalize_path(base_dir + "/" + id + ".zip"))
-	

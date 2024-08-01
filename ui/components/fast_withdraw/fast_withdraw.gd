@@ -106,7 +106,7 @@ func _on_button_copy_address_pressed() -> void:
 
 func _on_button_invoice_paid_pressed() -> void:
 	# Tell the server we paid
-	var txid : String = $LineEditTXID.text
+	var txid : String = $HBoxContainer4/LineEditTXID.text
 	$"/root/Net".invoice_paid.rpc_id(1, txid, $SpinBoxAmount.value, $LineEditMainchainAddress.text)
 
 

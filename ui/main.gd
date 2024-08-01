@@ -1,17 +1,11 @@
-extends CanvasLayer
+extends Node
 
-@onready var tab_container = $VBox/Content/TabContainer
-@onready var left_menu     = $VBox/LeftMenu
-@onready var settings_tab  = $VBox/Content/TabContainer/Settings
-
-
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	left_menu.left_menu_button_pressed.connect(self._on_left_menu_button_pressed)
-	settings_tab.hide_settings.connect(self._on_left_menu_button_pressed)
-	
-	get_tree().root.title += " | " + Appstate.app_config.get_value("", "version")
-
-func _on_left_menu_button_pressed(v: int):
-	tab_container.current_tab = v
-	if v == 0: left_menu.settings_shown = 0
+	# Load and instantiate the scene
+	var application_scene = load("res://source/application/application.tscn")
+	if application_scene:
+		var application_instance = application_scene.instantiate()
+		# Add the scene to the current tree
+		add_child(application_instance)
+	else:
+		print("Failed to load the application scene.")

@@ -1,0 +1,44 @@
+[gd_scene load_steps=2 format=3 uid="uid://3423r8wl8vxb"]
+
+[ext_resource type="PackedScene" uid="uid://cq65ocurdi7c1" path="res://source/nodes/node_panel/node_panel.tscn" id="1_qsgf1"]
+
+[node name="Nodes" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+
+[node name="Window" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="NodePanel1" parent="ScrollContainer/Window" instance=ExtResource("1_qsgf1")]
+layout_mode = 2
+
+[node name="NodePanel2" parent="ScrollContainer/Window" instance=ExtResource("1_qsgf1")]
+layout_mode = 2
+
+[node name="NodePanel3" parent="ScrollContainer/Window" instance=ExtResource("1_qsgf1")]
+layout_mode = 2
+
+[node name="NodePanel4" parent="ScrollContainer/Window" instance=ExtResource("1_qsgf1")]
+layout_mode = 2
+
+[node name="NodePanel5" parent="ScrollContainer/Window" instance=ExtResource("1_qsgf1")]
+layout_mode = 2
+
+[node name="NodePanel6" parent="ScrollContainer/Window" instance=ExtResource("1_qsgf1")]
+layout_mode = 2
+
+[node name="NodePanel7" parent="ScrollContainer/Window" instance=ExtResource("1_qsgf1")]
+layout_mode = 2
+
+[node name="NodePanel8" parent="ScrollContainer/Window" instance=ExtResource("1_qsgf1")]
+layout_mode = 2

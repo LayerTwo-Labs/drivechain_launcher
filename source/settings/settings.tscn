@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://bi3mevmny3dj3"]
+
+[ext_resource type="Script" path="res://ui/components/settings/settings.gd" id="1_folyo"]
+[ext_resource type="PackedScene" uid="uid://csx4lnf3n6r84" path="res://source/settings/data_directories/data_directories.tscn" id="1_iwxd0"]
+[ext_resource type="PackedScene" uid="uid://bcajgwunu16on" path="res://source/settings/display_settings/display_settings.tscn" id="2_bic18"]
+
+[node name="Settings" type="MarginContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_folyo")
+
+[node name="Window" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Container" type="VBoxContainer" parent="Window"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="DataDirectories" parent="Window/Container" instance=ExtResource("1_iwxd0")]
+layout_mode = 2
+
+[node name="DisplaySettings" parent="Window/Container" instance=ExtResource("2_bic18")]
+layout_mode = 2
+
+[node name="Reset" type="Button" parent="Window"]
+custom_minimum_size = Vector2(128, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+focus_mode = 0
+text = "RESET"

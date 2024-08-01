@@ -14,18 +14,127 @@ jobs:
       fail-fast: false
       matrix:
         build: [macos, windows, linux]
+        include:
+          - build: linux
+            godot-bin: 'godot.linuxbsd.editor.x86_64.mono'
+            godot-template-bins: 'godot.linuxbsd.template_*'
+            godot-templates-dir: '/home/runner/.local/share/godot/export_templates/4.2.2.stable.mono'
+          - build: macos
+            godot-bin: 'godot.macos.editor.universal'
+            godot-template-bins: 'godot.macos.template_*'
+            godot-templates-dir: '/Users/runner/Library/Application Support/Godot/export_templates/4.2.2.stable'
+          # Windows build runs on Ubuntu
+          - build: windows
+            godot-bin: 'godot.linuxbsd.editor.x86_64.mono'
+            godot-template-bins: 'godot.windows.template_*'
+            godot-templates-dir: '/home/runner/.local/share/godot/export_templates/4.2.2.stable.mono'
 
     steps:
       - uses: actions/checkout@v3
 
       - uses: chickensoft-games/setup-godot@v1
         with:
-          version: 4.2.1
-          use-dotnet: false
+          version: 4.2.2
+          # When running on Linux, we have to use the .NET build, as this is
+          # the only custom build available from the CI
+          use-dotnet: ${{ matrix.build == 'linux' || matrix.build == 'windows' }}
           include-templates: true
+
+      - name: Download Godot w/Bitcoin module
+        uses: robinraju/release-downloader@v1.11
+        with:
+          repository: LayerTwo-Labs/godot-bitcoin-module
+          tag: v4.2.2-bitcoin
+          filename: ${{ matrix.godot-bin }}
+
+      - name: Download Godot templates w/Bitcoin module
+        uses: robinraju/release-downloader@v1.11
+        with:
+          repository: LayerTwo-Labs/godot-bitcoin-module
+          tag: v4.2.2-bitcoin
+          filename: ${{ matrix.godot-template-bins }}
+
+      # FIXME: remove
+      - name: show files (linux / windows)
+        if: ${{ matrix.build == 'linux' || matrix.build == 'windows' }}
+        run: |
+          ls
+          echo 'TEMPLATES'
+          ls ${{ matrix.godot-templates-dir }}
+          echo 'VERSION TXT'
+          cat "${{ matrix.godot-templates-dir }}/version.txt"
+          echo $GODOT
+
+      # FIXME: remove
+      - name: show files (macos)
+        if: ${{ matrix.build == 'macos' }}
+        run: |
+          ls
+          #echo 'TEMPLATES'
+          #ls '/Users/runner/Library/Application Support/Godot/export_templates/4.2.2.stable'
+          #echo 'MACOS TEMPLATES'
+          #zipinfo -1 '/Users/runner/Library/Application Support/Godot/export_templates/4.2.2.stable/macos.zip'
+          #echo 'VERSION TXT'
+          #cat '/Users/runner/Library/Application Support/Godot/export_templates/4.2.2.stable/version.txt'
+          echo $GODOT
+
+      - name: Replace default templates with custom templates (linux)
+        if: ${{ matrix.build == 'linux' }}
+        run: |
+          rm "${{ matrix.godot-templates-dir }}/linux_debug.x86_64"
+          mv godot.linuxbsd.template_debug.x86_64.mono "${{ matrix.godot-templates-dir }}/linux_debug.x86_64"
+          rm "${{ matrix.godot-templates-dir }}/linux_release.x86_64"
+          mv godot.linuxbsd.template_release.x86_64.mono "${{ matrix.godot-templates-dir }}/linux_release.x86_64"
+
+      - name: Replace default templates with custom templates (macos)
+        if: ${{ matrix.build == 'macos' }}
+        run: |
+          # Temporary directory used to construct the zip file
+          TMP_ZIP_DIR=$(mktemp -d)
+          mkdir -p "${TMP_ZIP_DIR}/macos_template.app/Contents/MacOS"
+          mv "godot.macos.template_debug.universal" "${TMP_ZIP_DIR}/macos_template.app/Contents/MacOS/godot_macos_debug.universal"
+          mv "godot.macos.template_release.universal" "${TMP_ZIP_DIR}/macos_template.app/Contents/MacOS/godot_macos_release.universal"
+          zip --delete "${{ matrix.godot-templates-dir }}/macos.zip" "macos_template.app/Contents/MacOS/godot_macos_debug.universal"
+          zip --delete "${{ matrix.godot-templates-dir }}/macos.zip" "macos_template.app/Contents/MacOS/godot_macos_release.universal"
+          pushd "${TMP_ZIP_DIR}"
+          zip "${{ matrix.godot-templates-dir }}/macos.zip" "macos_template.app/Contents/MacOS/godot_macos_debug.universal"
+          zip "${{ matrix.godot-templates-dir }}/macos.zip" "macos_template.app/Contents/MacOS/godot_macos_release.universal"
+          popd
+
+      - name: Replace default templates with custom templates (windows)
+        if: ${{ matrix.build == 'windows' }}
+        run: |
+          rm "${{ matrix.godot-templates-dir }}/windows_debug_x86_64.exe"
+          mv "godot.windows.template_debug.x86_64.exe" "${{ matrix.godot-templates-dir }}/windows_debug_x86_64.exe"
+          rm "${{ matrix.godot-templates-dir }}/windows_debug_x86_64_console.exe"
+          mv "godot.windows.template_debug.x86_64.console.exe" "${{ matrix.godot-templates-dir }}/windows_debug_x86_64_console.exe"
+          rm "${{ matrix.godot-templates-dir }}/windows_release_x86_64.exe"
+          mv "godot.windows.template_release.x86_64.exe" "${{ matrix.godot-templates-dir }}/windows_release_x86_64.exe"
+          rm "${{ matrix.godot-templates-dir }}/windows_release_x86_64_console.exe"
+          mv "godot.windows.template_release.x86_64.console.exe" "${{ matrix.godot-templates-dir }}/windows_release_x86_64_console.exe"
+
+      # FIXME: remove
+      - name: show files (linux / windows)
+        if: ${{ matrix.build == 'linux' || matrix.build == 'windows' }}
+        run: |
+          ls
+          echo 'TEMPLATES'
+          ls ${{ matrix.godot-templates-dir }}
+
+      # FIXME: remove
+      - name: show files (macos)
+        if: ${{ matrix.build == 'macos' }}
+        run: |
+          ls
+          echo 'TEMPLATES'
+          ls '/Users/runner/Library/Application Support/Godot/export_templates/4.2.2.stable'
+          echo 'MACOS TEMPLATES'
+          zipinfo -1 '/Users/runner/Library/Application Support/Godot/export_templates/4.2.2.stable/macos.zip'
 
       - name: Verify Setup
         run: |
+          chmod +x ${{ matrix.godot-bin }}
+          mv ${{ matrix.godot-bin }} $GODOT
           godot --version
 
       - name: Import certificate to Keychain
@@ -46,11 +155,14 @@ jobs:
         run: |
           echo ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY }} | base64 --decode > notarization_api_key.p8
 
+      # MUST be run before build
+      - name: Initialize godot cache
+        run: python3 .github/scripts/godot_ci_cache.py
+
       - name: Export build
         run: |
           name="${{fromJSON('{"windows": "Windows Desktop", "macos": "macOS", "linux": "Linux/X11"}')[matrix.build] }}"
           godot --headless --export-debug "$name" --verbose 2>&1 | tee build.log
-
         env:
           GODOT_MACOS_NOTARIZATION_API_KEY_ID:
             ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY_ID }}

@@ -1,0 +1,79 @@
+[gd_scene load_steps=3 format=3 uid="uid://cpud5qbwgtucx"]
+
+[ext_resource type="Script" path="res://source/nodes/chain_providers_info/reset_sidechain_window.gd" id="1_eqo5x"]
+[ext_resource type="Theme" uid="uid://b730juygqetth" path="res://ui/themes/dangerous_button.tres" id="2_jkg3p"]
+
+[node name="ResetSidechainWindow" type="ColorRect"]
+texture_filter = 4
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0, 0, 0, 0.721569)
+script = ExtResource("1_eqo5x")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(500, 275)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/Panel/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+texture_filter = 4
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 3
+autowrap_mode = 2
+
+[node name="Button" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+texture_filter = 4
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Reset and backup wallets
+"
+
+[node name="Control" type="Control" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+texture_filter = 4
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+text = "Choose \"Reset everything\" to get a fresh install of the Launcher and to delete all sidechains and all wallets."
+horizontal_alignment = 1
+vertical_alignment = 3
+autowrap_mode = 2
+
+[node name="Button2" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+texture_filter = 4
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_jkg3p")
+text = "Reset everything"
+
+[connection signal="gui_input" from="CenterContainer" to="." method="_on_center_container_gui_input"]
+[connection signal="pressed" from="CenterContainer/Panel/MarginContainer/VBoxContainer/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="CenterContainer/Panel/MarginContainer/VBoxContainer/Button2" to="." method="_on_button_2_pressed"]

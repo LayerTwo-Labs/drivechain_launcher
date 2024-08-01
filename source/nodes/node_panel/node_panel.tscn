@@ -1,0 +1,123 @@
+[gd_scene load_steps=9 format=3 uid="uid://cq65ocurdi7c1"]
+
+[ext_resource type="Script" path="res://source/nodes/node_panel/node_panel.gd" id="1_ijj0w"]
+[ext_resource type="Texture2D" uid="uid://2xouba13q8q7" path="res://assets/images/pattern_33.png" id="2_lb2fn"]
+[ext_resource type="PackedScene" uid="uid://cjfcxi77d8pjt" path="res://source/nodes/node_panel/download.tscn" id="2_ubul7"]
+[ext_resource type="Texture2D" uid="uid://drrrqh5w6tl8t" path="res://assets/images/icons8-settings.svg" id="4_8w22k"]
+[ext_resource type="FontFile" uid="uid://b1w37357tl3er" path="res://assets/fonts/Cantarell-Bold.ttf" id="4_h86ci"]
+[ext_resource type="Texture2D" uid="uid://jpde6uqywmlg" path="res://assets/images/trash-svgrepo-com(1).svg" id="8_8l4af"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dqqs8"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.42, 0.42, 0.42, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 8.0
+expand_margin_top = 8.0
+expand_margin_right = 8.0
+expand_margin_bottom = 8.0
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_cnrh3"]
+
+[node name="NodePanel" type="Control"]
+texture_filter = 4
+custom_minimum_size = Vector2(403, 90)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 403.0
+offset_bottom = 90.0
+size_flags_horizontal = 3
+script = ExtResource("1_ijj0w")
+
+[node name="ShimmerEffect" type="TextureRect" parent="."]
+visible = false
+self_modulate = Color(1, 1, 1, 0.0156863)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_lb2fn")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(403, 84)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 6.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 8
+
+[node name="Panel" type="Panel" parent="MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dqqs8")
+
+[node name="Container" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Header" type="HBoxContainer" parent="MarginContainer/Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="Download" parent="MarginContainer/Container/Header" instance=ExtResource("2_ubul7")]
+layout_mode = 2
+
+[node name="Heading" type="Label" parent="MarginContainer/Container/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("4_h86ci")
+theme_override_font_sizes/font_size = 28
+text = "NodePanel"
+
+[node name="Settings" type="Button" parent="MarginContainer/Container/Header"]
+texture_filter = 4
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+icon = ExtResource("4_8w22k")
+
+[node name="Delete" type="Button" parent="MarginContainer/Container/Header"]
+texture_filter = 4
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+icon = ExtResource("8_8l4af")
+
+[node name="Description" type="Label" parent="MarginContainer/Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+text = "Description"
+text_overrun_behavior = 3
+
+[node name="Overlay" type="ColorRect" parent="."]
+visible = false
+modulate = Color(0, 0, 0, 0.541176)
+material = SubResource("CanvasItemMaterial_cnrh3")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -11.0
+grow_horizontal = 2
+grow_vertical = 2

@@ -1,0 +1,69 @@
+[gd_scene load_steps=2 format=3 uid="uid://csx4lnf3n6r84"]
+
+[ext_resource type="FontFile" uid="uid://ccfr6y00w3tjf" path="res://assets/fonts/Cantarell-Regular.ttf" id="1_17r3w"]
+
+[node name="DataDirectories" type="VBoxContainer"]
+
+[node name="Heading" type="Label" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "DATA DIRECTORIES"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Options" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Labels" type="VBoxContainer" parent="Options"]
+custom_minimum_size = Vector2(296, 0)
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="ApplicationDataDirectory" type="Label" parent="Options/Labels"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "APPLICATION DATA DIRECTORY"
+vertical_alignment = 1
+
+[node name="DriveChainDataDirectory" type="Label" parent="Options/Labels"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "DRIVECHAIN DATA DIRECTORY"
+vertical_alignment = 1
+
+[node name="Inputs" type="VBoxContainer" parent="Options"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+
+[node name="ApplicationDataDirectory" type="LineEdit" parent="Options/Inputs"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+focus_mode = 0
+theme_override_fonts/font = ExtResource("1_17r3w")
+editable = false
+
+[node name="DriveChainDataDirectory" type="LineEdit" parent="Options/Inputs"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+focus_mode = 0
+theme_override_fonts/font = ExtResource("1_17r3w")
+editable = false
+
+[node name="BrowseButtons" type="VBoxContainer" parent="Options"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="ApplicationDataDirectory" type="Button" parent="Options/BrowseButtons"]
+custom_minimum_size = Vector2(40, 36)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+text = "..."
+
+[node name="DriveChainDataDirectory" type="Button" parent="Options/BrowseButtons"]
+custom_minimum_size = Vector2(40, 36)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+text = "..."

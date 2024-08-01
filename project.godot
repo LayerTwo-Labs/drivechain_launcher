@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="drivechain_launcher"
-run/main_scene="res://ui/main.tscn"
+run/main_scene="res://source/application/application.tscn"
 config/use_custom_user_dir=true
 config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://icon.png"
@@ -22,15 +22,19 @@ config/windows_native_icon="res://icon.ico"
 
 Appstate="*res://autoloads/appstate.tscn"
 Net="*res://net.gd"
-DashboardPanel="*res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.tscn"
-chain_state="*res://models/chain_state.tscn"
-ResetSidechainWindow="*res://ui/components/dashboard/chain_providers_info/reset_sidechain_window.tscn"
+DashboardPanel="*res://ui/components/dashboard/base_dashboard_panel/base_chain_dashboard_panel.gd"
+chain_state="*res://models/chain_state.gd"
+ResetSidechainWindow="*res://source/nodes/chain_providers_info/reset_sidechain_window.gd"
+GlobalFont="*res://resource/GlobalFont.gd"
 
 [display]
 
-window/size/viewport_width=1024
-window/size/viewport_height=640
+window/size/viewport_width=851
+window/size/viewport_height=600
+window/size/resizable=false
 window/subwindows/embed_subwindows=false
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [dotnet]
 
@@ -43,10 +47,11 @@ import/blender/enabled=false
 [gui]
 
 theme/custom="res://ui/themes/default_dark.tres"
-theme/custom_font="res://assets/fonts/Cantarell-Regular.ttf"
-theme/default_font_multichannel_signed_distance_field=true
+theme/custom_font="res://assets/fonts/Satoshi-Regular.otf"
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=2
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=true

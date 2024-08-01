@@ -1,36 +1,75 @@
-[gd_scene load_steps=5 format=3 uid="uid://dscucqwnoepb1"]
+[gd_scene load_steps=8 format=3 uid="uid://dscucqwnoepb1"]
 
 [ext_resource type="Script" path="res://ui/main.gd" id="1_ur5w6"]
 [ext_resource type="PackedScene" uid="uid://dwhtby81ylt3s" path="res://ui/components/left_menu/left_menu.tscn" id="2_0lj2k"]
+[ext_resource type="Script" path="res://ui/tabs.gd" id="2_usfcd"]
 [ext_resource type="PackedScene" uid="uid://bwg823t4rnqpy" path="res://ui/components/dashboard/dashboard.tscn" id="3_3v44j"]
+[ext_resource type="PackedScene" uid="uid://dm660sh0nt05c" path="res://ui/components/create_wallet/create_wallet.tscn" id="3_nvymr"]
 [ext_resource type="PackedScene" uid="uid://bommmvy1qyobc" path="res://ui/components/settings/settings.tscn" id="4_3j67w"]
+[ext_resource type="PackedScene" uid="uid://b5wmjp1psgsvr" path="res://ui/components/fast_withdraw/fast_withdraw.tscn" id="5_34lsw"]
 
-[node name="Main" type="CanvasLayer"]
-script = ExtResource("1_ur5w6")
-
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="Main" type="VBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
+script = ExtResource("1_ur5w6")
 
-[node name="Content" type="MarginContainer" parent="VBox"]
+[node name="Background" type="Panel" parent="."]
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Content" type="MarginContainer" parent="Background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TabContainer" type="TabContainer" parent="VBox/Content"]
+[node name="TabContainer" type="TabContainer" parent="Background/Content"]
 layout_mode = 2
-tabs_visible = false
+current_tab = 4
+clip_tabs = false
+all_tabs_in_front = true
+script = ExtResource("2_usfcd")
 
-[node name="Dashboard" parent="VBox/Content/TabContainer" instance=ExtResource("3_3v44j")]
-layout_mode = 2
-
-[node name="Settings" parent="VBox/Content/TabContainer" instance=ExtResource("4_3j67w")]
+[node name="Wallet" type="Control" parent="Background/Content/TabContainer"]
 visible = false
 layout_mode = 2
 
-[node name="LeftMenu" parent="VBox" instance=ExtResource("2_0lj2k")]
+[node name="CreateWallet" parent="Background/Content/TabContainer/Wallet" instance=ExtResource("3_nvymr")]
+layout_mode = 1
+
+[node name="Nodes" parent="Background/Content/TabContainer" instance=ExtResource("3_3v44j")]
+visible = false
 layout_mode = 2
+
+[node name="Fast Withdrawal" type="Control" parent="Background/Content/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="FastWithdraw" parent="Background/Content/TabContainer/Fast Withdrawal" instance=ExtResource("5_34lsw")]
+layout_mode = 1
+
+[node name="Tools" type="Control" parent="Background/Content/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="Settings" parent="Background/Content/TabContainer" instance=ExtResource("4_3j67w")]
+layout_mode = 2
+
+[node name="Menu" parent="." instance=ExtResource("2_0lj2k")]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="ChainProviderInfoLayer" type="CanvasLayer" parent="."]
