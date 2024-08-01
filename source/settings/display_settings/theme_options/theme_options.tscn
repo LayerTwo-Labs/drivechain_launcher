@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://c0x1u7g3b58iw"]
+[gd_scene load_steps=3 format=3 uid="uid://c0x1u7g3b58iw"]
 
 [ext_resource type="Script" path="res://source/settings/display_settings/theme_options/theme_options.gd" id="1_yvg0j"]
-[ext_resource type="Texture2D" uid="uid://dqbgs0mj3akyd" path="res://assets/icons/CheckButton/CheckButton_UnChecked.png" id="3_dyys2"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_8b16r"]
 
@@ -28,7 +27,6 @@ toggle_mode = true
 action_mode = 0
 button_group = SubResource("ButtonGroup_8b16r")
 text = "BLUE"
-icon = ExtResource("3_dyys2")
 
 [node name="Black" type="Button" parent="Options"]
 custom_minimum_size = Vector2(136, 0)
@@ -39,4 +37,3 @@ button_pressed = true
 action_mode = 0
 button_group = SubResource("ButtonGroup_8b16r")
 text = "BLACK"
-icon = ExtResource("3_dyys2")

@@ -106,6 +106,7 @@ theme_override_constants/margin_bottom = 4
 layout_mode = 2
 
 [node name="IconBox" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+texture_filter = 4
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("2_g8yfn")
@@ -113,6 +114,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="MarginContainer/HBoxContainer"]
+texture_filter = 4
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)

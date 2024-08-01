@@ -88,6 +88,7 @@ theme_override_font_sizes/font_size = 28
 text = "NodePanel"
 
 [node name="Settings" type="Button" parent="MarginContainer/Container/Header"]
+texture_filter = 4
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_vertical = 4
@@ -95,6 +96,7 @@ focus_mode = 0
 icon = ExtResource("4_8w22k")
 
 [node name="Delete" type="Button" parent="MarginContainer/Container/Header"]
+texture_filter = 4
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_vertical = 4

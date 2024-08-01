@@ -167,6 +167,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="CheckButtonLocalhost" type="CheckButton" parent="HBoxContainer3"]
+custom_minimum_size = Vector2(200, 2.08165e-12)
 layout_mode = 2
 text = "Debug server"
 
