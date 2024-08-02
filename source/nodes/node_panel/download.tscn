@@ -1,7 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://cjfcxi77d8pjt"]
 
 [ext_resource type="Script" path="res://source/nodes/node_panel/download.gd" id="1_no5dn"]
-[ext_resource type="Texture2D" uid="uid://sitylibnubgw" path="res://assets/images/download-cloud-svgrepo.svg" id="2_g8yfn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2befl"]
 bg_color = Color(1, 1, 1, 1)
@@ -23,6 +22,9 @@ corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_jn0ri"]
+load_path = "res://.godot/imported/download-cloud-svgrepo.svg-5d91d83002443aa7d3d37428d7c35944.ctex"
 
 [sub_resource type="Animation" id="Animation_rsgv1"]
 length = 0.001
@@ -109,7 +111,7 @@ layout_mode = 2
 texture_filter = 4
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
-texture = ExtResource("2_g8yfn")
+texture = SubResource("CompressedTexture2D_jn0ri")
 expand_mode = 1
 stretch_mode = 5
 

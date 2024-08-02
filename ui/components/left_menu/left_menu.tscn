@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://dwhtby81ylt3s"]
 
 [ext_resource type="Script" path="res://ui/components/left_menu/left_menu.gd" id="1_yja75"]
-[ext_resource type="Texture2D" uid="uid://blq6pvspmkcbj" path="res://assets/images/prev.svg" id="3_3lhq3"]
-[ext_resource type="Texture2D" uid="uid://c5ddyq86urmmy" path="res://assets/images/next.svg" id="7_k0tsh"]
+[ext_resource type="Texture2D" uid="uid://c865fxarlp4e1" path="res://assets/images/left-arrow-svgrepo-com.png" id="2_5g8my"]
+[ext_resource type="Texture2D" uid="uid://4ulwmgydwoi2" path="res://assets/images/right-arrow-next-svgrepo-com (2).png" id="3_2rq81"]
 [ext_resource type="Script" path="res://ui/components/left_menu/Quotes.gd" id="7_kx1k8"]
 [ext_resource type="FontFile" uid="uid://ciu7chyqqs4k7" path="res://assets/fonts/Saira_Expanded-Bold.ttf" id="11_6qy05"]
 [ext_resource type="FontFile" uid="uid://dgxbgdcr3s84u" path="res://assets/fonts/Saira_Expanded-Regular.ttf" id="12_nwgc3"]
@@ -37,26 +37,30 @@ size_flags_stretch_ratio = 0.0
 theme_override_constants/separation = 8
 
 [node name="PrevButton" type="Button" parent="MarginContainer/HBox"]
+texture_filter = 4
 layout_mode = 2
-text = "Prev"
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = ExtResource("2_5g8my")
+flat = true
 
 [node name="Quotes" type="Label" parent="MarginContainer/HBox"]
 custom_minimum_size = Vector2(250, 0)
+layout_direction = 3
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 theme_override_font_sizes/font_size = 13
-horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="Author" type="Label" parent="MarginContainer/HBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-
 [node name="NextButton" type="Button" parent="MarginContainer/HBox"]
+texture_filter = 4
 layout_mode = 2
-text = "Next"
+size_flags_horizontal = 8
+size_flags_vertical = 4
+icon = ExtResource("3_2rq81")
+flat = true
 
 [node name="QuotesDialog" type="AcceptDialog" parent="."]
 title = "QUOTES"
@@ -77,13 +81,6 @@ grow_vertical = 2
 [node name="Header" type="HBoxContainer" parent="QuotesDialog/Box"]
 layout_mode = 2
 
-[node name="PrevButton" type="Button" parent="QuotesDialog/Box/Header"]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-icon = ExtResource("3_3lhq3")
-flat = true
-
 [node name="Author" type="Label" parent="QuotesDialog/Box/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -96,13 +93,6 @@ theme_override_font_sizes/font_size = 28
 text = "Name"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="NextButton" type="Button" parent="QuotesDialog/Box/Header"]
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 4
-icon = ExtResource("7_k0tsh")
-flat = true
 
 [node name="Margin" type="ColorRect" parent="QuotesDialog/Box"]
 custom_minimum_size = Vector2(0, 1)
@@ -121,5 +111,5 @@ autowrap_mode = 2
 script = ExtResource("7_kx1k8")
 author_label = NodePath("../Header/Author")
 
-[connection signal="pressed" from="QuotesDialog/Box/Header/PrevButton" to="QuotesDialog/Box/Quotes" method="_on_prev_button_pressed"]
-[connection signal="pressed" from="QuotesDialog/Box/Header/NextButton" to="QuotesDialog/Box/Quotes" method="_on_next_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBox/PrevButton" to="QuotesDialog/Box/Quotes" method="_on_prev_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBox/NextButton" to="QuotesDialog/Box/Quotes" method="_on_next_button_pressed"]

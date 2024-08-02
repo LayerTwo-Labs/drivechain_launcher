@@ -1,11 +1,11 @@
 [gd_scene load_steps=9 format=3 uid="uid://cq65ocurdi7c1"]
 
 [ext_resource type="Script" path="res://source/nodes/node_panel/node_panel.gd" id="1_ijj0w"]
-[ext_resource type="Texture2D" uid="uid://2xouba13q8q7" path="res://assets/images/pattern_33.png" id="2_lb2fn"]
 [ext_resource type="PackedScene" uid="uid://cjfcxi77d8pjt" path="res://source/nodes/node_panel/download.tscn" id="2_ubul7"]
-[ext_resource type="Texture2D" uid="uid://drrrqh5w6tl8t" path="res://assets/images/icons8-settings.svg" id="4_8w22k"]
 [ext_resource type="FontFile" uid="uid://b1w37357tl3er" path="res://assets/fonts/Cantarell-Bold.ttf" id="4_h86ci"]
-[ext_resource type="Texture2D" uid="uid://jpde6uqywmlg" path="res://assets/images/trash-svgrepo-com(1).svg" id="8_8l4af"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_bl3lx"]
+load_path = "res://.godot/imported/pattern_33.png-6a06ad3b641dc052103386e82d92dac9.ctex"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dqqs8"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -22,6 +22,12 @@ expand_margin_left = 8.0
 expand_margin_top = 8.0
 expand_margin_right = 8.0
 expand_margin_bottom = 8.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_orksi"]
+load_path = "res://.godot/imported/icons8-settings.svg-3abab0a1cc1e22f71f96e60e0862595e.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_aqe83"]
+load_path = "res://.godot/imported/trash-svgrepo-com(1).svg-0f38edd909f1c2b1144dc0fc23313836.ctex"
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_cnrh3"]
 
@@ -45,7 +51,7 @@ anchor_bottom = 1.0
 offset_right = -8.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_lb2fn")
+texture = SubResource("CompressedTexture2D_bl3lx")
 expand_mode = 1
 stretch_mode = 1
 
@@ -93,7 +99,7 @@ custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
-icon = ExtResource("4_8w22k")
+icon = SubResource("CompressedTexture2D_orksi")
 
 [node name="Delete" type="Button" parent="MarginContainer/Container/Header"]
 texture_filter = 4
@@ -101,7 +107,7 @@ custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
-icon = ExtResource("8_8l4af")
+icon = SubResource("CompressedTexture2D_aqe83")
 
 [node name="Description" type="Label" parent="MarginContainer/Container"]
 layout_mode = 2
