@@ -122,7 +122,9 @@ func clear_all_output():
 	var bip39_info_label = bip39_panel.get_node("BIP39Info")
 	if bip39_info_label:
 		var headers_text = """[table=2]
-[cell][color=white][b][u]BIP39 Hex:[/u][/b][/color][/cell] [cell][/cell]
+[cell][color=white][b][u]BIP39 Hex:
+
+[/u][/b][/color][/cell] [cell][/cell]
 [cell][color=white][b][u]BIP39 Bin:
 
 
@@ -171,9 +173,14 @@ func update_bip39_panel(output: Dictionary):
 			formatted_checksum += checksum.substr(i, 4) + " "
 		formatted_checksum = formatted_checksum.strip_edges()
 		
+		var bip39_hex = output.get("bip39_hex", "")
+		var first_half = bip39_hex.substr(0, 32)
+		var second_half = bip39_hex.substr(32)
 
 		var info_text = """[table=2]
-[cell][color=white][b][u]BIP39 Hex:[/u][/b][/color][/cell] [cell]{bip39_hex}[/cell]
+[cell][color=white][b][u]BIP39 Hex:
+
+[/u][/b][/color][/cell] [cell]{first_half}[color=#808080]{second_half}[/color][/cell]
 [cell][color=white][b][u]BIP39 Bin:
 
 
@@ -182,7 +189,8 @@ func update_bip39_panel(output: Dictionary):
 [cell][color=white][b][u]BIP39 Checksum:[/u][/b][/color][/cell] [cell][color=green]{bip39_csum}[/color][/cell]
 [cell][color=white][b][u]BIP39 Checksum Hex:[/u][/b][/color][/cell] [cell][color=green]{bip39_csum_hex}[/color][/cell]
 [/table]""".format({
-			"bip39_hex": output.get("bip39_hex", ""),
+			"first_half": first_half,
+			"second_half": second_half,
 			"bip39_bin": formatted_bin,
 			"bip39_csum": formatted_checksum,
 			"bip39_csum_hex": output.get("bip39_csum_hex", "")
@@ -246,7 +254,9 @@ func setup_bip39_headers():
 	var bip39_info_label = bip39_panel.get_node("BIP39Info")
 	if bip39_info_label:
 		var headers_text = """[table=2]
-[cell][color=white][b][u]BIP39 Hex:[/u][/b][/color][/cell] [cell][/cell]
+[cell][color=white][b][u]BIP39 Hex:
+
+[/u][/b][/color][/cell] [cell][/cell]
 [cell][color=white][b][u]BIP39 Bin:
 
 
