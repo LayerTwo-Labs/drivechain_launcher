@@ -14,12 +14,13 @@ signal hide_settings
 
 var base_size: Vector2 
 var reset_popup: Control = null
+var default_resolution: Vector2
 
 func _ready():
 	var user_data_dir : String = ProjectSettings.globalize_path(OS.get_user_data_dir())
 	var user_drivechain_dir : String = ProjectSettings.globalize_path(Appstate.get_drivechain_dir())
 	if Appstate.get_platform() == Appstate.platform.WIN:
-		app_dir.placeholder_text        = "\\".join(user_data_dir.split("/"))
+		app_dir.placeholder_text		= "\\".join(user_data_dir.split("/"))
 		drivechain_dir.placeholder_text = "\\".join(user_drivechain_dir.split("/"))
 	else:
 		app_dir.placeholder_text		= user_data_dir
@@ -28,6 +29,22 @@ func _ready():
 	drivechain_dir_button.connect("pressed",Callable(self, "_on_drivechain_data_open_pressed"))
 	reset_button.connect("pressed", Callable(self, "_on_reset_button_pressed"))
 	apply_custom_font()
+	
+	# Set the default resolution based on the operating system
+	default_resolution = get_default_resolution()
+	# You can use default_resolution elsewhere in your project as needed
+
+func get_default_resolution() -> Vector2:
+	match Appstate.get_platform():
+		Appstate.platform.MAC:
+			return Vector2(1920, 1080)
+		Appstate.platform.WIN:
+			return Vector2(1024, 576)
+		Appstate.platform.LINUX:
+			return Vector2(1280, 720)
+		_:
+			# Default fallback resolution
+			return Vector2(1280, 720)
 
 func apply_custom_font():
 	var custom_font = load(CUSTOM_FONT_PATH)
