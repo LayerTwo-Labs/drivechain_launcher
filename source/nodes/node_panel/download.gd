@@ -5,7 +5,7 @@ signal action_requested(action)
 const DOWNLOAD_ICON = preload("res://assets/images/download-cloud-svgrepo.svg")
 const RUN_ICON = preload("res://assets/images/play-svgrepo-com.svg")
 const STOP_ICON = preload("res://assets/images/stop-circle-svgrepo-com.svg")
-const CUSTOM_FONT = preload("res://assets/fonts/Satoshi-Regular.otf")
+const CUSTOM_FONT = preload("res://assets/fonts/Cantarell-Regular.ttf")
 
 enum STATE { NOT_DOWNLOADED, DOWNLOADING, NOT_RUNNING, RUNNING }
 

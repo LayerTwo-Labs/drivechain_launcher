@@ -8,7 +8,7 @@ extends MarginContainer
 @onready var reset_button: Button = $Window/Reset
 @onready var reset_everything_scene = preload("res://ui/components/settings/reset_everything_window.tscn")
 
-const CUSTOM_FONT_PATH = "res://assets/fonts/Satoshi-Bold.otf"
+const CUSTOM_FONT_PATH = "res://assets/fonts/Cantarell-Bold.ttf"
 
 signal hide_settings
 

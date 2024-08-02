@@ -11,7 +11,6 @@ extends TabContainer
 @onready var popup_window = $PopUp
 @onready var popup_vbox = $PopUp/MarginContainer/VBoxContainer
 @onready var mnemonic_label = $PopUp/MarginContainer/VBoxContainer/Label
-@onready var hide_button = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer/Hide
 @onready var mnemonic_in = $MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/MnemonicIn
 @onready var load_button = $MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/Load
 @onready var fast_button = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer/Random
@@ -25,7 +24,6 @@ func _ready():
 	return_button.connect("pressed", Callable(self, "_on_return_button_pressed"))
 	entropy_in.connect("text_changed", Callable(self, "_on_entropy_in_changed"))
 	create_pop_up.connect("pressed", Callable(self, "_on_create_popup_pressed"))
-	hide_button.connect("toggled", Callable(self, "_on_hide_button_toggled"))
 	load_button.connect("pressed", Callable(self, "_on_load_button_pressed"))
 	fast_button.connect("pressed", Callable(self, "_on_fast_button_pressed"))
 	
@@ -110,8 +108,6 @@ func _create_wallet(input: String):
 		populate_grid(output["mnemonic"], output["bip39_bin"], output["bip39_csum"])
 		update_bip39_panel(output)
 		update_launch_panel(output)
-		_toggle_output_visibility(true)  # Ensure output is visible
-		hide_button.button_pressed = false
 	else:
 		clear_all_output()
 
@@ -152,9 +148,7 @@ func clear_all_output():
 [/table]"""
 		launch_info_label.text = headers_text
 	
-	hide_button.button_pressed = false
 	current_wallet_data = {}
-	_toggle_output_visibility(true)
 		
 func _on_entropy_in_changed(new_text: String):
 	if new_text.is_empty():
@@ -451,53 +445,6 @@ func _on_popup_close_pressed() -> void:
 		popup_window = null
 		get_tree().root.disconnect("size_changed", Callable(self, "_center_popup"))
 
-func _on_hide_button_toggled(button_pressed: bool):
-	_toggle_output_visibility(!button_pressed)
-
-func _toggle_output_visibility(is_visible: bool):
-	for i in range(1, mnemonic_out.get_child_count()):
-		if i != 13 and i != 26:  
-			var label = mnemonic_out.get_child(i).get_child(0) as Label
-			if label:
-				label.visible = is_visible
-
-	var bip39_info_label = bip39_panel.get_node("BIP39Info")
-	if bip39_info_label:
-		if is_visible:
-			# Restore the full content
-			update_bip39_panel(current_wallet_data)
-		else:
-			# Keep only headers visible
-			var headers_text = """[table=2]
-[cell][color=white][b][u]BIP39 Hex:[/u][/b][/color][/cell] [cell][/cell]
-[cell][color=white][b][u]BIP39 Bin:
-
-
-
-[/u][/b][/color][/cell] [cell][/cell]
-[cell][color=white][b][u]BIP39 Checksum:[/u][/b][/color][/cell] [cell][/cell]
-[cell][color=white][b][u]BIP39 Checksum Hex:[/u][/b][/color][/cell] [cell][/cell]
-[/table]"""
-			bip39_info_label.text = headers_text
-
-	var launch_info_label = launch_panel.get_node("VBoxContainer/LaunchInfo")
-	if launch_info_label:
-		if is_visible:
-			update_launch_panel(current_wallet_data)
-		else:
-			var headers_text = """[table=2]
-[cell][color=white][b][u]HD Key Data:
-
-[/u][/b][/color][/cell] [cell][/cell]
-[cell][color=white][b][u]Master Key:
-
-[/u][/b][/color][/cell] [cell][/cell]
-[cell][color=white][b][u]Chain Code:
-
-[/u][/b][/color][/cell] [cell][/cell]
-[/table]"""
-			launch_info_label.text = headers_text
-
 func _on_load_button_pressed():
 	var wallet = BitcoinWallet.new()
 	var mnemonic = mnemonic_in.text.strip_edges().to_lower()
@@ -579,8 +526,6 @@ func reset_wallet_tab():
 	entropy_in.text = ""
 	mnemonic_in.text = ""
 	current_wallet_data = {}
-	hide_button.button_pressed = false
-	_toggle_output_visibility(true)
 	mnemonic_out.setup_grid()
 	current_tab = 0
 	

@@ -2,7 +2,6 @@ extends GridContainer
 
 var columns_count = 3
 var rows_count = 4
-var font_path = "res://assets/fonts/Satoshi-Regular.otf"
 
 func _ready():
 	columns = columns_count
@@ -14,8 +13,6 @@ func setup_grid():
 	for child in get_children():
 		child.queue_free()
 	
-	var font = load(font_path)
-	
 	# Set up the grid
 	for i in range(rows_count * columns_count):
 		var label = Label.new()
@@ -24,7 +21,6 @@ func setup_grid():
 		label.size_flags_horizontal = SIZE_EXPAND_FILL
 		label.size_flags_vertical = SIZE_EXPAND_FILL
 		label.autowrap_mode = TextServer.AUTOWRAP_OFF
-		label.add_theme_font_override("font", font)
 		label.text = "check"  # Empty by default
 		add_child(label)
 	
