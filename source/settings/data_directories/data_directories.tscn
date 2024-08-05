@@ -5,10 +5,10 @@
 [node name="DataDirectories" type="VBoxContainer"]
 
 [node name="Heading" type="Label" parent="."]
+texture_filter = 4
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
-text = "DATA DIRECTORIES"
-horizontal_alignment = 1
+text = "Directories"
 vertical_alignment = 1
 
 [node name="Options" type="HBoxContainer" parent="."]
@@ -22,13 +22,13 @@ theme_override_constants/separation = 16
 [node name="ApplicationDataDirectory" type="Label" parent="Options/Labels"]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
-text = "APPLICATION DATA DIRECTORY"
+text = "This Launcher"
 vertical_alignment = 1
 
 [node name="DriveChainDataDirectory" type="Label" parent="Options/Labels"]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
-text = "DRIVECHAIN DATA DIRECTORY"
+text = "Drivenet (L1)"
 vertical_alignment = 1
 
 [node name="Inputs" type="VBoxContainer" parent="Options"]

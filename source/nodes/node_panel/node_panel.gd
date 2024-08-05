@@ -96,7 +96,13 @@ func update_drivechain_view():
 
 func update_sidechain_view():
 	var drivechain_provider = Appstate.get_drivechain_provider()
-	download_button.disabled = not drivechain_provider.is_ready_for_execution()
+	var drivechain_state = Appstate.chain_states[drivechain_provider.id] if drivechain_provider.id in Appstate.chain_states else null
+	var drivechain_running = drivechain_provider.is_ready_for_execution() and drivechain_state and drivechain_state.state == ChainState.c_state.RUNNING
+	download_button.disabled = not drivechain_running
+	if not drivechain_running:
+		download_button.modulate = Color(0.5, 0.5, 0.5)  # Grey out the button
+	else:
+		download_button.modulate = Color(1, 1, 1)  # Normal color
 	update_button_state()
 	
 func update_overlay():
@@ -104,7 +110,9 @@ func update_overlay():
 		overlay.color = Color(1, 1, 1, 0)  
 	else:
 		var drivechain_provider = Appstate.get_drivechain_provider()
-		if drivechain_provider.is_ready_for_execution():
+		var drivechain_state = Appstate.chain_states[drivechain_provider.id] if drivechain_provider.id in Appstate.chain_states else null
+		var drivechain_running = drivechain_provider.is_ready_for_execution() and drivechain_state and drivechain_state.state == ChainState.c_state.RUNNING
+		if drivechain_running:
 			overlay.color = Color(1, 1, 1, 0) 
 			overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		else:
@@ -112,15 +120,30 @@ func update_overlay():
 			overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 
 func update_button_state():
+	var drivechain_provider = Appstate.get_drivechain_provider()
+	var drivechain_state = Appstate.chain_states[drivechain_provider.id] if drivechain_provider.id in Appstate.chain_states else null
+	var drivechain_running = drivechain_provider.is_ready_for_execution() and drivechain_state and drivechain_state.state == ChainState.c_state.RUNNING
+	
 	if not chain_provider.is_ready_for_execution():
 		download_button.set_state(DownloadButton.STATE.NOT_DOWNLOADED)
 	elif chain_provider.is_ready_for_execution() and chain_state.state != ChainState.c_state.RUNNING:
 		download_button.set_state(DownloadButton.STATE.NOT_RUNNING)
 	else:
 		download_button.set_state(DownloadButton.STATE.RUNNING)
+	
+	if not is_drivechain:
+		download_button.disabled = not drivechain_running
+		if not drivechain_running:
+			download_button.modulate = Color(0.5, 0.5, 0.5)  # Grey out the button
+		else:
+			download_button.modulate = Color(1, 1, 1)
 
 func _on_action_requested(action: String):
-	if is_drivechain or Appstate.get_drivechain_provider().is_ready_for_execution():
+	var drivechain_provider = Appstate.get_drivechain_provider()
+	var drivechain_state = Appstate.chain_states[drivechain_provider.id] if drivechain_provider.id in Appstate.chain_states else null
+	var drivechain_running = drivechain_provider.is_ready_for_execution() and drivechain_state and drivechain_state.state == ChainState.c_state.RUNNING
+	
+	if is_drivechain or drivechain_running:
 		if cooldown_timer.is_stopped():
 			match action:
 				"download":
@@ -134,7 +157,7 @@ func _on_action_requested(action: String):
 		else:
 			print("Action is on cooldown. Please wait.")
 	else:
-		print("Cannot perform action. Drivechain is not downloaded.")
+		print("Cannot perform action. Drivechain is not running.")
 
 func start_cooldown():
 	cooldown_timer.start()
@@ -233,12 +256,24 @@ func unzip_file_and_setup_binary(base_dir: String, zip_path: String):
 	update_view()
 
 func _on_start_button_pressed():
-	print("Starting chain: ", chain_provider.id)
-	chain_provider.start_chain()
-	download_button.set_state(DownloadButton.STATE.RUNNING)
-	update_view()
+	var drivechain_provider = Appstate.get_drivechain_provider()
+	var drivechain_state = Appstate.chain_states[drivechain_provider.id] if drivechain_provider.id in Appstate.chain_states else null
+	var drivechain_running = drivechain_provider.is_ready_for_execution() and drivechain_state and drivechain_state.state == ChainState.c_state.RUNNING
+	
+	if is_drivechain or drivechain_running:
+		print("Starting chain: ", chain_provider.id)
+		chain_provider.start_chain()
+		download_button.set_state(DownloadButton.STATE.RUNNING)
+		update_view()
+	else:
+		print("Cannot start sidechain. Drivechain is not running.")
 
 func _on_stop_button_pressed():
+	if is_drivechain:
+		print("Stopping drivechain: ", chain_provider.id)
+		stop_all_running_sidechains()
+		await get_tree().create_timer(1.0).timeout  # Wait for sidechains to stop
+
 	print("Stopping chain: ", chain_provider.id)
 	chain_state.stop_chain()
 	download_button.set_state(DownloadButton.STATE.NOT_RUNNING)
@@ -406,3 +441,11 @@ func refresh_chain_data():
 		chain_provider.refresh()
 		chain_state.refresh()
 		update_view()
+		
+func stop_all_running_sidechains():
+	for chain_id in Appstate.chain_states:
+		var chain_state = Appstate.chain_states[chain_id]
+		if chain_state.state == ChainState.c_state.RUNNING and chain_id != chain_provider.id:
+			print("Stopping sidechain: ", chain_id)
+			chain_state.stop_chain()
+	await get_tree().create_timer(2.0).timeout

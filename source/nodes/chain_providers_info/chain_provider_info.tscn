@@ -2,7 +2,9 @@
 
 [ext_resource type="Script" path="res://source/nodes/chain_providers_info/chain_provider_info.gd" id="1_0uufu"]
 [ext_resource type="FontFile" uid="uid://b1w37357tl3er" path="res://assets/fonts/Cantarell-Bold.ttf" id="2_jumpv"]
-[ext_resource type="Texture2D" uid="uid://hcq0d87vm0xk" path="res://assets/images/folder-open-symbolic 1.svg" id="3_3cbqg"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ihaj0"]
+load_path = "res://.godot/imported/folder-open-symbolic 1.svg-d125f1a60e971d20e00dbf1ea893e0f1.editor.ctex"
 
 [node name="ChainProviderInfo" type="ColorRect"]
 anchors_preset = 15
@@ -103,7 +105,7 @@ expand_to_text_length = true
 
 [node name="Button" type="Button" parent="Center/Panel/Margin/VBox/SidechainDirectory"]
 layout_mode = 2
-icon = ExtResource("3_3cbqg")
+icon = SubResource("CompressedTexture2D_ihaj0")
 
 [node name="LocalHash" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
 layout_mode = 2

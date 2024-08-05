@@ -3,7 +3,7 @@ extends MarginContainer
 @onready var scroll_container = $ScrollContainer
 @onready var window = scroll_container.get_node("Window")
 var panel = preload("res://source/nodes/node_panel/node_panel.tscn")
-const CUSTOM_FONT_PATH = "res://assets/fonts/Satoshi-Bold.otf"
+const CUSTOM_FONT_PATH = "res://assets/fonts/Cantarell-Bold.ttf"
 
 @export var panel_vertical_spacing: float = 6  # Adjust this value to increase/decrease spacing
 

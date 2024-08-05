@@ -2,8 +2,7 @@ extends GridContainer
 
 var columns_count = 13
 var rows_count = 3
-
-var header_font_path = "res://assets/fonts/Satoshi-Bold.otf"
+var header_font_path = "res://assets/fonts/Cantarell-Bold.ttf"
 
 func _ready():
 	columns = columns_count
@@ -66,6 +65,10 @@ func setup_grid():
 		else:
 			label.text = " "
 		
+		# Set text color for WORDS row to blue
+		if i > 0 and i < 13:
+			label.add_theme_color_override("font_color", Color.DEEP_SKY_BLUE)
+		
 		panel.add_child(label)
 		add_child(panel)
 	
@@ -76,27 +79,26 @@ func setup_grid():
 func _on_window_resize():
 	var parent_size = get_parent().size
 	var max_width = parent_size.x * 0.8  # 80% of parent width
-	var max_height = parent_size.y * 0.6  # 60% of parent height, adjust as needed
-
+	var min_height = 100
+	
 	var cell_width = max_width / columns_count
-	var cell_height = cell_width * 0.6  # Adjust this factor for desired cell height
-
+	var cell_height = min_height / rows_count
+	
 	var grid_width = cell_width * columns_count
-	var grid_height = cell_height * rows_count
-
-	# Ensure the grid doesn't exceed the maximum allowed size
+	var grid_height = min_height
+	
+	# Ensure the grid doesn't exceed the maximum allowed width
 	grid_width = min(grid_width, max_width)
-	grid_height = min(grid_height, max_height)
-
+	
 	# Update the grid size
 	custom_minimum_size = Vector2(grid_width, grid_height)
 	size = Vector2(grid_width, grid_height)
-
+	
 	# Update cell sizes
 	for child in get_children():
 		child.custom_minimum_size = Vector2(cell_width, cell_height)
-
+	
 	# Center the grid in its parent
 	position = Vector2((parent_size.x - grid_width) / 2, (parent_size.y - grid_height) / 2)
-
+	
 	queue_sort()

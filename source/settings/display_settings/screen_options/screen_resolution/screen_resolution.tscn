@@ -9,14 +9,17 @@ script = ExtResource("1_5rgnv")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 2
-size_flags_horizontal = 3
 text = "RESOLUTION"
 vertical_alignment = 1
 
-[node name="List" type="OptionButton" parent="."]
-custom_minimum_size = Vector2(192, 36)
+[node name="Control" type="Control" parent="."]
+custom_minimum_size = Vector2(8, 2.08165e-12)
 layout_mode = 2
-size_flags_horizontal = 8
+
+[node name="List" type="OptionButton" parent="."]
+custom_minimum_size = Vector2(120, 36)
+layout_mode = 2
+size_flags_horizontal = 0
 theme = ExtResource("2_7js7k")
 alignment = 1
 item_count = 8

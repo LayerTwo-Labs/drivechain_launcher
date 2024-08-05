@@ -10,8 +10,11 @@ script = ExtResource("1_yvg0j")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 2
-size_flags_horizontal = 3
 text = "THEME"
+
+[node name="Control" type="Control" parent="."]
+custom_minimum_size = Vector2(18, 2.08165e-12)
+layout_mode = 2
 
 [node name="Options" type="GridContainer" parent="."]
 layout_mode = 2

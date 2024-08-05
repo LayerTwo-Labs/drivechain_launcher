@@ -13,7 +13,7 @@ offset_bottom = 40.0
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_bbx5e")
 theme_override_font_sizes/font_size = 28
-text = "DISPLAY  SETTINGS"
+text = "Display"
 horizontal_alignment = 1
 vertical_alignment = 1
 
