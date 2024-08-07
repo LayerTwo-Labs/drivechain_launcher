@@ -78,6 +78,7 @@ layout_mode = 2
 
 [node name="ChainSelectionButton" type="OptionButton" parent="HBoxContainer2"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 14
 item_count = 3
 selected = 0
 popup/item_0/text = "Testchain"

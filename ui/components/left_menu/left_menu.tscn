@@ -1,8 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://dwhtby81ylt3s"]
+[gd_scene load_steps=6 format=3 uid="uid://dwhtby81ylt3s"]
 
 [ext_resource type="Script" path="res://ui/components/left_menu/left_menu.gd" id="1_yja75"]
-[ext_resource type="Texture2D" uid="uid://c865fxarlp4e1" path="res://assets/images/left-arrow-svgrepo-com.png" id="2_5g8my"]
-[ext_resource type="Texture2D" uid="uid://4ulwmgydwoi2" path="res://assets/images/right-arrow-next-svgrepo-com (2).png" id="3_2rq81"]
 [ext_resource type="Script" path="res://ui/components/left_menu/Quotes.gd" id="7_kx1k8"]
 [ext_resource type="FontFile" uid="uid://ciu7chyqqs4k7" path="res://assets/fonts/Saira_Expanded-Bold.ttf" id="11_6qy05"]
 [ext_resource type="FontFile" uid="uid://dgxbgdcr3s84u" path="res://assets/fonts/Saira_Expanded-Regular.ttf" id="12_nwgc3"]
@@ -38,11 +36,17 @@ theme_override_constants/separation = 8
 
 [node name="PrevButton" type="Button" parent="MarginContainer/HBox"]
 texture_filter = 4
+layout_direction = 1
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 0
 size_flags_vertical = 4
-icon = ExtResource("2_5g8my")
+theme_override_font_sizes/font_size = 38
+text = "<"
 flat = true
+
+[node name="Control" type="Control" parent="MarginContainer/HBox"]
+custom_minimum_size = Vector2(5, 2.08165e-12)
+layout_mode = 2
 
 [node name="Quotes" type="Label" parent="MarginContainer/HBox"]
 custom_minimum_size = Vector2(250, 0)
@@ -54,12 +58,17 @@ theme_override_font_sizes/font_size = 13
 vertical_alignment = 1
 autowrap_mode = 2
 
+[node name="Control2" type="Control" parent="MarginContainer/HBox"]
+custom_minimum_size = Vector2(5, 2.08165e-12)
+layout_mode = 2
+
 [node name="NextButton" type="Button" parent="MarginContainer/HBox"]
 texture_filter = 4
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
-icon = ExtResource("3_2rq81")
+theme_override_font_sizes/font_size = 38
+text = ">"
 flat = true
 
 [node name="QuotesDialog" type="AcceptDialog" parent="."]
