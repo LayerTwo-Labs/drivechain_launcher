@@ -101,8 +101,12 @@ func update_sidechain_view():
 	download_button.disabled = not drivechain_running
 	if not drivechain_running:
 		download_button.modulate = Color(0.5, 0.5, 0.5)  # Grey out the button
+		heading_label.modulate = Color(0.5, 0.5, 0.5)  # Grey out the heading text
+		description_label.modulate = Color(0.5, 0.5, 0.5)  # Grey out the description text
 	else:
 		download_button.modulate = Color(1, 1, 1)  # Normal color
+		heading_label.modulate = Color(1, 1, 1)  # Normal color for heading text
+		description_label.modulate = Color(1, 1, 1)  # Normal color for description text
 	update_button_state()
 	
 func update_overlay():
@@ -115,9 +119,13 @@ func update_overlay():
 		if drivechain_running:
 			overlay.color = Color(1, 1, 1, 0) 
 			overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			heading_label.modulate = Color(1, 1, 1)  # Normal color for heading text
+			description_label.modulate = Color(1, 1, 1)  # Normal color for description text
 		else:
 			overlay.color = Color(1, 1, 1, 0.5)  # Semi-transparent white
 			overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+			heading_label.modulate = Color(0.5, 0.5, 0.5)  # Grey out the heading text
+			description_label.modulate = Color(0.5, 0.5, 0.5)  # Grey out the description text
 
 func update_button_state():
 	var drivechain_provider = Appstate.get_drivechain_provider()

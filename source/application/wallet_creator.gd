@@ -420,7 +420,7 @@ func save_wallet_data():
 		return
 
 	var user_data_dir = OS.get_user_data_dir()
-	var file = FileAccess.open(user_data_dir.path_join("starters/wallet_master_seed.txt"), FileAccess.WRITE)
+	var file = FileAccess.open(user_data_dir.path_join("wallet_starters/wallet_master_seed.txt"), FileAccess.WRITE)
 	var json_string = JSON.stringify(seed_data)
 	file.store_string(json_string)
 	file.close()
@@ -482,7 +482,7 @@ func _on_load_button_pressed():
 		"seed_hex": result["seed"]
 	}
 	var user_data_dir = OS.get_user_data_dir()
-	var file = FileAccess.open(user_data_dir.path_join("starters/wallet_master_seed.txt"), FileAccess.WRITE)
+	var file = FileAccess.open(user_data_dir.path_join("wallet_starters/wallet_master_seed.txt"), FileAccess.WRITE)
 	var json_string = JSON.stringify(seed_data)
 	file.store_string(json_string)
 	file.close()
@@ -522,13 +522,23 @@ func save_sidechain_info(sidechain_data):
 		if key.begins_with("sidechain_"):
 			var slot = key.split("_")[1]
 			var user_data_dir = OS.get_user_data_dir()
-			var filename = user_data_dir.path_join("starters/sidechain_%s_starter.txt" % slot)
+			var filename = user_data_dir.path_join("wallet_starters/sidechain_%s_starter.txt" % slot)
 			var file = FileAccess.open(filename, FileAccess.WRITE)
 			if file:
 				file.store_string(JSON.stringify(sidechain_data[key]))
 				file.close()
 			else:
 				print("Failed to save sidechain starter information for slot ", slot)
+		elif key.begins_with("mainchain"):
+			var user_data_dir = OS.get_user_data_dir()
+			var filename = user_data_dir.path_join("wallet_starters/mainchain_starter.txt")
+			var file = FileAccess.open(filename, FileAccess.WRITE)
+			if file:
+				file.store_string(JSON.stringify(sidechain_data[key]))
+				file.close()
+			else:
+				print("Failed to save sidechain starter information for mainchain")
+			
 				
 func reset_wallet_tab():
 	
@@ -545,7 +555,7 @@ func _on_tab_changed(tab):
 
 func ensure_starters_directory():
 	var user_data_dir = OS.get_user_data_dir()
-	var starters_dir = user_data_dir.path_join("starters")
+	var starters_dir = user_data_dir.path_join("wallet_starters")
 	var dir = DirAccess.open(user_data_dir)
-	if not dir.dir_exists("starters"):
-		dir.make_dir("starters")
+	if not dir.dir_exists("wallet_starters"):
+		dir.make_dir("wallet_starters")
