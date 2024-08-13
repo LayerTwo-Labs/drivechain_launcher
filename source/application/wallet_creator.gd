@@ -420,7 +420,17 @@ func save_wallet_data():
 		return
 
 	var user_data_dir = OS.get_user_data_dir()
-	var file = FileAccess.open(user_data_dir.path_join("wallet_starters/wallet_master_seed.txt"), FileAccess.WRITE)
+	var wallet_starters_dir = user_data_dir.path_join("wallet_starters")
+	if not DirAccess.dir_exists_absolute(wallet_starters_dir):
+		var dir = DirAccess.open(user_data_dir)
+		if dir.make_dir("wallet_starters") != OK:
+			print("Error: Unable to create wallet_starters directory.")
+			return
+
+	var file = FileAccess.open(wallet_starters_dir.path_join("wallet_master_seed.txt"), FileAccess.WRITE)
+	if file == null:
+		print("Error: Unable to open file for writing.")
+		return
 	var json_string = JSON.stringify(seed_data)
 	file.store_string(json_string)
 	file.close()
