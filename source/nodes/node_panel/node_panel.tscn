@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://source/nodes/node_panel/node_panel.gd" id="1_ijj0w"]
 [ext_resource type="PackedScene" uid="uid://cjfcxi77d8pjt" path="res://source/nodes/node_panel/download.tscn" id="2_ubul7"]
+[ext_resource type="Texture2D" uid="uid://drrrqh5w6tl8t" path="res://assets/images/icons8-settings.svg" id="4_15yd3"]
 [ext_resource type="FontFile" uid="uid://b1w37357tl3er" path="res://assets/fonts/Cantarell-Bold.ttf" id="4_h86ci"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_bl3lx"]
@@ -22,9 +23,6 @@ expand_margin_left = 8.0
 expand_margin_top = 8.0
 expand_margin_right = 8.0
 expand_margin_bottom = 8.0
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_orksi"]
-load_path = "res://.godot/imported/icons8-settings.svg-3abab0a1cc1e22f71f96e60e0862595e.ctex"
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_aqe83"]
 load_path = "res://.godot/imported/trash-svgrepo-com(1).svg-0f38edd909f1c2b1144dc0fc23313836.ctex"
@@ -94,12 +92,12 @@ theme_override_font_sizes/font_size = 28
 text = "NodePanel"
 
 [node name="Settings" type="Button" parent="MarginContainer/Container/Header"]
-texture_filter = 4
+texture_filter = 3
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
-icon = SubResource("CompressedTexture2D_orksi")
+icon = ExtResource("4_15yd3")
 
 [node name="Delete" type="Button" parent="MarginContainer/Container/Header"]
 texture_filter = 4

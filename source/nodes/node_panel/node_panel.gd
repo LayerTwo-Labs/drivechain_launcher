@@ -176,10 +176,125 @@ func _on_cooldown_timer_timeout():
 
 func download():
 	print("\nStarting download process for: ", chain_provider.id, "\n")
+	
+	ensure_directories_exist()
+	
+	var user_data_dir = OS.get_user_data_dir()
+	var wallet_starters_dir = user_data_dir.path_join("wallet_starters")
+	var sidechain_base_dir = chain_provider.base_dir
+	
+	print("Wallet starters directory: ", wallet_starters_dir)
+	print("Sidechain base directory: ", sidechain_base_dir)
+	
+	if chain_provider.chain_type == ChainProvider.c_type.MAIN:
+		handle_mainchain_file(wallet_starters_dir, sidechain_base_dir)
+	else:
+		handle_sidechain_file(wallet_starters_dir, sidechain_base_dir)
+	
 	download_button.set_state(DownloadButton.STATE.DOWNLOADING)
 	
 	setup_download_requirements()
 	initiate_download_process()
+
+func handle_mainchain_file(wallet_starters_dir: String, sidechain_base_dir: String):
+	var mainchain_filename = "mainchain_starter.txt"
+	var source_path = wallet_starters_dir.path_join(mainchain_filename)
+	var dest_path = sidechain_base_dir.path_join(mainchain_filename)
+	
+	print("Checking for mainchain starter file:")
+	print("Source path: ", source_path)
+	print("Destination path: ", dest_path)
+	
+	if not FileAccess.file_exists(dest_path):
+		if FileAccess.file_exists(source_path):
+			print("Mainchain starter file found in wallet_starters directory. Moving to sidechain base directory.")
+			var err = DirAccess.copy_absolute(source_path, dest_path)
+			if err == OK:
+				print("Successfully moved mainchain starter file to sidechain base directory.")
+			else:
+				print("Failed to move mainchain starter file. Error code: ", err)
+		else:
+			print("Mainchain starter file not found in wallet_starters directory.")
+			print("This may indicate that the wallet has not been set up properly.")
+			print("Please ensure you have created a wallet and generated the mainchain starter file.")
+			print("If you have already created a wallet, try regenerating the mainchain starter file.")
+			list_directory_contents(wallet_starters_dir)
+	else:
+		print("Mainchain starter file already exists in sidechain base directory.")
+
+func handle_sidechain_file(wallet_starters_dir: String, sidechain_base_dir: String):
+	var slot_number = get_sidechain_slot_number()
+	var sidechain_filename = "sidechain_%s_starter.txt" % slot_number
+	var source_path = wallet_starters_dir.path_join(sidechain_filename)
+	var dest_path = sidechain_base_dir.path_join(sidechain_filename)
+	
+	print("Checking for sidechain starter file:")
+	print("Source path: ", source_path)
+	print("Destination path: ", dest_path)
+	
+	if not FileAccess.file_exists(dest_path):
+		if FileAccess.file_exists(source_path):
+			print("Sidechain starter file found in wallet_starters directory. Moving to sidechain base directory.")
+			var err = DirAccess.copy_absolute(source_path, dest_path)
+			if err == OK:
+				print("Successfully moved sidechain starter file to sidechain base directory.")
+			else:
+				print("Failed to move sidechain starter file. Error code: ", err)
+		else:
+			print("Sidechain starter file not found in wallet_starters directory.")
+			print("This may indicate that the wallet has not been set up properly.")
+			print("Please ensure you have created a wallet and generated sidechain starter files.")
+			print("If you have already created a wallet, try regenerating the sidechain starter files.")
+			list_directory_contents(wallet_starters_dir)
+	else:
+		print("Sidechain starter file already exists in sidechain base directory.")
+
+func get_sidechain_slot_number() -> String:
+	if chain_provider and "slot" in chain_provider:
+		var slot = chain_provider.slot
+		if slot != -1:
+			return str(slot)
+	
+	print("Warning: Slot number not found for chain ID: ", chain_provider.id)
+	return "unknown"
+
+func ensure_directories_exist():
+	var user_data_dir = OS.get_user_data_dir()
+	var wallet_starters_dir = user_data_dir.path_join("wallet_starters")
+	
+	var dir = DirAccess.open(user_data_dir)
+	if dir:
+		if not dir.dir_exists("wallet_starters"):
+			var err = dir.make_dir("wallet_starters")
+			if err != OK:
+				print("Failed to create wallet_starters directory. Error code: ", err)
+	else:
+		print("Failed to access user data directory")
+	
+	# Ensure the sidechain base directory exists
+	if chain_provider:
+		var err = DirAccess.make_dir_recursive_absolute(chain_provider.base_dir)
+		if err != OK:
+			print("Failed to create sidechain base directory. Error code: ", err)
+
+func list_directory_contents(path: String):
+	var dir = DirAccess.open(path)
+	if dir:
+		print("Contents of ", path, ":")
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if dir.current_is_dir():
+				print("  [Dir] " + file_name)
+			else:
+				print("  [File] " + file_name)
+			file_name = dir.get_next()
+		dir.list_dir_end()
+	else:
+		print("An error occurred when trying to access the path: ", path)
+		print("This could be due to permission issues or the directory not existing.")
+		print("Please check that the following directory exists and is accessible:")
+		print(path)
 
 func setup_download_requirements():
 	if download_req != null:
