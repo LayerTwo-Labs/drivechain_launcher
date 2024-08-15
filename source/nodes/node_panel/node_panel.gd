@@ -47,7 +47,7 @@ func _ready():
 	if not is_drivechain:
 		Appstate.connect("drivechain_downloaded", Callable(self, "update_overlay"))
 	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var font_variation = load("res://assets/fonts/Cantarell-Regular.ttf")
+	var font_variation = load("res://assets/fonts/Satoshi-Regular.otf")
 	heading_label.add_theme_font_override("font", font_variation)
 	description_label.add_theme_font_override("font", font_variation)
 
