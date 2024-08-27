@@ -26,7 +26,7 @@ func _ready():
 	create_pop_up.connect("pressed", Callable(self, "_on_create_popup_pressed"))
 	load_button.connect("pressed", Callable(self, "_on_load_button_pressed"))
 	fast_button.connect("pressed", Callable(self, "_on_fast_button_pressed"))
-	
+
 	if tabs:
 		tabs.connect("tab_changed", Callable(self, "_on_tab_changed"))
 	setup_bip39_panel()
@@ -43,7 +43,7 @@ func setup_bip39_panel():
 	bip39_info_label.size_flags_vertical = SIZE_EXPAND_FILL
 	bip39_info_label.custom_minimum_size = Vector2(0, 200)
 	bip39_panel.add_child(bip39_info_label)
-	
+
 	var headers_text = """[table=2]
 [cell][color=white][b][u]BIP39 Hex:[/u][/b][/color][/cell] [cell][/cell]
 [cell][color=white][b][u]BIP39 Bin:
@@ -61,7 +61,7 @@ func setup_launch_panel():
 	vbox.name = "VBoxContainer"
 	vbox.size_flags_vertical = SIZE_EXPAND_FILL
 	launch_panel.add_child(vbox)
-	
+
 	var launch_info_label = RichTextLabel.new()
 	launch_info_label.name = "LaunchInfo"
 	launch_info_label.bbcode_enabled = true
@@ -70,7 +70,7 @@ func setup_launch_panel():
 	launch_info_label.size_flags_horizontal = SIZE_EXPAND_FILL
 	launch_info_label.size_flags_vertical = SIZE_EXPAND_FILL
 	vbox.add_child(launch_info_label)
-	
+
 	var headers_text = """[table=2]
 [cell][color=white][b][u]HD Key Data:
 
@@ -118,7 +118,7 @@ func clear_all_output():
 			var label = mnemonic_out.get_child(i).get_child(0) as Label
 			if label:
 				label.text = ""
-	
+
 	var bip39_info_label = bip39_panel.get_node("BIP39Info")
 	if bip39_info_label:
 		var headers_text = """[table=2]
@@ -134,7 +134,7 @@ func clear_all_output():
 [cell][color=white][b][u]BIP39 Checksum Hex:[/u][/b][/color][/cell] [cell][/cell]
 [/table]"""
 		bip39_info_label.text = headers_text
-	
+
 	var launch_info_label = launch_panel.get_node("VBoxContainer/LaunchInfo")
 	if launch_info_label:
 		var headers_text = """[table=2]
@@ -149,9 +149,9 @@ func clear_all_output():
 [/u][/b][/color][/cell] [cell][/cell]
 [/table]"""
 		launch_info_label.text = headers_text
-	
+
 	current_wallet_data = {}
-		
+
 func _on_entropy_in_changed(new_text: String):
 	if new_text.is_empty():
 		clear_all_output()
@@ -166,13 +166,13 @@ func update_bip39_panel(output: Dictionary):
 		for i in range(0, bin_string.length(), 4):
 			formatted_bin += bin_string.substr(i, 4) + " "
 		formatted_bin = formatted_bin.strip_edges()
-		
+
 		var checksum = output.get("bip39_csum", "")
 		var formatted_checksum = ""
 		for i in range(0, checksum.length(), 4):
 			formatted_checksum += checksum.substr(i, 4) + " "
 		formatted_checksum = formatted_checksum.strip_edges()
-		
+
 		var bip39_hex = output.get("bip39_hex", "")
 		var first_half = bip39_hex.substr(0, 32)
 		var second_half = bip39_hex.substr(32)
@@ -225,18 +225,18 @@ func populate_grid(mnemonic: String, bip39_bin: String, bip39_csum: String):
 	var bin_chunks = []
 	for i in range(0, bip39_bin.length(), 11):
 		bin_chunks.append(bip39_bin.substr(i, 11))
-	
+
 	for i in range(12):
 		if i < words.size() and i < bin_chunks.size():
 			var word_panel = mnemonic_out.get_child(i + 1)
 			var bin_panel = mnemonic_out.get_child(i + 14)
 			var index_panel = mnemonic_out.get_child(i + 27)
-			
+
 			if word_panel and bin_panel and index_panel:
 				var word_label = word_panel.get_child(0) as Label
 				var bin_label = bin_panel.get_child(0) as Label
 				var index_label = index_panel.get_child(0) as Label
-				
+
 				if word_label and bin_label and index_label:
 					word_label.text = words[i]
 					if i == 11:
@@ -249,7 +249,7 @@ func populate_grid(mnemonic: String, bip39_bin: String, bip39_csum: String):
 			else:
 				print("Panel not found for index ", i)
 	mnemonic_out.queue_redraw()
-	
+
 func setup_bip39_headers():
 	var bip39_info_label = bip39_panel.get_node("BIP39Info")
 	if bip39_info_label:
@@ -266,7 +266,7 @@ func setup_bip39_headers():
 [cell][color=white][b][u]BIP39 Checksum Hex:[/u][/b][/color][/cell] [cell][/cell]
 [/table]"""
 		bip39_info_label.text = headers_text
-		
+
 func setup_launch_panel_headers():
 	var vbox = launch_panel.get_node_or_null("VBoxContainer")
 	if not vbox:
@@ -274,7 +274,7 @@ func setup_launch_panel_headers():
 		vbox.name = "VBoxContainer"
 		vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		launch_panel.add_child(vbox)
-	
+
 	var launch_info_label = vbox.get_node_or_null("LaunchInfo")
 	if not launch_info_label:
 		launch_info_label = RichTextLabel.new()
@@ -286,7 +286,7 @@ func setup_launch_panel_headers():
 		launch_info_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		vbox.add_child(launch_info_label)
 		vbox.move_child(launch_info_label, 0)  # Move to top
-	
+
 	var headers_text = """[table=2]
 [cell][color=white][b][u]HD Key Data:
 
@@ -300,26 +300,133 @@ func setup_launch_panel_headers():
 """
 	launch_info_label.text = headers_text
 
-
 func _on_create_popup_pressed():
-
 	if entropy_in.text.is_empty():
 		return
-		
+
+	if check_existing_wallet():
+		show_existing_wallet_popup()
+	else:
+		show_new_wallet_popup()
+
+func check_existing_wallet() -> bool:
+	var user_data_dir = OS.get_user_data_dir()
+	var wallet_file = user_data_dir.path_join("wallet_starters/wallet_master_seed.txt")
+	return FileAccess.file_exists(wallet_file)
+
+func show_existing_wallet_popup():
 	if popup_window != null:
-		_center_popup()
-		popup_window.show()
-		return
+		popup_window.queue_free()
 	
 	popup_window = Control.new()
 	popup_window.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	
+
 	var background = ColorRect.new()
 	background.color = Color(0, 0, 0, 0.5)
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	background.connect("gui_input", Callable(self, "_on_background_gui_input"))
 	popup_window.add_child(background)
-	
+
+	var panel = Panel.new()
+	panel.custom_minimum_size = Vector2(400, 250)
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.set_anchor_and_offset(SIDE_LEFT, 0.5, -200)
+	panel.set_anchor_and_offset(SIDE_TOP, 0.5, -125)
+	panel.set_anchor_and_offset(SIDE_RIGHT, 0.5, 200)
+	panel.set_anchor_and_offset(SIDE_BOTTOM, 0.5, 125)
+	popup_window.add_child(panel)
+
+	var stylebox = StyleBoxFlat.new()
+	stylebox.set_border_width_all(2)
+	stylebox.border_color = Color.WHITE
+	stylebox.bg_color = Color(0.15, 0.15, 0.15)
+	panel.add_theme_stylebox_override("panel", stylebox)
+
+	var main_vbox = VBoxContainer.new()
+	main_vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_KEEP_SIZE, 10)
+	main_vbox.add_theme_constant_override("separation", 20)
+	panel.add_child(main_vbox)
+
+	var warning_label = Label.new()
+	warning_label.text = "WARNING:"
+	warning_label.add_theme_color_override("font_color", Color.RED)
+	warning_label.add_theme_font_size_override("font_size", 28)
+	warning_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	main_vbox.add_child(warning_label)
+
+	var message_label = Label.new()
+	message_label.text = "A wallet already exists.\nYou must delete the current wallet\nbefore creating a new one."
+	message_label.add_theme_color_override("font_color", Color.RED)
+	message_label.add_theme_font_size_override("font_size", 20)
+	message_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	message_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	message_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	main_vbox.add_child(message_label)
+
+	var button_hbox = HBoxContainer.new()
+	button_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	button_hbox.add_theme_constant_override("separation", 10)
+	button_hbox.size_flags_vertical = Control.SIZE_SHRINK_END
+	main_vbox.add_child(button_hbox)
+
+	var button_width = 120
+	var button_height = 40
+
+	var delete_button = Button.new()
+	delete_button.text = "Delete Wallet"
+	delete_button.custom_minimum_size = Vector2(button_width, button_height)
+	delete_button.connect("pressed", Callable(self, "_on_delete_wallet_pressed"))
+	button_hbox.add_child(delete_button)
+
+	var show_wallet_button = Button.new()
+	show_wallet_button.text = "Show Wallet"
+	show_wallet_button.custom_minimum_size = Vector2(button_width, button_height)
+	show_wallet_button.connect("pressed", Callable(self, "_on_show_wallet_pressed"))
+	button_hbox.add_child(show_wallet_button)
+
+	var close_button = Button.new()
+	close_button.text = "Close"
+	close_button.custom_minimum_size = Vector2(button_width, button_height)
+	close_button.connect("pressed", Callable(self, "_on_popup_close_pressed"))
+	button_hbox.add_child(close_button)
+
+	get_tree().root.add_child(popup_window)
+	get_tree().root.connect("size_changed", Callable(self, "_center_popup"))
+	popup_window.show()
+
+func _on_delete_wallet_pressed():
+	var user_data_dir = OS.get_user_data_dir()
+	var wallet_starters_dir = user_data_dir.path_join("wallet_starters")
+	var dir = DirAccess.open(wallet_starters_dir)
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if not dir.current_is_dir():
+				dir.remove(file_name)
+			file_name = dir.get_next()
+	print("Wallet deleted.")
+	_on_popup_close_pressed()
+
+func _on_show_wallet_pressed():
+	# Placeholder for future functionality
+	print("Show Wallet functionality not implemented yet.")
+
+func show_new_wallet_popup():
+	if popup_window != null:
+		_center_popup()
+		popup_window.show()
+		return
+
+	popup_window = Control.new()
+	popup_window.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+	var background = ColorRect.new()
+	background.color = Color(0, 0, 0, 0.5)
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	background.connect("gui_input", Callable(self, "_on_background_gui_input"))
+	popup_window.add_child(background)
+
 	var panel = Panel.new()
 	panel.custom_minimum_size = Vector2(400, 300)  # Adjust size as needed
 	panel.set_anchors_preset(Control.PRESET_CENTER)
@@ -328,13 +435,13 @@ func _on_create_popup_pressed():
 	panel.set_anchor_and_offset(SIDE_RIGHT, 0.5, 200)
 	panel.set_anchor_and_offset(SIDE_BOTTOM, 0.5, 150)
 	popup_window.add_child(panel)
-	
+
 	var stylebox = StyleBoxFlat.new()
 	stylebox.set_border_width_all(2)
 	stylebox.border_color = Color.WHITE
 	stylebox.bg_color = Color(0.15, 0.15, 0.15)
 	panel.add_theme_stylebox_override("panel", stylebox)
-	
+
 	var main_vbox = VBoxContainer.new()
 	main_vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_KEEP_SIZE, 10)
 	panel.add_child(main_vbox)
@@ -383,11 +490,11 @@ func _on_create_popup_pressed():
 	hbox.add_child(no_button)
 	hbox.add_child(spacer)
 	hbox.add_child(yes_button)
-	
+
 	get_tree().root.add_child(popup_window)
-	
+
 	get_tree().root.connect("size_changed", Callable(self, "_center_popup"))
-	
+
 	popup_window.show()
 
 func _center_popup() -> void:
@@ -443,10 +550,10 @@ func _on_popup_yes_pressed():
 		return
 
 	save_wallet_data()
-	
+
 	var Bitcoin = BitcoinWallet.new()
 	var sidechain_slots = get_sidechain_info()
-	
+
 	if not current_wallet_data.has("seed") or not current_wallet_data.has("mnemonic"):
 		print("Error: Incomplete wallet data. Unable to generate sidechain starters.")
 		_on_popup_close_pressed()
@@ -458,6 +565,37 @@ func _on_popup_yes_pressed():
 	if tabs:
 		tabs.current_tab = 1
 	print("Wallet and sidechain information saved.")
+
+func _on_replace_wallet_yes_pressed():
+	# Delete old wallet and sidechain files
+	var user_data_dir = OS.get_user_data_dir()
+	var wallet_starters_dir = user_data_dir.path_join("wallet_starters")
+	var dir = DirAccess.open(wallet_starters_dir)
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if not dir.current_is_dir():
+				dir.remove(file_name)
+			file_name = dir.get_next()
+	
+	# Save new wallet data
+	save_wallet_data()
+
+	var Bitcoin = BitcoinWallet.new()
+	var sidechain_slots = get_sidechain_info()
+
+	if not current_wallet_data.has("seed") or not current_wallet_data.has("mnemonic"):
+		print("Error: Incomplete wallet data. Unable to generate sidechain starters.")
+		_on_popup_close_pressed()
+		return
+
+	var sidechain_data = Bitcoin.generate_sidechain_starters(current_wallet_data["seed"], current_wallet_data["mnemonic"], sidechain_slots)
+	save_sidechain_info(sidechain_data)
+	_on_popup_close_pressed()
+	if tabs:
+		tabs.current_tab = 1
+	print("Wallet and sidechain information replaced and saved.")
 
 func _on_popup_close_pressed() -> void:
 	if popup_window != null:
@@ -511,7 +649,7 @@ func _on_fast_button_pressed():
 	var entropy = wallet_generator.fast_create()
 	entropy_in.text = entropy
 	_on_entropy_in_changed(entropy)
-	
+
 func get_sidechain_info():
 	var sidechain_info = []
 	var file = FileAccess.open("res://chain_providers.cfg", FileAccess.READ)
@@ -548,17 +686,15 @@ func save_sidechain_info(sidechain_data):
 				file.close()
 			else:
 				print("Failed to save sidechain starter information for mainchain")
-			
-				
+
 func reset_wallet_tab():
-	
 	clear_all_output()
 	entropy_in.text = ""
 	mnemonic_in.text = ""
 	current_wallet_data = {}
 	mnemonic_out.setup_grid()
 	current_tab = 0
-	
+
 func _on_tab_changed(tab):
 	if tab != get_index(): 
 		reset_wallet_tab()

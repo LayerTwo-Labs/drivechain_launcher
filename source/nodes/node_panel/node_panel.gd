@@ -22,6 +22,8 @@ const HEADER_PANEL_STYLE_BOX = preload("res://resource/style_box/nodes/header_pa
 @onready var delete_button: Button = $MarginContainer/Container/Header/Delete
 @onready var settings_button: Button = $MarginContainer/Container/Header/Settings
 
+@onready var chain_providers_config = load_chain_providers_config()
+
 var download_req: HTTPRequest
 var progress_timer: Timer
 var cooldown_timer: Timer
@@ -47,9 +49,18 @@ func _ready():
 	if not is_drivechain:
 		Appstate.connect("drivechain_downloaded", Callable(self, "update_overlay"))
 	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var font_variation = load("res://assets/fonts/Cantarell-Regular.ttf")
+	var font_variation = load("res://assets/fonts/Satoshi-Regular.otf")
 	heading_label.add_theme_font_override("font", font_variation)
 	description_label.add_theme_font_override("font", font_variation)
+	load_chain_providers_config()
+	
+func load_chain_providers_config():
+	var config = ConfigFile.new()
+	var err = config.load("res://chain_providers.cfg")
+	if err != OK:
+		print("Failed to load chain_providers.cfg. Error code: ", err)
+		return null
+	return config
 
 func setup(_chain_provider: ChainProvider, _chain_state: ChainState):
 	chain_provider = _chain_provider
@@ -126,11 +137,12 @@ func update_overlay():
 			overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 			heading_label.modulate = Color(0.5, 0.5, 0.5)  # Grey out the heading text
 			description_label.modulate = Color(0.5, 0.5, 0.5)  # Grey out the description text
-
 func update_button_state():
 	var drivechain_provider = Appstate.get_drivechain_provider()
 	var drivechain_state = Appstate.chain_states[drivechain_provider.id] if drivechain_provider.id in Appstate.chain_states else null
 	var drivechain_running = drivechain_provider.is_ready_for_execution() and drivechain_state and drivechain_state.state == ChainState.c_state.RUNNING
+	
+	var download_file_exists = check_download_file_exists()
 	
 	if not chain_provider.is_ready_for_execution():
 		download_button.set_state(DownloadButton.STATE.NOT_DOWNLOADED)
@@ -140,11 +152,42 @@ func update_button_state():
 		download_button.set_state(DownloadButton.STATE.RUNNING)
 	
 	if not is_drivechain:
-		download_button.disabled = not drivechain_running
-		if not drivechain_running:
+		download_button.disabled = not drivechain_running or not download_file_exists
+		if not drivechain_running or not download_file_exists:
 			download_button.modulate = Color(0.5, 0.5, 0.5)  # Grey out the button
 		else:
 			download_button.modulate = Color(1, 1, 1)
+	else:
+		download_button.disabled = not download_file_exists
+		if not download_file_exists:
+			download_button.modulate = Color(0.5, 0.5, 0.5)  # Grey out the button
+		else:
+			download_button.modulate = Color(1, 1, 1)
+
+func check_download_file_exists() -> bool:
+	if chain_providers_config == null:
+		print("Chain providers config not loaded.")
+		return false
+	
+	var platform = Appstate.get_platform()
+	var download_file_key = ""
+	var download_size_key = ""
+	
+	match platform:
+		Appstate.platform.LINUX:
+			download_file_key = "download_file_linux"
+			download_size_key = "download_size_linux"
+		Appstate.platform.MAC:
+			download_file_key = "download_file_mac"
+			download_size_key = "download_size_mac"
+		Appstate.platform.WIN:
+			download_file_key = "download_file_win"
+			download_size_key = "download_size_win"
+	
+	var download_file = chain_providers_config.get_value(chain_provider.id, download_file_key, "")
+	var download_size = chain_providers_config.get_value(chain_provider.id, download_size_key, 0)
+	
+	return download_file != "" and download_size > 0
 
 func _on_action_requested(action: String):
 	var drivechain_provider = Appstate.get_drivechain_provider()

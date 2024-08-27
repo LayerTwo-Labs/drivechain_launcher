@@ -17,11 +17,24 @@ func populate_resolution_list():
 		resolution_list_button.add_item(res)
 
 func set_default_resolution():
-	var default_resolution = "1920 x 1080"
-	var index = resolution_list_button.get_item_index(1)  # 1920x1080 is the second item (index 1)
+	var default_index = 1  # Default to 1920x1080 (second item)
 	
-	apply_resolution(index)
-	resolution_list_button.select(index)
+	match OS.get_name():
+		"Windows":
+			default_index = resolution_list_button.get_item_count() - 1  # Last item (smallest resolution)
+		"Linux":
+			default_index = find_resolution_index("1280 x 720")
+		"macOS":
+			default_index = find_resolution_index("1920 x 1080")
+	
+	apply_resolution(default_index)
+	resolution_list_button.select(default_index)
+
+func find_resolution_index(resolution: String) -> int:
+	for i in range(resolution_list_button.get_item_count()):
+		if resolution_list_button.get_item_text(i) == resolution:
+			return i
+	return 1  # Default to 1920x1080 if not found
 
 func _on_resolution_selected(index: int):
 	var resolution = apply_resolution(index)
