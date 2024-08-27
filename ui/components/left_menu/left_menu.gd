@@ -43,7 +43,7 @@ func change_quote(index: int):
 		var quote_text = quote_data["quote"]
 		var author_text = quote_data["author"]
 		
-		quotes_label.text = "\"" + quote_text + "\n- " + author_text + "\""
+		quotes_label.text = '"' + quote_text + '"\n- ' + author_text
 		
 		var word_count = quote_text.split(" ").size()
 		if word_count < 30:
@@ -53,10 +53,8 @@ func change_quote(index: int):
 		else:
 			quotes_label.add_theme_font_size_override("font_size", 11)
 		
-		# Adjust the position of the author's name
 		quotes_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		await get_tree().process_frame  # Wait for the label to update
-		var last_line_start = quotes_label.get_line_count() - 1
 	else:
 		push_error("Invalid quote data format")
 
