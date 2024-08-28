@@ -1,12 +1,28 @@
-[gd_scene load_steps=6 format=3 uid="uid://dwhtby81ylt3s"]
+[gd_scene load_steps=9 format=3 uid="uid://dwhtby81ylt3s"]
 
 [ext_resource type="Script" path="res://ui/components/left_menu/left_menu.gd" id="1_yja75"]
+[ext_resource type="Texture2D" uid="uid://idhpbwi2nf2o" path="res://assets/images/wallet-check.png" id="3_ov53k"]
 [ext_resource type="Script" path="res://ui/components/left_menu/Quotes.gd" id="7_kx1k8"]
 [ext_resource type="FontFile" uid="uid://ciu7chyqqs4k7" path="res://assets/fonts/Saira_Expanded-Bold.ttf" id="11_6qy05"]
 [ext_resource type="FontFile" uid="uid://dgxbgdcr3s84u" path="res://assets/fonts/Saira_Expanded-Regular.ttf" id="12_nwgc3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c8gs8"]
 bg_color = Color(0.141176, 0.141176, 0.141176, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3enni"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 3
+border_width_right = 2
+border_width_bottom = 3
+border_color = Color(0, 0.968627, 0, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="Theme" id="Theme_xvpkc"]
+Button/styles/normal = SubResource("StyleBoxFlat_3enni")
 
 [node name="Menu" type="PanelContainer"]
 clip_contents = true
@@ -33,6 +49,14 @@ theme_override_constants/margin_bottom = 8
 layout_mode = 2
 size_flags_stretch_ratio = 0.0
 theme_override_constants/separation = 8
+
+[node name="Wallet" type="Button" parent="MarginContainer/HBox"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_vertical = 4
+theme = SubResource("Theme_xvpkc")
+icon = ExtResource("3_ov53k")
+icon_alignment = 1
 
 [node name="PrevButton" type="Button" parent="MarginContainer/HBox"]
 texture_filter = 4
