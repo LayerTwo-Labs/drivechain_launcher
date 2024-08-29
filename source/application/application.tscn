@@ -1,12 +1,16 @@
-[gd_scene load_steps=8 format=3 uid="uid://d3umh8q67cxar"]
+[gd_scene load_steps=10 format=3 uid="uid://d3umh8q67cxar"]
 
 [ext_resource type="Theme" uid="uid://h5leavcufiab" path="res://resource/theme/black.theme" id="1_ool8a"]
 [ext_resource type="Script" path="res://source/application/tabs_format.gd" id="2_6g70o"]
 [ext_resource type="PackedScene" uid="uid://bi3mevmny3dj3" path="res://source/settings/settings.tscn" id="2_qna4f"]
 [ext_resource type="PackedScene" uid="uid://3423r8wl8vxb" path="res://source/nodes/nodes.tscn" id="2_xvhh7"]
 [ext_resource type="Script" path="res://source/nodes/dashboard.gd" id="4_1w6t5"]
+[ext_resource type="PackedScene" uid="uid://he03ywtaoupd" path="res://source/create_wallet/wallet-create.tscn" id="7_wg8wv"]
 [ext_resource type="PackedScene" uid="uid://duvvgc45h86gp" path="res://source/fast_withdrawal/fast_withdraw-new.tscn" id="9_al4dm"]
 [ext_resource type="PackedScene" uid="uid://dwhtby81ylt3s" path="res://ui/components/left_menu/left_menu.tscn" id="11_x7vrd"]
+
+[sub_resource type="Theme" id="Theme_j82mx"]
+TabContainer/styles/panel = null
 
 [node name="Application" type="Control" groups=["application"]]
 texture_filter = 4
@@ -44,12 +48,14 @@ layout_mode = 2
 [node name="TabContainer2" type="TabContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme = SubResource("Theme_j82mx")
 clip_tabs = false
 tabs_visible = false
 
 [node name="TabContainer" type="TabContainer" parent="MarginContainer/VBoxContainer/TabContainer2"]
 layout_mode = 2
 size_flags_vertical = 3
+tab_alignment = 1
 clip_tabs = false
 script = ExtResource("2_6g70o")
 
@@ -66,6 +72,10 @@ visible = false
 layout_mode = 2
 
 [node name="Settings" parent="MarginContainer/VBoxContainer/TabContainer2/TabContainer" instance=ExtResource("2_qna4f")]
+visible = false
+layout_mode = 2
+
+[node name="Wallet" parent="MarginContainer/VBoxContainer/TabContainer2" instance=ExtResource("7_wg8wv")]
 visible = false
 layout_mode = 2
 
