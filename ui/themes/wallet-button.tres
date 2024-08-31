@@ -1,0 +1,37 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://cj6fg1jg1vbqk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5nood"]
+bg_color = Color(0.509804, 0.509804, 0.509804, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 1, 0, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u4bpr"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.509804, 0.509804, 0.509804, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+expand_margin_left = 3.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 2.0
+
+[resource]
+Button/colors/icon_disabled_color = Color(1, 0, 1, 1)
+Button/colors/icon_focus_color = Color(0, 1, 0, 1)
+Button/colors/icon_normal_color = Color(0, 1, 0, 1)
+Button/colors/icon_pressed_color = Color(0, 1, 0, 1)
+Button/styles/normal = SubResource("StyleBoxFlat_5nood")
+Label/styles/normal = SubResource("StyleBoxFlat_u4bpr")

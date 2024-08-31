@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://d3umh8q67cxar"]
+[gd_scene load_steps=11 format=3 uid="uid://d3umh8q67cxar"]
 
 [ext_resource type="Theme" uid="uid://h5leavcufiab" path="res://resource/theme/black.theme" id="1_ool8a"]
 [ext_resource type="Script" path="res://source/application/tabs_format.gd" id="2_6g70o"]
 [ext_resource type="PackedScene" uid="uid://bi3mevmny3dj3" path="res://source/settings/settings.tscn" id="2_qna4f"]
+[ext_resource type="Script" path="res://source/application/walletbutton.gd" id="2_x0thy"]
 [ext_resource type="PackedScene" uid="uid://3423r8wl8vxb" path="res://source/nodes/nodes.tscn" id="2_xvhh7"]
 [ext_resource type="Script" path="res://source/nodes/dashboard.gd" id="4_1w6t5"]
 [ext_resource type="PackedScene" uid="uid://he03ywtaoupd" path="res://source/create_wallet/wallet-create.tscn" id="7_wg8wv"]
@@ -44,13 +45,19 @@ theme_override_constants/margin_bottom = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
+script = ExtResource("2_x0thy")
 
 [node name="TabContainer2" type="TabContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme = SubResource("Theme_j82mx")
+current_tab = 1
 clip_tabs = false
 tabs_visible = false
+
+[node name="Wallet" parent="MarginContainer/VBoxContainer/TabContainer2" instance=ExtResource("7_wg8wv")]
+visible = false
+layout_mode = 2
 
 [node name="TabContainer" type="TabContainer" parent="MarginContainer/VBoxContainer/TabContainer2"]
 layout_mode = 2
@@ -72,10 +79,6 @@ visible = false
 layout_mode = 2
 
 [node name="Settings" parent="MarginContainer/VBoxContainer/TabContainer2/TabContainer" instance=ExtResource("2_qna4f")]
-visible = false
-layout_mode = 2
-
-[node name="Wallet" parent="MarginContainer/VBoxContainer/TabContainer2" instance=ExtResource("7_wg8wv")]
 visible = false
 layout_mode = 2
 

@@ -1,6 +1,6 @@
 extends PanelContainer
 
-@onready var quotes_label: Label = $MarginContainer/HBox/Quotes
+@onready var quotes_label: Label = $MarginContainer/HBox/Panel3/Quotes
 @onready var next_button: Button = $MarginContainer/HBox/NextButton
 @onready var prev_button: Button = $MarginContainer/HBox/PrevButton
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://he03ywtaoupd"]
+[gd_scene load_steps=12 format=3 uid="uid://he03ywtaoupd"]
 
 [ext_resource type="Script" path="res://source/application/wallet_creator.gd" id="1_b04rb"]
 [ext_resource type="Texture2D" uid="uid://dgqkqb642nnfx" path="res://assets/images/exit-svgrepo-com.svg" id="2_yutjw"]
@@ -8,7 +8,36 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qsl1u"]
 bg_color = Color(0, 0, 0, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jgas2"]
+bg_color = Color(0.423529, 0.423529, 0.423529, 0.431373)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lrq2r"]
+bg_color = Color(0.341176, 0.341176, 0.341176, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8e8op"]
+bg_color = Color(0.341176, 0.341176, 0.341176, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w2780"]
+bg_color = Color(0.0885599, 0.0885599, 0.0885599, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n6uh1"]
+bg_color = Color(0.340339, 0.340339, 0.340339, 1)
+
+[sub_resource type="Theme" id="Theme_gpxnn"]
+Button/colors/font_disabled_color = Color(1, 0, 0, 0.501961)
+Button/fonts/font = null
+Button/styles/disabled = SubResource("StyleBoxFlat_jgas2")
+Button/styles/focus = SubResource("StyleBoxFlat_lrq2r")
+Button/styles/hover = SubResource("StyleBoxFlat_8e8op")
+Button/styles/normal = SubResource("StyleBoxFlat_w2780")
+Button/styles/pressed = SubResource("StyleBoxFlat_n6uh1")
+
 [node name="Wallet" type="TabContainer"]
+current_tab = 1
 tabs_visible = false
 script = ExtResource("1_b04rb")
 
@@ -92,7 +121,6 @@ layout_mode = 2
 text = "Create New Wallet"
 
 [node name="MarginContainer2" type="MarginContainer" parent="."]
-visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer2"]
@@ -161,6 +189,24 @@ custom_minimum_size = Vector2(2.08165e-12, 50)
 layout_mode = 2
 size_flags_vertical = 10
 text = "Create Wallet"
+
+[node name="Spacer3" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths"]
+custom_minimum_size = Vector2(2.08165e-12, 5)
+layout_mode = 2
+
+[node name="DeleteButton" type="Button" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme = SubResource("Theme_gpxnn")
+theme_override_colors/font_color = Color(1, 0.287306, 0.225237, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_colors/font_hover_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_colors/font_focus_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_colors/font_disabled_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_colors/font_outline_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_font_sizes/font_size = 14
+text = "Delete Wallet"
 
 [node name="Spacer2" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer"]
 custom_minimum_size = Vector2(2.08165e-12, 5)
