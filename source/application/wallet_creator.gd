@@ -14,7 +14,7 @@ extends TabContainer
 @onready var mnemonic_in = $MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/MnemonicIn
 @onready var load_button = $MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/Load
 @onready var fast_button = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer/Random
-@onready var delete_button = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/DeleteButton
+@onready var delete_button = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer/DeleteButton
 
 
 @onready var tabs = get_parent() if get_parent() is TabContainer else null
@@ -397,6 +397,7 @@ func setup_launch_panel_headers():
 
 func _on_create_popup_pressed():
 	if entropy_in.text.is_empty():
+		entropy_in.placeholder_text = "You must enter or generate entropy to create wallet"
 		return
 
 	if check_existing_wallet():

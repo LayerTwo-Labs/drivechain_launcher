@@ -1,9 +1,10 @@
-[gd_scene load_steps=20 format=3 uid="uid://he03ywtaoupd"]
+[gd_scene load_steps=21 format=3 uid="uid://he03ywtaoupd"]
 
 [ext_resource type="Script" path="res://source/application/wallet_creator.gd" id="1_b04rb"]
 [ext_resource type="Texture2D" uid="uid://dgqkqb642nnfx" path="res://assets/images/exit-svgrepo-com.svg" id="2_yutjw"]
 [ext_resource type="Theme" uid="uid://ddwjiywfvqp62" path="res://entropy_theme.tres" id="3_2xvuv"]
 [ext_resource type="Texture2D" uid="uid://itqhnp8fc877" path="res://assets/images/help-circle-outline-svgrepo-com.svg" id="3_gjr45"]
+[ext_resource type="Texture2D" uid="uid://dirsvxtym10jq" path="res://ui/trashpropersize.png" id="4_8wkpx"]
 [ext_resource type="Script" path="res://source/application/mnemonic.gd" id="4_bj0n2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qsl1u"]
@@ -78,6 +79,13 @@ bg_color = Color(0.340339, 0.340339, 0.340339, 1)
 
 [sub_resource type="Theme" id="Theme_gpxnn"]
 Button/colors/font_disabled_color = Color(1, 0, 0, 0.501961)
+Button/colors/font_pressed_color = Color(1, 0, 0, 1)
+Button/colors/icon_disabled_color = Color(1, 1, 1, 0.4)
+Button/colors/icon_focus_color = Color(1, 0, 0, 1)
+Button/colors/icon_hover_color = Color(1, 0, 0, 1)
+Button/colors/icon_hover_pressed_color = Color(1, 0, 0, 1)
+Button/colors/icon_normal_color = Color(1, 0, 0, 1)
+Button/colors/icon_pressed_color = Color(1, 0, 0, 1)
 Button/fonts/font = null
 Button/styles/disabled = SubResource("StyleBoxFlat_jgas2")
 Button/styles/focus = SubResource("StyleBoxFlat_lrq2r")
@@ -202,7 +210,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(2.08165e-12, 50)
 layout_mode = 2
 theme = SubResource("Theme_wtlfy")
-text = "Fast Random"
+text = " Random "
 
 [node name="Control2" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(5, 2.08165e-12)
@@ -216,7 +224,27 @@ theme = SubResource("Theme_4mjfb")
 text = " Create "
 
 [node name="Control3" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(5, 2.08165e-12)
+custom_minimum_size = Vector2(2, 2.08165e-12)
+layout_mode = 2
+
+[node name="DeleteButton" type="Button" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(30, 2.08165e-12)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = SubResource("Theme_gpxnn")
+theme_override_colors/font_color = Color(1, 0.287306, 0.225237, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_colors/font_hover_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_colors/font_focus_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_colors/font_disabled_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_colors/font_outline_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_font_sizes/font_size = 14
+icon = ExtResource("4_8wkpx")
+icon_alignment = 1
+
+[node name="Control4" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(2, 2.08165e-12)
 layout_mode = 2
 
 [node name="Help" type="Button" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
@@ -256,21 +284,6 @@ horizontal_alignment = 1
 [node name="Spacer3" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths"]
 layout_mode = 2
 size_flags_vertical = 3
-
-[node name="DeleteButton" type="Button" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths"]
-custom_minimum_size = Vector2(120, 2.08165e-12)
-layout_mode = 2
-size_flags_horizontal = 4
-theme = SubResource("Theme_gpxnn")
-theme_override_colors/font_color = Color(1, 0.287306, 0.225237, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.286275, 0.223529, 1)
-theme_override_colors/font_hover_color = Color(1, 0.286275, 0.223529, 1)
-theme_override_colors/font_focus_color = Color(1, 0.286275, 0.223529, 1)
-theme_override_colors/font_hover_pressed_color = Color(1, 0.286275, 0.223529, 1)
-theme_override_colors/font_disabled_color = Color(1, 0.286275, 0.223529, 1)
-theme_override_colors/font_outline_color = Color(1, 0.286275, 0.223529, 1)
-theme_override_font_sizes/font_size = 14
-text = "Delete Wallet"
 
 [node name="Spacer2" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer"]
 custom_minimum_size = Vector2(2.08165e-12, 5)
