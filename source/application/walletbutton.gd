@@ -6,11 +6,12 @@ signal wallet_deleted
 @onready var wallet_button: Button = $Menu/MarginContainer/HBox/Panel/Wallet
 @onready var wallet_tab: TabContainer = $TabContainer2
 @onready var wallet_screen: TabContainer = $TabContainer2/Wallet
+@onready var create_popup_button: Button = $TabContainer2/Wallet/MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer/LaunchPopUp
 
 @export var wallet_exists_theme_path: String = "res://ui/themes/wallet-button.tres"
-@export var wallet_not_exists_theme_path: String = "res://ui/themes/wallet-null.tres"
 
 func _ready():
+	load_and_set_theme(wallet_exists_theme_path)
 	wallet_button.connect("pressed", Callable(self, "_on_wallet_button_pressed"))
 	wallet_created.connect(Callable(self, "_on_wallet_created"))
 	wallet_deleted.connect(Callable(self, "_on_wallet_deleted"))
@@ -26,14 +27,14 @@ func update_wallet_state():
 		_set_wallet_not_exists_state()
 
 func _set_wallet_exists_state():
-	load_and_set_theme(wallet_exists_theme_path)
 	wallet_button.disabled = false
+	create_popup_button.disabled = false
 	wallet_tab.current_tab = 1
 	wallet_screen.current_tab = 1
 
 func _set_wallet_not_exists_state():
-	load_and_set_theme(wallet_not_exists_theme_path)
 	wallet_button.disabled = true
+	create_popup_button.disabled = false
 	wallet_tab.current_tab = 0
 
 func load_and_set_theme(theme_path: String):

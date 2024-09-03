@@ -29,8 +29,10 @@ expand_margin_right = 5.0
 expand_margin_bottom = 2.0
 
 [resource]
-Button/colors/icon_disabled_color = Color(1, 0, 1, 1)
+Button/colors/icon_disabled_color = Color(1, 0, 0, 1)
 Button/colors/icon_focus_color = Color(0, 1, 0, 1)
+Button/colors/icon_hover_color = Color(0, 1, 0, 1)
+Button/colors/icon_hover_pressed_color = Color(0, 1, 0, 1)
 Button/colors/icon_normal_color = Color(0, 1, 0, 1)
 Button/colors/icon_pressed_color = Color(0, 1, 0, 1)
 Button/styles/normal = SubResource("StyleBoxFlat_5nood")

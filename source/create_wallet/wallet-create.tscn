@@ -1,12 +1,63 @@
-[gd_scene load_steps=12 format=3 uid="uid://he03ywtaoupd"]
+[gd_scene load_steps=20 format=3 uid="uid://he03ywtaoupd"]
 
 [ext_resource type="Script" path="res://source/application/wallet_creator.gd" id="1_b04rb"]
 [ext_resource type="Texture2D" uid="uid://dgqkqb642nnfx" path="res://assets/images/exit-svgrepo-com.svg" id="2_yutjw"]
+[ext_resource type="Theme" uid="uid://ddwjiywfvqp62" path="res://entropy_theme.tres" id="3_2xvuv"]
 [ext_resource type="Texture2D" uid="uid://itqhnp8fc877" path="res://assets/images/help-circle-outline-svgrepo-com.svg" id="3_gjr45"]
 [ext_resource type="Script" path="res://source/application/mnemonic.gd" id="4_bj0n2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qsl1u"]
 bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Theme" id="Theme_wtlfy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4vpuv"]
+bg_color = Color(0.125911, 0.125911, 0.125911, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gl6sh"]
+bg_color = Color(0.313726, 0.313726, 0.313726, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vo0qr"]
+bg_color = Color(0.185383, 0.185383, 0.185383, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oo7g8"]
+bg_color = Color(0.32549, 0.32549, 0.32549, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7m6np"]
+bg_color = Color(0.32549, 0.32549, 0.32549, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="Theme" id="Theme_4mjfb"]
+Button/colors/font_color = Color(0, 1, 0, 1)
+Button/colors/font_disabled_color = Color(1, 0, 0, 0.501961)
+Button/colors/font_focus_color = Color(0, 1, 0, 1)
+Button/colors/font_hover_color = Color(0, 1, 0, 1)
+Button/colors/font_hover_pressed_color = Color(0, 1, 0, 1)
+Button/colors/font_pressed_color = Color(0, 1, 0, 1)
+Button/styles/disabled = SubResource("StyleBoxFlat_4vpuv")
+Button/styles/focus = SubResource("StyleBoxFlat_gl6sh")
+Button/styles/hover = SubResource("StyleBoxFlat_vo0qr")
+Button/styles/normal = SubResource("StyleBoxFlat_oo7g8")
+Button/styles/pressed = SubResource("StyleBoxFlat_7m6np")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jgas2"]
 bg_color = Color(0.423529, 0.423529, 0.423529, 0.431373)
@@ -140,14 +191,35 @@ icon = ExtResource("2_yutjw")
 [node name="LineEdit" type="LineEdit" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme = ExtResource("3_2xvuv")
 placeholder_text = "Input random string or fast create"
 max_length = 64
 expand_to_text_length = true
 
+[node name="Control" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(5, 2.08165e-12)
+layout_mode = 2
+
 [node name="Random" type="Button" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(2.08165e-12, 50)
 layout_mode = 2
-text = "Fast Create"
+theme = SubResource("Theme_wtlfy")
+text = "Fast Random"
+
+[node name="Control2" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(5, 2.08165e-12)
+layout_mode = 2
+
+[node name="LaunchPopUp" type="Button" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 50)
+layout_mode = 2
+size_flags_vertical = 10
+theme = SubResource("Theme_4mjfb")
+text = " Create "
+
+[node name="Control3" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(5, 2.08165e-12)
+layout_mode = 2
 
 [node name="Help" type="Button" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -183,12 +255,6 @@ size_flags_vertical = 0
 layout_mode = 2
 text = "BIP 32"
 horizontal_alignment = 1
-
-[node name="LaunchPopUp" type="Button" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths"]
-custom_minimum_size = Vector2(2.08165e-12, 50)
-layout_mode = 2
-size_flags_vertical = 10
-text = "Create Wallet"
 
 [node name="Spacer3" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths"]
 custom_minimum_size = Vector2(2.08165e-12, 5)

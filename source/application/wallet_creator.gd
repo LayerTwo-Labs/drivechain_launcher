@@ -7,7 +7,7 @@ extends TabContainer
 @onready var mnemonic_out = $MarginContainer2/VBoxContainer/BoxContainer/GridContainer
 @onready var bip39_panel = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/BIP39
 @onready var launch_panel = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths
-@onready var create_pop_up = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/LaunchPopUp
+@onready var create_pop_up = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer/LaunchPopUp
 @onready var popup_window = $PopUp
 @onready var popup_vbox = $PopUp/MarginContainer/VBoxContainer
 @onready var mnemonic_label = $PopUp/MarginContainer/VBoxContainer/Label
@@ -488,18 +488,6 @@ func show_existing_wallet_popup():
 	delete_button.connect("pressed", Callable(self, "_on_delete_wallet_pressed"))
 	button_hbox.add_child(delete_button)
 
-	var show_wallet_button = Button.new()
-	show_wallet_button.text = "Show Wallet"
-	show_wallet_button.custom_minimum_size = Vector2(button_width, button_height)
-	show_wallet_button.connect("pressed", Callable(self, "_on_show_wallet_pressed"))
-	button_hbox.add_child(show_wallet_button)
-
-	var close_button = Button.new()
-	close_button.text = "Close"
-	close_button.custom_minimum_size = Vector2(button_width, button_height)
-	close_button.connect("pressed", Callable(self, "_on_popup_close_pressed"))
-	button_hbox.add_child(close_button)
-
 	get_tree().root.add_child(popup_window)
 	get_tree().root.connect("size_changed", Callable(self, "_center_popup"))
 	popup_window.show()
@@ -657,12 +645,14 @@ func show_new_wallet_popup():
 
 	var main_vbox = VBoxContainer.new()
 	main_vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_KEEP_SIZE, 10)
+	main_vbox.add_theme_constant_override("separation", 20)
 	panel.add_child(main_vbox)
 
 	var attention_label = Label.new()
 	attention_label.text = "**ATTENTION** Write down these 12 words for future wallet recovery and restoration as you will NOT see them again"
 	attention_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	attention_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	attention_label.add_theme_color_override("font_color", Color.RED)
 	main_vbox.add_child(attention_label)
 
 	var mnemonic_container = PanelContainer.new()
@@ -674,6 +664,7 @@ func show_new_wallet_popup():
 	mnemonic_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	mnemonic_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	mnemonic_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	mnemonic_label.add_theme_font_size_override("font_size", 16)
 	mnemonic_container.add_child(mnemonic_label)
 
 	var bottom_container = VBoxContainer.new()
@@ -685,29 +676,26 @@ func show_new_wallet_popup():
 	question_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	bottom_container.add_child(question_label)
 
-	var hbox = HBoxContainer.new()
-	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	bottom_container.add_child(hbox)
+	var button_hbox = HBoxContainer.new()
+	button_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	button_hbox.add_theme_constant_override("separation", 20)
+	button_hbox.size_flags_vertical = Control.SIZE_SHRINK_END
+	bottom_container.add_child(button_hbox)
 
 	var yes_button = Button.new()
-	yes_button.text = "Yes"
+	yes_button.text = "Yes, Create"
+	yes_button.custom_minimum_size = Vector2(120, 40)
 	yes_button.connect("pressed", Callable(self, "_on_popup_yes_pressed"))
+	button_hbox.add_child(yes_button)
 
 	var no_button = Button.new()
-	no_button.text = "No"
+	no_button.text = "No, Cancel"
+	no_button.custom_minimum_size = Vector2(120, 40)
 	no_button.connect("pressed", Callable(self, "_on_popup_close_pressed"))
-
-	var spacer = Control.new()
-	spacer.custom_minimum_size.x = 100
-
-	hbox.add_child(no_button)
-	hbox.add_child(spacer)
-	hbox.add_child(yes_button)
+	button_hbox.add_child(no_button)
 
 	get_tree().root.add_child(popup_window)
-
 	get_tree().root.connect("size_changed", Callable(self, "_center_popup"))
-
 	popup_window.show()
 
 func _center_popup() -> void:
@@ -935,19 +923,13 @@ func ensure_starters_directory():
 		dir.make_dir("wallet_starters")
 		
 func update_wallet_button_theme(button: Button, wallet_exists: bool):
-	var theme_path = "res://ui/themes/wallet-button.tres" if wallet_exists else "res://ui/themes/wallet-null.tres"
-	if ResourceLoader.exists(theme_path):
-		var theme = load(theme_path) as Theme
-		if theme:
-			button.theme = theme
-		else:
-			print("Failed to load theme from path: ", theme_path)
+	if wallet_exists:
+		button.disabled = false
 	else:
-		print("Theme file does not exist at path: ", theme_path)
-		
+		button.disabled = true
+
 func _on_wallet_created():
 	update_delete_button_state()
 
-# Add this new function to handle wallet deletion signal
 func _on_wallet_deleted():
 	update_delete_button_state()
