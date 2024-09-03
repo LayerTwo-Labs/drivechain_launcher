@@ -12,47 +12,49 @@ bg_color = Color(0, 0, 0, 1)
 [sub_resource type="Theme" id="Theme_wtlfy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4vpuv"]
-bg_color = Color(0.125911, 0.125911, 0.125911, 1)
+bg_color = Color(0.18359, 0.18359, 0.18359, 1)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gl6sh"]
-bg_color = Color(0.313726, 0.313726, 0.313726, 1)
+bg_color = Color(0, 1, 0, 0.32549)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vo0qr"]
-bg_color = Color(0.185383, 0.185383, 0.185383, 1)
+bg_color = Color(0, 1, 0, 0.32549)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oo7g8"]
-bg_color = Color(0.32549, 0.32549, 0.32549, 1)
+bg_color = Color(0, 1, 0, 0.32549)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7m6np"]
-bg_color = Color(0.32549, 0.32549, 0.32549, 1)
+bg_color = Color(0, 1, 0, 0.32549)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="Theme" id="Theme_4mjfb"]
-Button/colors/font_color = Color(0, 1, 0, 1)
+Button/colors/font_color = Color(0.875, 0.875, 0.875, 1)
 Button/colors/font_disabled_color = Color(1, 0, 0, 0.501961)
-Button/colors/font_focus_color = Color(0, 1, 0, 1)
-Button/colors/font_hover_color = Color(0, 1, 0, 1)
-Button/colors/font_hover_pressed_color = Color(0, 1, 0, 1)
-Button/colors/font_pressed_color = Color(0, 1, 0, 1)
+Button/colors/font_focus_color = Color(0.95, 0.95, 0.95, 1)
+Button/colors/font_outline_color = Color(1, 1, 1, 1)
 Button/styles/disabled = SubResource("StyleBoxFlat_4vpuv")
 Button/styles/focus = SubResource("StyleBoxFlat_gl6sh")
 Button/styles/hover = SubResource("StyleBoxFlat_vo0qr")
@@ -70,10 +72,6 @@ bg_color = Color(0.341176, 0.341176, 0.341176, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w2780"]
 bg_color = Color(0.0885599, 0.0885599, 0.0885599, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n6uh1"]
 bg_color = Color(0.340339, 0.340339, 0.340339, 1)
@@ -226,7 +224,7 @@ layout_mode = 2
 icon = ExtResource("3_gjr45")
 
 [node name="Spacer3" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer"]
-custom_minimum_size = Vector2(2.08165e-12, 5)
+custom_minimum_size = Vector2(2.08165e-12, 10)
 layout_mode = 2
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer2/VBoxContainer/BoxContainer"]
@@ -249,7 +247,6 @@ layout_mode = 2
 [node name="Paths" type="VBoxContainer" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 0
 
 [node name="Header" type="Label" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths"]
 layout_mode = 2
@@ -257,12 +254,13 @@ text = "BIP 32"
 horizontal_alignment = 1
 
 [node name="Spacer3" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths"]
-custom_minimum_size = Vector2(2.08165e-12, 5)
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="DeleteButton" type="Button" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths"]
+custom_minimum_size = Vector2(120, 2.08165e-12)
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 4
 theme = SubResource("Theme_gpxnn")
 theme_override_colors/font_color = Color(1, 0.287306, 0.225237, 1)
 theme_override_colors/font_pressed_color = Color(1, 0.286275, 0.223529, 1)

@@ -153,38 +153,25 @@ func setup_launch_panel():
 
 	var headers_text = """[table=2]
 [cell][color=white][b][u]HD Key Data:
-
 [/u][/b][/color][/cell] [cell][/cell]
 [cell][color=white][b][u]Master Key:
-
 [/u][/b][/color][/cell] [cell][/cell]
 [cell][color=white][b][u]Chain Code:
-
 [/u][/b][/color][/cell] [cell][/cell]
 [/table]"""
 	launch_info_label.text = headers_text
-
-	var existing_button = launch_panel.get_node_or_null("LaunchPopUp")
-	var existing_delete = launch_panel.get_node_or_null("DeleteButton")
-	if existing_button:
-		launch_panel.remove_child(existing_button)
-		vbox.add_child(existing_button)
-		
-	var spacer = Control.new()
-	spacer.size_flags_vertical = SIZE_EXPAND_FILL
-	vbox.add_child(spacer)
 	
+	var existing_spacer = launch_panel.get_node_or_null("Spacer3")
+	if existing_spacer:
+		launch_panel.remove_child(existing_spacer)
+		vbox.add_child(existing_spacer)
+		existing_spacer.size_flags_vertical = SIZE_EXPAND_FILL
+
+	var existing_delete = launch_panel.get_node_or_null("DeleteButton")
 	if existing_delete:
 		launch_panel.remove_child(existing_delete)
 		vbox.add_child(existing_delete)
-
-	# Add a spacer to push the delete button to the bottom
-	
-
-	# Create and add the delete wallet button
-	
-	
-
+		existing_delete.size_flags_vertical = SIZE_SHRINK_CENTER
 
 func _on_create_wallet_button_pressed():
 	reset_wallet_tab()
