@@ -15,6 +15,7 @@ extends TabContainer
 @onready var load_button = $MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/Load
 @onready var fast_button = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer/Random
 @onready var delete_button = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer/DeleteButton
+@onready var help_button = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer/Help
 
 
 @onready var tabs = get_parent() if get_parent() is TabContainer else null
@@ -30,6 +31,7 @@ func _ready():
 	load_button.connect("pressed", Callable(self, "_on_load_button_pressed"))
 	fast_button.connect("pressed", Callable(self, "_on_fast_button_pressed"))
 	delete_button.connect("pressed", Callable(self, "_on_delete_wallet_pressed"))
+	help_button.connect("pressed", Callable(self, "_on_help_button_pressed"))
 	
 	if tabs:
 		tabs.connect("tab_changed", Callable(self, "_on_tab_changed"))
@@ -600,6 +602,78 @@ func delete_wallet():
 	update_delete_button_state()
 
 	print("Wallet deleted and UI reset.")
+	
+func _on_help_button_pressed():
+	show_help_popup()
+	
+func show_help_popup():
+	if popup_window != null:
+		popup_window.queue_free()
+
+	popup_window = Control.new()
+	popup_window.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+	var background = ColorRect.new()
+	background.color = Color(0, 0, 0, 0.5)
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	background.connect("gui_input", Callable(self, "_on_background_gui_input"))
+	popup_window.add_child(background)
+
+	var panel = Panel.new()
+	panel.custom_minimum_size = Vector2(500, 400)
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.set_anchor_and_offset(SIDE_LEFT, 0.5, -250)
+	panel.set_anchor_and_offset(SIDE_TOP, 0.5, -200)
+	panel.set_anchor_and_offset(SIDE_RIGHT, 0.5, 250)
+	panel.set_anchor_and_offset(SIDE_BOTTOM, 0.5, 200)
+	popup_window.add_child(panel)
+
+	var stylebox = StyleBoxFlat.new()
+	stylebox.set_border_width_all(2)
+	stylebox.border_color = Color.WHITE
+	stylebox.bg_color = Color(0.15, 0.15, 0.15)
+	panel.add_theme_stylebox_override("panel", stylebox)
+
+	var main_vbox = VBoxContainer.new()
+	main_vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_KEEP_SIZE, 10)
+	main_vbox.add_theme_constant_override("separation", 10)
+	panel.add_child(main_vbox)
+
+	var title_label = Label.new()
+	title_label.text = "Wallet Help"
+	title_label.add_theme_font_size_override("font_size", 24)
+	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	main_vbox.add_child(title_label)
+
+	var help_text = """
+	• Create Wallet: Use 'Random' or enter entropy, then click 'Create Wallet'
+	• Mnemonic: 12-word phrase for wallet recovery - keep it safe!
+	• Load Wallet: Enter existing mnemonic and click 'Load'
+	• Wallet Info: View BIP39 data and HD key details after creation/loading
+	• Sidechains: Automatically generated based on your wallet
+	• Security: Never share your mnemonic or private keys
+	• Delete Wallet: Removes current wallet data (irreversible)
+
+	Note: This tool is for educational/testing purposes only.
+	For real transactions, use secure, well-reviewed wallet software.
+	"""
+
+	var help_label = Label.new()
+	help_label.text = help_text
+	help_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	help_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	main_vbox.add_child(help_label)
+
+	var close_button = Button.new()
+	close_button.text = "Close"
+	close_button.custom_minimum_size = Vector2(120, 40)
+	close_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	close_button.connect("pressed", Callable(self, "_on_popup_close_pressed"))
+	main_vbox.add_child(close_button)
+
+	get_tree().root.add_child(popup_window)
+	get_tree().root.connect("size_changed", Callable(self, "_center_popup"))
+	popup_window.show()
 
 func show_new_wallet_popup():
 	if popup_window != null:
