@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://dwhtby81ylt3s"]
+[gd_scene load_steps=11 format=3 uid="uid://dwhtby81ylt3s"]
 
 [ext_resource type="Script" path="res://ui/components/left_menu/left_menu.gd" id="1_yja75"]
+[ext_resource type="Texture2D" uid="uid://ur4flpu4avin" path="res://assets/images/icons8-wallet-100.png" id="2_1m8wg"]
 [ext_resource type="Script" path="res://ui/components/left_menu/Quotes.gd" id="7_kx1k8"]
 [ext_resource type="FontFile" uid="uid://ciu7chyqqs4k7" path="res://assets/fonts/Saira_Expanded-Bold.ttf" id="11_6qy05"]
 [ext_resource type="FontFile" uid="uid://dgxbgdcr3s84u" path="res://assets/fonts/Saira_Expanded-Regular.ttf" id="12_nwgc3"]
@@ -8,8 +9,39 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c8gs8"]
 bg_color = Color(0.141176, 0.141176, 0.141176, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s30qn"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.312466, 0.312466, 0.312466, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6e8g7"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.313726, 0.313726, 0.313726, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+expand_margin_top = 5.0
+expand_margin_right = 10.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="Theme" id="Theme_gdtlt"]
+Panel/styles/panel = SubResource("StyleBoxFlat_6e8g7")
+
+[sub_resource type="Theme" id="Theme_2hg8v"]
+
 [node name="Menu" type="PanelContainer"]
-clip_contents = true
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -34,6 +66,34 @@ layout_mode = 2
 size_flags_stretch_ratio = 0.0
 theme_override_constants/separation = 8
 
+[node name="Panel" type="Panel" parent="MarginContainer/HBox"]
+custom_minimum_size = Vector2(100, 2.08165e-12)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s30qn")
+
+[node name="Wallet" type="Button" parent="MarginContainer/HBox/Panel"]
+texture_filter = 4
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 4
+icon = ExtResource("2_1m8wg")
+icon_alignment = 1
+
+[node name="Control4" type="Control" parent="MarginContainer/HBox"]
+custom_minimum_size = Vector2(5, 2.08165e-12)
+layout_mode = 2
+
 [node name="PrevButton" type="Button" parent="MarginContainer/HBox"]
 texture_filter = 4
 layout_direction = 1
@@ -48,12 +108,23 @@ flat = true
 custom_minimum_size = Vector2(5, 2.08165e-12)
 layout_mode = 2
 
-[node name="Quotes" type="Label" parent="MarginContainer/HBox"]
-custom_minimum_size = Vector2(250, 0)
-layout_direction = 3
+[node name="Panel3" type="Panel" parent="MarginContainer/HBox"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme = SubResource("Theme_gdtlt")
+
+[node name="Quotes" type="Label" parent="MarginContainer/HBox/Panel3"]
+custom_minimum_size = Vector2(250, 0)
+layout_direction = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
 size_flags_vertical = 1
+theme = SubResource("Theme_2hg8v")
 theme_override_font_sizes/font_size = 13
 vertical_alignment = 1
 autowrap_mode = 2

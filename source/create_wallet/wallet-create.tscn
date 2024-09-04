@@ -1,0 +1,294 @@
+[gd_scene load_steps=21 format=3 uid="uid://he03ywtaoupd"]
+
+[ext_resource type="Script" path="res://source/application/wallet_creator.gd" id="1_b04rb"]
+[ext_resource type="Texture2D" uid="uid://dgqkqb642nnfx" path="res://assets/images/exit-svgrepo-com.svg" id="2_yutjw"]
+[ext_resource type="Theme" uid="uid://ddwjiywfvqp62" path="res://entropy_theme.tres" id="3_2xvuv"]
+[ext_resource type="Texture2D" uid="uid://itqhnp8fc877" path="res://assets/images/help-circle-outline-svgrepo-com.svg" id="3_gjr45"]
+[ext_resource type="Texture2D" uid="uid://dirsvxtym10jq" path="res://ui/trashpropersize.png" id="4_8wkpx"]
+[ext_resource type="Script" path="res://source/application/mnemonic.gd" id="4_bj0n2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qsl1u"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Theme" id="Theme_wtlfy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4vpuv"]
+bg_color = Color(0.18359, 0.18359, 0.18359, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gl6sh"]
+bg_color = Color(0, 1, 0, 0.32549)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vo0qr"]
+bg_color = Color(0, 1, 0, 0.32549)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oo7g8"]
+bg_color = Color(0, 1, 0, 0.32549)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7m6np"]
+bg_color = Color(0, 1, 0, 0.32549)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="Theme" id="Theme_4mjfb"]
+Button/colors/font_color = Color(0.875, 0.875, 0.875, 1)
+Button/colors/font_disabled_color = Color(1, 0, 0, 0.501961)
+Button/colors/font_focus_color = Color(0.95, 0.95, 0.95, 1)
+Button/colors/font_outline_color = Color(1, 1, 1, 1)
+Button/styles/disabled = SubResource("StyleBoxFlat_4vpuv")
+Button/styles/focus = SubResource("StyleBoxFlat_gl6sh")
+Button/styles/hover = SubResource("StyleBoxFlat_vo0qr")
+Button/styles/normal = SubResource("StyleBoxFlat_oo7g8")
+Button/styles/pressed = SubResource("StyleBoxFlat_7m6np")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jgas2"]
+bg_color = Color(0.423529, 0.423529, 0.423529, 0.431373)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lrq2r"]
+bg_color = Color(0.341176, 0.341176, 0.341176, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8e8op"]
+bg_color = Color(0.341176, 0.341176, 0.341176, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w2780"]
+bg_color = Color(0.0885599, 0.0885599, 0.0885599, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n6uh1"]
+bg_color = Color(0.340339, 0.340339, 0.340339, 1)
+
+[sub_resource type="Theme" id="Theme_gpxnn"]
+Button/colors/font_disabled_color = Color(1, 0, 0, 0.501961)
+Button/colors/font_pressed_color = Color(1, 0, 0, 1)
+Button/colors/icon_disabled_color = Color(1, 1, 1, 0.4)
+Button/colors/icon_focus_color = Color(1, 0, 0, 1)
+Button/colors/icon_hover_color = Color(1, 0, 0, 1)
+Button/colors/icon_hover_pressed_color = Color(1, 0, 0, 1)
+Button/colors/icon_normal_color = Color(1, 0, 0, 1)
+Button/colors/icon_pressed_color = Color(1, 0, 0, 1)
+Button/fonts/font = null
+Button/styles/disabled = SubResource("StyleBoxFlat_jgas2")
+Button/styles/focus = SubResource("StyleBoxFlat_lrq2r")
+Button/styles/hover = SubResource("StyleBoxFlat_8e8op")
+Button/styles/normal = SubResource("StyleBoxFlat_w2780")
+Button/styles/pressed = SubResource("StyleBoxFlat_n6uh1")
+
+[node name="Wallet" type="TabContainer"]
+current_tab = 1
+tabs_visible = false
+script = ExtResource("1_b04rb")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Control3" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 40)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 45)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Restore Wallet"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 40)
+layout_mode = 2
+
+[node name="MnemonicIn" type="TextEdit" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 100)
+layout_mode = 2
+placeholder_text = "Enter 12 words separated by a space"
+wrap_mode = 1
+autowrap_mode = 2
+
+[node name="Control2" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 50)
+layout_mode = 2
+
+[node name="Load" type="Button" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 60)
+layout_mode = 2
+text = "Load Wallet"
+
+[node name="Control" type="Panel" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 2.08165e-12)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_qsl1u")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Control3" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(2.08165e-12, 40)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(2.08165e-12, 45)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Create Wallet"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(2.08165e-12, 40)
+layout_mode = 2
+
+[node name="Create" type="Button" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(2.08165e-12, 220)
+layout_mode = 2
+text = "Create New Wallet"
+
+[node name="MarginContainer2" type="MarginContainer" parent="."]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer2"]
+layout_mode = 2
+
+[node name="BoxContainer" type="VBoxContainer" parent="MarginContainer2/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer2/VBoxContainer/BoxContainer"]
+layout_mode = 2
+
+[node name="Return" type="Button" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("2_yutjw")
+
+[node name="LineEdit" type="LineEdit" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("3_2xvuv")
+placeholder_text = "Input random string or fast create"
+max_length = 64
+expand_to_text_length = true
+
+[node name="Control" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(5, 2.08165e-12)
+layout_mode = 2
+
+[node name="Random" type="Button" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 50)
+layout_mode = 2
+theme = SubResource("Theme_wtlfy")
+text = " Random "
+
+[node name="Control2" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(5, 2.08165e-12)
+layout_mode = 2
+
+[node name="LaunchPopUp" type="Button" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 50)
+layout_mode = 2
+size_flags_vertical = 10
+theme = SubResource("Theme_4mjfb")
+text = " Create "
+
+[node name="Control3" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(2, 2.08165e-12)
+layout_mode = 2
+
+[node name="DeleteButton" type="Button" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(30, 2.08165e-12)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = SubResource("Theme_gpxnn")
+theme_override_colors/font_color = Color(1, 0.287306, 0.225237, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_colors/font_hover_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_colors/font_focus_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_colors/font_disabled_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_colors/font_outline_color = Color(1, 0.286275, 0.223529, 1)
+theme_override_font_sizes/font_size = 14
+icon = ExtResource("4_8wkpx")
+icon_alignment = 1
+
+[node name="Control4" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(2, 2.08165e-12)
+layout_mode = 2
+
+[node name="Help" type="Button" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("3_gjr45")
+
+[node name="Spacer3" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 10)
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer2/VBoxContainer/BoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BIP39" type="VBoxContainer" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="Header" type="Label" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/BIP39"]
+layout_mode = 2
+text = "BIP 39 Seed Phrase"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="Paths" type="VBoxContainer" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Header" type="Label" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths"]
+layout_mode = 2
+text = "BIP 32"
+horizontal_alignment = 1
+
+[node name="Spacer3" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Spacer2" type="Control" parent="MarginContainer2/VBoxContainer/BoxContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 5)
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer2/VBoxContainer/BoxContainer"]
+layout_mode = 2
+script = ExtResource("4_bj0n2")

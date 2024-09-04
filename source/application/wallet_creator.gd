@@ -7,17 +7,21 @@ extends TabContainer
 @onready var mnemonic_out = $MarginContainer2/VBoxContainer/BoxContainer/GridContainer
 @onready var bip39_panel = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/BIP39
 @onready var launch_panel = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths
-@onready var create_pop_up = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer2/Paths/LaunchPopUp
+@onready var create_pop_up = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer/LaunchPopUp
 @onready var popup_window = $PopUp
 @onready var popup_vbox = $PopUp/MarginContainer/VBoxContainer
 @onready var mnemonic_label = $PopUp/MarginContainer/VBoxContainer/Label
 @onready var mnemonic_in = $MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/MnemonicIn
 @onready var load_button = $MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/Load
 @onready var fast_button = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer/Random
+@onready var delete_button = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer/DeleteButton
+@onready var help_button = $MarginContainer2/VBoxContainer/BoxContainer/HBoxContainer/Help
+
 
 @onready var tabs = get_parent() if get_parent() is TabContainer else null
 
 var current_wallet_data = {}
+var displaying_existing_wallet = false
 
 func _ready():
 	create_wallet_button.connect("pressed", Callable(self, "_on_create_wallet_button_pressed"))
@@ -26,12 +30,90 @@ func _ready():
 	create_pop_up.connect("pressed", Callable(self, "_on_create_popup_pressed"))
 	load_button.connect("pressed", Callable(self, "_on_load_button_pressed"))
 	fast_button.connect("pressed", Callable(self, "_on_fast_button_pressed"))
-
+	delete_button.connect("pressed", Callable(self, "_on_delete_wallet_pressed"))
+	help_button.connect("pressed", Callable(self, "_on_help_button_pressed"))
+	
 	if tabs:
 		tabs.connect("tab_changed", Callable(self, "_on_tab_changed"))
 	setup_bip39_panel()
 	setup_launch_panel()
 	ensure_starters_directory()
+	setup_wallet_button()
+	update_delete_button_state()
+	
+func setup_wallet_button():
+	# Try to find the wallet button using different paths
+	var wallet_button = get_node_or_null("../Menu/MarginContainer/HBox/Panel/Wallet")
+	if not wallet_button:
+		wallet_button = get_node_or_null("/root/Main/VBoxContainer/Menu/MarginContainer/HBox/Panel/Wallet")
+	if not wallet_button:
+		wallet_button = get_node_or_null("../../Menu/MarginContainer/HBox/Panel/Wallet")
+	
+	if wallet_button:
+		wallet_button.connect("pressed", Callable(self, "_on_wallet_button_pressed"))
+	else:
+		print("Error: Wallet button not found. Please check the scene structure and button name.")
+
+
+func update_delete_button_state():
+	var user_data_dir = OS.get_user_data_dir()
+	var wallet_file = user_data_dir.path_join("wallet_starters/wallet_master_seed.txt")
+	
+	if delete_button:
+		delete_button.disabled = not FileAccess.file_exists(wallet_file)
+	else:
+		print("Warning: delete_button not found. Check the node path.")
+
+
+func _on_wallet_button_pressed():
+	var user_data_dir = OS.get_user_data_dir()
+	var wallet_file = user_data_dir.path_join("wallet_starters/wallet_master_seed.txt")
+	
+	if FileAccess.file_exists(wallet_file):
+		load_existing_wallet(wallet_file)
+	else:
+		reset_wallet_tab()
+
+func load_existing_wallet(wallet_file):
+	var file = FileAccess.open(wallet_file, FileAccess.READ)
+	if file:
+		var json_string = file.get_as_text()
+		var json_result = JSON.parse_string(json_string)
+		if json_result is Dictionary:
+			current_wallet_data = json_result
+			display_wallet_info()
+		else:
+			print("Error: Invalid JSON data in wallet file.")
+	else:
+		print("Error: Unable to open wallet file.")
+
+func display_wallet_info():
+	displaying_existing_wallet = true
+	
+	var mnemonic = current_wallet_data.get("mnemonic", "")
+	if mnemonic:
+		var Bitcoin = BitcoinWallet.new()
+		var wallet_data = Bitcoin.generate_wallet(mnemonic)
+		
+		if wallet_data.has("error"):
+			print("Error generating wallet from stored mnemonic: ", wallet_data["error"])
+			return
+		
+		# Use the existing display mechanism
+		current_wallet_data = wallet_data
+		populate_grid(wallet_data["mnemonic"], wallet_data["bip39_bin"], wallet_data["bip39_csum"])
+		update_bip39_panel(wallet_data)
+		update_launch_panel(wallet_data)
+		
+		# Set placeholder text for entropy input
+		entropy_in.placeholder_text = "Displaying current master wallet information. Start typing to generate new wallet information."
+		entropy_in.text = ""
+		
+		# Disable create popup button
+		create_pop_up.disabled = true
+	else:
+		print("Error: No mnemonic found in stored wallet data.")
+		reset_wallet_tab()
 
 func setup_bip39_panel():
 	var bip39_info_label = RichTextLabel.new()
@@ -73,20 +155,25 @@ func setup_launch_panel():
 
 	var headers_text = """[table=2]
 [cell][color=white][b][u]HD Key Data:
-
 [/u][/b][/color][/cell] [cell][/cell]
 [cell][color=white][b][u]Master Key:
-
 [/u][/b][/color][/cell] [cell][/cell]
 [cell][color=white][b][u]Chain Code:
-
 [/u][/b][/color][/cell] [cell][/cell]
 [/table]"""
 	launch_info_label.text = headers_text
-	var existing_button = launch_panel.get_node_or_null("LaunchPopUp")
-	if existing_button:
-		launch_panel.remove_child(existing_button)
-		vbox.add_child(existing_button)
+	
+	var existing_spacer = launch_panel.get_node_or_null("Spacer3")
+	if existing_spacer:
+		launch_panel.remove_child(existing_spacer)
+		vbox.add_child(existing_spacer)
+		existing_spacer.size_flags_vertical = SIZE_EXPAND_FILL
+
+	var existing_delete = launch_panel.get_node_or_null("DeleteButton")
+	if existing_delete:
+		launch_panel.remove_child(existing_delete)
+		vbox.add_child(existing_delete)
+		existing_delete.size_flags_vertical = SIZE_SHRINK_CENTER
 
 func _on_create_wallet_button_pressed():
 	reset_wallet_tab()
@@ -112,7 +199,6 @@ func _create_wallet(input: String):
 		clear_all_output()
 
 func clear_all_output():
-	entropy_in.text = ""
 	for i in range(1, mnemonic_out.get_child_count()):
 		if i != 13 and i != 26:
 			var label = mnemonic_out.get_child(i).get_child(0) as Label
@@ -151,11 +237,22 @@ func clear_all_output():
 		launch_info_label.text = headers_text
 
 	current_wallet_data = {}
+	create_pop_up.disabled = false
+	displaying_existing_wallet = false
+	entropy_in.placeholder_text = ""  # Reset placeholder text
 
 func _on_entropy_in_changed(new_text: String):
 	if new_text.is_empty():
-		clear_all_output()
+		if displaying_existing_wallet:
+			# If we were displaying existing wallet info, just clear everything
+			clear_all_output()
+		else:
+			# Normal behavior when clearing input
+			clear_all_output()
 	else:
+		# New input, so we're no longer displaying existing wallet
+		displaying_existing_wallet = false
+		create_pop_up.disabled = false
 		_create_wallet(new_text)
 
 func update_bip39_panel(output: Dictionary):
@@ -302,12 +399,15 @@ func setup_launch_panel_headers():
 
 func _on_create_popup_pressed():
 	if entropy_in.text.is_empty():
+		entropy_in.placeholder_text = "You must enter or generate entropy to create wallet"
 		return
 
 	if check_existing_wallet():
 		show_existing_wallet_popup()
 	else:
 		show_new_wallet_popup()
+	
+	update_delete_button_state()
 
 func check_existing_wallet() -> bool:
 	var user_data_dir = OS.get_user_data_dir()
@@ -378,39 +478,202 @@ func show_existing_wallet_popup():
 	delete_button.connect("pressed", Callable(self, "_on_delete_wallet_pressed"))
 	button_hbox.add_child(delete_button)
 
-	var show_wallet_button = Button.new()
-	show_wallet_button.text = "Show Wallet"
-	show_wallet_button.custom_minimum_size = Vector2(button_width, button_height)
-	show_wallet_button.connect("pressed", Callable(self, "_on_show_wallet_pressed"))
-	button_hbox.add_child(show_wallet_button)
-
-	var close_button = Button.new()
-	close_button.text = "Close"
-	close_button.custom_minimum_size = Vector2(button_width, button_height)
-	close_button.connect("pressed", Callable(self, "_on_popup_close_pressed"))
-	button_hbox.add_child(close_button)
-
 	get_tree().root.add_child(popup_window)
 	get_tree().root.connect("size_changed", Callable(self, "_center_popup"))
 	popup_window.show()
 
 func _on_delete_wallet_pressed():
+	show_delete_confirmation_popup()
+
+func show_delete_confirmation_popup():
+	if popup_window != null:
+		popup_window.queue_free()
+
+	popup_window = Control.new()
+	popup_window.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+	var background = ColorRect.new()
+	background.color = Color(0, 0, 0, 0.5)
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	background.connect("gui_input", Callable(self, "_on_background_gui_input"))
+	popup_window.add_child(background)
+
+	var panel = Panel.new()
+	panel.custom_minimum_size = Vector2(400, 200)
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.set_anchor_and_offset(SIDE_LEFT, 0.5, -200)
+	panel.set_anchor_and_offset(SIDE_TOP, 0.5, -100)
+	panel.set_anchor_and_offset(SIDE_RIGHT, 0.5, 200)
+	panel.set_anchor_and_offset(SIDE_BOTTOM, 0.5, 100)
+	popup_window.add_child(panel)
+
+	var stylebox = StyleBoxFlat.new()
+	stylebox.set_border_width_all(2)
+	stylebox.border_color = Color.WHITE
+	stylebox.bg_color = Color(0.15, 0.15, 0.15)
+	panel.add_theme_stylebox_override("panel", stylebox)
+
+	var main_vbox = VBoxContainer.new()
+	main_vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_KEEP_SIZE, 10)
+	main_vbox.add_theme_constant_override("separation", 20)
+	panel.add_child(main_vbox)
+
+	var warning_label = Label.new()
+	warning_label.text = "WARNING:"
+	warning_label.add_theme_color_override("font_color", Color.RED)
+	warning_label.add_theme_font_size_override("font_size", 28)
+	warning_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	main_vbox.add_child(warning_label)
+
+	var message_label = Label.new()
+	message_label.text = "Are you sure you want to delete the wallet?\nThis action cannot be undone."
+	message_label.add_theme_color_override("font_color", Color.WHITE)
+	message_label.add_theme_font_size_override("font_size", 16)
+	message_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	message_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	message_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	main_vbox.add_child(message_label)
+
+	var button_hbox = HBoxContainer.new()
+	button_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	button_hbox.add_theme_constant_override("separation", 20)
+	button_hbox.size_flags_vertical = Control.SIZE_SHRINK_END
+	main_vbox.add_child(button_hbox)
+
+	var yes_button = Button.new()
+	yes_button.text = "Yes, Delete"
+	yes_button.custom_minimum_size = Vector2(120, 40)
+	yes_button.connect("pressed", Callable(self, "_on_delete_confirmation_yes"))
+	button_hbox.add_child(yes_button)
+
+	var no_button = Button.new()
+	no_button.text = "No, Cancel"
+	no_button.custom_minimum_size = Vector2(120, 40)
+	no_button.connect("pressed", Callable(self, "_on_popup_close_pressed"))
+	button_hbox.add_child(no_button)
+
+	get_tree().root.add_child(popup_window)
+	get_tree().root.connect("size_changed", Callable(self, "_center_popup"))
+	popup_window.show()
+	
+func _on_delete_confirmation_yes():
+	_on_popup_close_pressed()  # Close the confirmation popup
+	delete_wallet()
+	
+func delete_wallet():
 	var user_data_dir = OS.get_user_data_dir()
 	var wallet_starters_dir = user_data_dir.path_join("wallet_starters")
 	var dir = DirAccess.open(wallet_starters_dir)
+
 	if dir:
 		dir.list_dir_begin()
 		var file_name = dir.get_next()
 		while file_name != "":
 			if not dir.current_is_dir():
-				dir.remove(file_name)
+				var file_path = wallet_starters_dir.path_join(file_name)
+				var err = dir.remove(file_path)
+				if err != OK:
+					print("Error deleting file: ", file_path, " Error code: ", err)
 			file_name = dir.get_next()
-	print("Wallet deleted.")
-	_on_popup_close_pressed()
+		dir.list_dir_end()
+		print("Wallet files deleted successfully.")
+	else:
+		print("Error: Unable to access wallet directory.")
+		return
 
-func _on_show_wallet_pressed():
-	# Placeholder for future functionality
-	print("Show Wallet functionality not implemented yet.")
+	# Clear any stored wallet data
+	current_wallet_data.clear()
+
+	# Update the wallet button theme
+	var wallet_button = $"../../Menu/MarginContainer/HBox/Panel/Wallet"
+	update_wallet_button_theme(wallet_button, false)
+
+	# Reset UI elements
+	entropy_in.text = ""
+	mnemonic_in.text = ""
+	clear_all_output()
+
+	# Switch to the initial tab
+	if tabs:
+		tabs.current_tab = 0
+
+	current_tab = 0
+
+	update_delete_button_state()
+
+	print("Wallet deleted and UI reset.")
+	
+func _on_help_button_pressed():
+	show_help_popup()
+	
+func show_help_popup():
+	if popup_window != null:
+		popup_window.queue_free()
+
+	popup_window = Control.new()
+	popup_window.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+	var background = ColorRect.new()
+	background.color = Color(0, 0, 0, 0.5)
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	background.connect("gui_input", Callable(self, "_on_background_gui_input"))
+	popup_window.add_child(background)
+
+	var panel = Panel.new()
+	panel.custom_minimum_size = Vector2(500, 400)
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.set_anchor_and_offset(SIDE_LEFT, 0.5, -250)
+	panel.set_anchor_and_offset(SIDE_TOP, 0.5, -200)
+	panel.set_anchor_and_offset(SIDE_RIGHT, 0.5, 250)
+	panel.set_anchor_and_offset(SIDE_BOTTOM, 0.5, 200)
+	popup_window.add_child(panel)
+
+	var stylebox = StyleBoxFlat.new()
+	stylebox.set_border_width_all(2)
+	stylebox.border_color = Color.WHITE
+	stylebox.bg_color = Color(0.15, 0.15, 0.15)
+	panel.add_theme_stylebox_override("panel", stylebox)
+
+	var main_vbox = VBoxContainer.new()
+	main_vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_KEEP_SIZE, 10)
+	main_vbox.add_theme_constant_override("separation", 10)
+	panel.add_child(main_vbox)
+
+	var title_label = Label.new()
+	title_label.text = "Wallet Help"
+	title_label.add_theme_font_size_override("font_size", 24)
+	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	main_vbox.add_child(title_label)
+
+	var help_text = """
+	• Create Wallet: Use 'Random' or enter entropy, then click 'Create Wallet'
+	• Mnemonic: 12-word phrase for wallet recovery - keep it safe!
+	• Load Wallet: Enter existing mnemonic and click 'Load'
+	• Wallet Info: View BIP39 data and HD key details after creation/loading
+	• Sidechains: Automatically generated based on your wallet
+	• Security: Never share your mnemonic or private keys
+	• Delete Wallet: Removes current wallet data (irreversible)
+
+	Note: This tool is for educational/testing purposes only.
+	For real transactions, use secure, well-reviewed wallet software.
+	"""
+
+	var help_label = Label.new()
+	help_label.text = help_text
+	help_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	help_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	main_vbox.add_child(help_label)
+
+	var close_button = Button.new()
+	close_button.text = "Close"
+	close_button.custom_minimum_size = Vector2(120, 40)
+	close_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	close_button.connect("pressed", Callable(self, "_on_popup_close_pressed"))
+	main_vbox.add_child(close_button)
+
+	get_tree().root.add_child(popup_window)
+	get_tree().root.connect("size_changed", Callable(self, "_center_popup"))
+	popup_window.show()
 
 func show_new_wallet_popup():
 	if popup_window != null:
@@ -444,12 +707,14 @@ func show_new_wallet_popup():
 
 	var main_vbox = VBoxContainer.new()
 	main_vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_KEEP_SIZE, 10)
+	main_vbox.add_theme_constant_override("separation", 20)
 	panel.add_child(main_vbox)
 
 	var attention_label = Label.new()
 	attention_label.text = "**ATTENTION** Write down these 12 words for future wallet recovery and restoration as you will NOT see them again"
 	attention_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	attention_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	attention_label.add_theme_color_override("font_color", Color.RED)
 	main_vbox.add_child(attention_label)
 
 	var mnemonic_container = PanelContainer.new()
@@ -461,6 +726,7 @@ func show_new_wallet_popup():
 	mnemonic_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	mnemonic_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	mnemonic_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	mnemonic_label.add_theme_font_size_override("font_size", 16)
 	mnemonic_container.add_child(mnemonic_label)
 
 	var bottom_container = VBoxContainer.new()
@@ -472,29 +738,26 @@ func show_new_wallet_popup():
 	question_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	bottom_container.add_child(question_label)
 
-	var hbox = HBoxContainer.new()
-	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	bottom_container.add_child(hbox)
+	var button_hbox = HBoxContainer.new()
+	button_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	button_hbox.add_theme_constant_override("separation", 20)
+	button_hbox.size_flags_vertical = Control.SIZE_SHRINK_END
+	bottom_container.add_child(button_hbox)
 
 	var yes_button = Button.new()
-	yes_button.text = "Yes"
+	yes_button.text = "Yes, Create"
+	yes_button.custom_minimum_size = Vector2(120, 40)
 	yes_button.connect("pressed", Callable(self, "_on_popup_yes_pressed"))
+	button_hbox.add_child(yes_button)
 
 	var no_button = Button.new()
-	no_button.text = "No"
+	no_button.text = "No, Cancel"
+	no_button.custom_minimum_size = Vector2(120, 40)
 	no_button.connect("pressed", Callable(self, "_on_popup_close_pressed"))
-
-	var spacer = Control.new()
-	spacer.custom_minimum_size.x = 100
-
-	hbox.add_child(no_button)
-	hbox.add_child(spacer)
-	hbox.add_child(yes_button)
+	button_hbox.add_child(no_button)
 
 	get_tree().root.add_child(popup_window)
-
 	get_tree().root.connect("size_changed", Callable(self, "_center_popup"))
-
 	popup_window.show()
 
 func _center_popup() -> void:
@@ -562,9 +825,14 @@ func _on_popup_yes_pressed():
 	var sidechain_data = Bitcoin.generate_sidechain_starters(current_wallet_data["seed"], current_wallet_data["mnemonic"], sidechain_slots)
 	save_sidechain_info(sidechain_data)
 	_on_popup_close_pressed()
-	if tabs:
-		tabs.current_tab = 1
+
+	var wallet_button = $"../../Menu/MarginContainer/HBox/Panel/Wallet"
+	update_wallet_button_theme(wallet_button, true)
+
+	tabs.current_tab = 1
+
 	print("Wallet and sidechain information saved.")
+	update_delete_button_state()
 
 func _on_replace_wallet_yes_pressed():
 	# Delete old wallet and sidechain files
@@ -578,7 +846,7 @@ func _on_replace_wallet_yes_pressed():
 			if not dir.current_is_dir():
 				dir.remove(file_name)
 			file_name = dir.get_next()
-	
+
 	# Save new wallet data
 	save_wallet_data()
 
@@ -593,6 +861,10 @@ func _on_replace_wallet_yes_pressed():
 	var sidechain_data = Bitcoin.generate_sidechain_starters(current_wallet_data["seed"], current_wallet_data["mnemonic"], sidechain_slots)
 	save_sidechain_info(sidechain_data)
 	_on_popup_close_pressed()
+
+	var wallet_button = $"../../Menu/MarginContainer/HBox/Panel/Wallet"
+	update_wallet_button_theme(wallet_button, true)
+
 	if tabs:
 		tabs.current_tab = 1
 	print("Wallet and sidechain information replaced and saved.")
@@ -639,9 +911,13 @@ func _on_load_button_pressed():
 	var sidechain_slots = get_sidechain_info()
 	var sidechain_data = wallet.generate_sidechain_starters(result["seed"], result["mnemonic"], sidechain_slots)
 	save_sidechain_info(sidechain_data)
+	var wallet_button = $"../../Menu/MarginContainer/HBox/Panel/Wallet"
+	update_wallet_button_theme(wallet_button, true)
+
 	if tabs:
 		tabs.current_tab = 1
 	print("Wallet and sidechain information saved.")
+	update_delete_button_state()
 
 func _on_fast_button_pressed():
 	entropy_in.text = ""
@@ -694,6 +970,8 @@ func reset_wallet_tab():
 	current_wallet_data = {}
 	mnemonic_out.setup_grid()
 	current_tab = 0
+	create_pop_up.disabled = false
+	displaying_existing_wallet = false
 
 func _on_tab_changed(tab):
 	if tab != get_index(): 
@@ -705,3 +983,15 @@ func ensure_starters_directory():
 	var dir = DirAccess.open(user_data_dir)
 	if not dir.dir_exists("wallet_starters"):
 		dir.make_dir("wallet_starters")
+		
+func update_wallet_button_theme(button: Button, wallet_exists: bool):
+	if wallet_exists:
+		button.disabled = false
+	else:
+		button.disabled = true
+
+func _on_wallet_created():
+	update_delete_button_state()
+
+func _on_wallet_deleted():
+	update_delete_button_state()
