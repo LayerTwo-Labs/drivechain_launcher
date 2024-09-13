@@ -1,0 +1,4 @@
+[gd_resource type="Theme" format=3 uid="uid://ddwjiywfvqp62"]
+
+[resource]
+LineEdit/colors/font_placeholder_color = Color(1, 0.427451, 0, 1)
