@@ -942,27 +942,30 @@ func get_sidechain_info():
 	return sidechain_info
 
 func save_sidechain_info(sidechain_data):
-	for key in sidechain_data.keys():
-		if key.begins_with("sidechain_"):
-			var slot = key.split("_")[1]
-			var user_data_dir = OS.get_user_data_dir()
-			var filename = user_data_dir.path_join("wallet_starters/sidechain_%s_starter.txt" % slot)
-			var file = FileAccess.open(filename, FileAccess.WRITE)
-			if file:
-				file.store_string(JSON.stringify(sidechain_data[key]))
-				file.close()
-			else:
-				print("Failed to save sidechain starter information for slot ", slot)
-		elif key.begins_with("mainchain"):
-			var user_data_dir = OS.get_user_data_dir()
-			var filename = user_data_dir.path_join("wallet_starters/mainchain_starter.txt")
-			var file = FileAccess.open(filename, FileAccess.WRITE)
-			if file:
-				file.store_string(JSON.stringify(sidechain_data[key]))
-				file.close()
-			else:
-				print("Failed to save sidechain starter information for mainchain")
+	var user_data_dir = OS.get_user_data_dir()
+	var wallet_starters_dir = user_data_dir.path_join("wallet_starters")
 
+	# Save master seed file
+	var master_seed_file = FileAccess.open(wallet_starters_dir.path_join("wallet_master_seed.txt"), FileAccess.WRITE)
+	if master_seed_file:
+		# Assuming sidechain_data["mainchain"] contains all necessary information
+		master_seed_file.store_string(JSON.stringify(sidechain_data["mainchain"]))
+		master_seed_file.close()
+	else:
+		print("Failed to save master seed file")
+
+	# Save mainchain and sidechain files with only the mnemonic phrases
+	for key in sidechain_data.keys():
+		if key.begins_with("sidechain_") or key == "mainchain":
+			var filename = wallet_starters_dir.path_join(key + "_starter.txt")
+			var file = FileAccess.open(filename, FileAccess.WRITE)
+			if file:
+				# Save only the mnemonic phrase as plain text
+				file.store_string(sidechain_data[key]["mnemonic"])
+				file.close()
+			else:
+				print("Failed to save starter information for ", key)
+				
 func reset_wallet_tab():
 	clear_all_output()
 	entropy_in.text = ""
