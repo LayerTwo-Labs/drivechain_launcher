@@ -154,7 +154,7 @@ jobs:
         if: ${{ matrix.build == 'macos' }}
         run: |
           echo ${{ secrets.GODOT_MACOS_NOTARIZATION_API_KEY }} | base64 --decode > notarization_api_key.p8
-          echo sha256sum: $(sha256sum notarization_api_key.p8)
+          echo sha256sum: $(shasum -a 256 notarization_api_key.p8)
 
       # MUST be run before build
       - name: Initialize godot cache
